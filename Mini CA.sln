@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini CA Frontend", "Mini CA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{9C059255-2DFA-448B-8CD2-E59B542172ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini CA Backend", "Mini CA Backend\Mini CA Backend.csproj", "{D3EE2847-BD96-443A-B1B5-4544663CF04E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3EE2847-BD96-443A-B1B5-4544663CF04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3EE2847-BD96-443A-B1B5-4544663CF04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3EE2847-BD96-443A-B1B5-4544663CF04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3EE2847-BD96-443A-B1B5-4544663CF04E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
