@@ -2,7 +2,7 @@
 
 namespace Models
 {
-    public class Models
+    public class DAL
     {
     }
 }
