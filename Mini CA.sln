@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31229.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mini CA Frontend", "Mini CA Frontend\Mini CA Frontend.csproj", "{4774E8FC-D82D-4E13-94AA-0D4B7B97ED31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{9C059255-2DFA-448B-8CD2-E59B542172ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4774E8FC-D82D-4E13-94AA-0D4B7B97ED31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4774E8FC-D82D-4E13-94AA-0D4B7B97ED31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4774E8FC-D82D-4E13-94AA-0D4B7B97ED31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4774E8FC-D82D-4E13-94AA-0D4B7B97ED31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C059255-2DFA-448B-8CD2-E59B542172ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D809E45B-2D1C-4B0C-8A25-D1A1901577A9}
+	EndGlobalSection
+EndGlobal
