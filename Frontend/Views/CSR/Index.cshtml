@@ -1,0 +1,20 @@
+﻿@model Frontend.Models.UploadFileModel
+
+@using (Html.BeginForm("Upload", "CSR", null, FormMethod.Post, true, new { @enctype = "multipart/form-data" }))
+{
+    <dl>
+        <dt>
+            @Html.LabelFor(f => f.FormFile)
+        </dt>
+        <dd>
+            @Html.EditorFor(f => f.FormFile)
+            @Html.ValidationMessageFor(f => f.FormFile)
+        </dd>
+    </dl>
+    <input class="btn-primary" type="submit" value="Upload" />
+}
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

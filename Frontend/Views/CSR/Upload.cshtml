@@ -1,0 +1,67 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Models.CSR.CSR
+@{
+    var Title = ViewBag.Title;
+}
+
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.Organization)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.Organization)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.OrganizationUnitName)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.OrganizationUnitName)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.CommonName)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.CommonName)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.EMailAddress)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.EMailAddress)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.CountryCode)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.CountryCode)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.Locality)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.Locality)
+    </dd>
+</dl>
+<dl>
+    <dt>
+        @Html.LabelFor(c => c.State)
+    </dt>
+    <dd>
+        @Html.DisplayFor(c => c.State)
+    </dd>
+</dl>
+
+<br />
+@Html.ActionLink("Back to Index", "Index", "CSR")
