@@ -1,16 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31229.75
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{9C059255-2DFA-448B-8CD2-E59B542172ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{9C059255-2DFA-448B-8CD2-E59B542172ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Frontend", "Frontend\Frontend.csproj", "{D5B38F51-39C1-4F03-B959-2F73EC485EDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Frontend", "Frontend\Frontend.csproj", "{D5B38F51-39C1-4F03-B959-2F73EC485EDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{0A46D892-6596-4893-817E-68ED096198B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.csproj", "{0A46D892-6596-4893-817E-68ED096198B0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C059255-2DFA-448B-8CD2-E59B542172ED} = {9C059255-2DFA-448B-8CD2-E59B542172ED}
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0AD33629-B051-4D1C-AF8E-54B3E93F3983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTestApp", "DevTestApp\DevTestApp.csproj", "{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,14 @@ Global
 		{0A46D892-6596-4893-817E-68ED096198B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A46D892-6596-4893-817E-68ED096198B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A46D892-6596-4893-817E-68ED096198B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD33629-B051-4D1C-AF8E-54B3E93F3983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD33629-B051-4D1C-AF8E-54B3E93F3983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD33629-B051-4D1C-AF8E-54B3E93F3983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD33629-B051-4D1C-AF8E-54B3E93F3983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
