@@ -13,6 +13,8 @@ using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Crypto.Operators;
 using System.Collections.Generic;
 using System.Linq;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Pkcs;
 
 namespace Common;
 public static class Certificate
@@ -156,6 +158,24 @@ public static class Certificate
 
         X509V3CertificateGenerator certGen = new();
 
+        Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+        if (attributes != null)
+        {
+            for (int i = 0; i != attributes.Count; i++)
+            {
+                AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
+                if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                {
+                    X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
+                    foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
+                    {
+                        X509Extension ext = extensions.GetExtension(oid);
+                        certGen.AddExtension(oid, ext.IsCritical, ext.GetParsedValue());
+                    }
+                }
+            }
+        }
+
         // Serial Number
         BigInteger serialNumber
             = BigIntegers.CreateRandomInRange(BigInteger.One
@@ -214,6 +234,41 @@ public static class Certificate
         sb.AppendLine("-----END CERTIFICATE-----");
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="csr"></param>
+    /// <returns></returns>
+    public static IEnumerable<string> GetSANs(Pkcs10CertificationRequest csr)
+    {
+        List<string> retval = new();
+
+        Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+        if (attributes is not null)
+        {
+            for (int i = 0; i != attributes.Count; i++)
+            {
+                AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
+                if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                {
+                    X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
+                    foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
+                    {
+                        X509Extension ext = extensions.GetExtension(oid);
+                        var pv = (Asn1Sequence)ext.GetParsedValue();
+                        foreach(Asn1TaggedObject obj in pv)
+                        {
+                            string str = Encoding.UTF8.GetString(obj.GetObject().GetEncoded());
+                            retval.Add(new string(str.Where(c => !char.IsControl(c)).ToArray()));
+                        }
+                    }
+                }
+            }
+        }
+        
+        return retval;
     }
 
     private class CAKeyPasswordFinder : IPasswordFinder

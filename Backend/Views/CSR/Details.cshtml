@@ -1,0 +1,132 @@
+﻿@model Backend.Models.CSRDetailViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CSR</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CountryCode)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CountryCode)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Organization)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Organization)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrganizationUnitName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrganizationUnitName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CommonName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CommonName)
+        </dd>
+@if(Model is not null && Model.AlternateNames.Any())
+{
+        <dt class="col-sm-2">
+            @Html.LabelFor(c => c.AlternateNames)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+            @foreach (string item in Model.AlternateNames)
+            {
+                <li>@item</li>
+            }
+            </ul>
+        </dd>
+}
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Locality)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Locality)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EMailAddress)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EMailAddress)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FileName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FileName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FileSize)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FileSize)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SubmittedOn)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SubmittedOn)
+        </dd>
+    </dl>
+    @if (Model is not null && Model.IsSigned.Equals(true))
+    {
+        <h4>Certificate</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.SignedOn)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.SignedOn)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.NotBefore)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.NotBefore)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.NotAfter)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.NotAfter)
+            </dd>
+            <dt class = "col-sm-2">
+                <a asp-action="DownloadCertificate"
+                 asp-route-id="@Model.Id"
+                        class="btn btn-success">
+                    <i class="fas fa-arrow-down"></i> Download
+                </a>
+            </dt>
+        </dl>
+    }
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-default"><i class="fas fa-arrow-left"></i> Back to List</a>
+
+    @if (Model is not null
+         && Model.OriginalRequestId is not null
+         && Model.IsSigned.Equals(false))
+    {
+        <a asp-action="Process" asp-route-id="@Model.OriginalRequestId" class="btn btn-secondary">
+            <i class="fas fa-check"></i> Process
+        </a> 
+    }
+</div>

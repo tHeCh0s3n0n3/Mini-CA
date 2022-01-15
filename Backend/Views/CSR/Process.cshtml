@@ -1,0 +1,225 @@
+﻿@model Backend.Models.ProcessViewModel
+
+@{
+    ViewData["Title"] = "Process";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>CSR</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CountryCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CountryCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Organization)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Organization)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrganizationUnitName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrganizationUnitName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CommonName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CommonName)
+        </dd>
+@if(Model is not null && Model.AlternateNames.Any())
+{
+        <dt class="col-sm-2">
+            @Html.LabelFor(c => c.AlternateNames)
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+            @foreach (string item in Model.AlternateNames)
+            {
+                <li>@item</li>
+            }
+            </ul>
+        </dd>
+}
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Locality)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Locality)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.EMailAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EMailAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FileName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FileName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FileSize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FileSize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SubmittedOn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SubmittedOn)
+        </dd>
+    </dl>
+    <form asp-action="Process" method="post" asp-antiforgery="true">
+        <!-- Hidden Fields -->
+        @if (Model is not null)
+        {
+            <input type="hidden" asp-for="OriginalRequestId" value="@Model.OriginalRequestId" />
+            <input type="hidden" asp-for="CountryCode" value="@Model.CountryCode" />
+            <input type="hidden" asp-for="Organization" value="@Model.Organization" />
+            <input type="hidden" asp-for="CommonName" value="@Model.CommonName" />
+            <input type="hidden" asp-for="AlternateNames" value="@Model.AlternateNames" />
+            <input type="hidden" asp-for="Locality" value="@Model.Locality" />
+            <input type="hidden" asp-for="State" value="@Model.State" />
+            <input type="hidden" asp-for="EMailAddress" value="@Model.EMailAddress" />
+            <input type="hidden" asp-for="FileName" value="@Model.FileName" />
+            <input type="hidden" asp-for="SubmittedOn" value="@Model.SubmittedOn" />
+        }
+
+        <div class="form-group row">
+            <label asp-for="ExpieryDate" class="col-form-label col-sm-2"></label>
+            <input asp-for="ExpieryDate" class="form-control col-sm-2" />
+        </div>
+        <div class="d-flex flex-row flex-wrap">
+            <div class="col-3">
+                <h6>Certificate Purpose</h6>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeAll" data-type="purpose" class="form-check-input" onclick="AllPurposesSelected(this);" />
+                    <label asp-for="PurposeAll" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeServerAuth" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeServerAuth" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeClientAuth" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeClientAuth" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeCodeSigning" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeCodeSigning" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeEMailProtection" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeEMailProtection" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeIPsecEndSystem" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeIPsecEndSystem" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeIPsecTunnel" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeIPsecTunnel" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeIPsecUser" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeIPsecUser" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeTimeStamping" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeTimeStamping" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeOCSPSigning" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeOCSPSigning" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeSmartCardLogon" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeSmartCardLogon" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="PurposeMACAddress" data-type="purpose" class="form-check-input" />
+                    <label asp-for="PurposeMACAddress" class="form-check-label"></label>
+                </div>
+            </div>
+            <div class="col-3">
+                <h6>Certificate Usage</h6>
+                <div class="form-group form-check">
+                    <input asp-for="UsageDigitalSignature" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageDigitalSignature" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageNonRepudiation" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageNonRepudiation" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageKeyEncipherment" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageKeyEncipherment" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageDataEncipherment" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageDataEncipherment" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageKeyAgreement" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageKeyAgreement" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageKeyCertSigning" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageKeyCertSigning" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageCRLSigning" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageCRLSigning" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageEncipherOnly" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageEncipherOnly" class="form-check-label"></label>
+                </div>
+                <div class="form-group form-check">
+                    <input asp-for="UsageDecipherOnly" data-type="usage" class="form-check-input" />
+                    <label asp-for="UsageDecipherOnly" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-success" value="Sign Certificate" />
+            <a asp-action="Index" class="btn btn-default"><i class="fas fa-arrow-left"></i> Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section HeadScripts {
+    <script>
+        function AllPurposesSelected(ele) {
+            var inputs = $('input[data-type="' + ele.dataset.type + '"]').not(ele);
+            
+            if (ele.checked) {                
+                inputs.each(function(idx, item) {
+                    item.checked = !ele.checked;
+                    item.disabled = ele.checked;
+                });
+            }
+            else {
+                inputs.each(function(idx, item) {
+                    item.disabled = ele.checked;
+                });
+            }
+        }
+    </script>
+}

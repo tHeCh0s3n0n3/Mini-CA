@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Backend.Models.CSRIndexViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CountryCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommonName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubmittedOn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null) {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CountryCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CommonName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileSize)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SubmittedOn)
+                    </td>
+                    <td>
+                        @if (item.IsSigned && item.SignedCSRId is not null)
+                        {
+                            <a asp-action="DownloadCertificate"
+                             asp-route-id="@item.SignedCSRId"
+                                    class="btn btn-success"
+                                    title="Download Certificate">
+                                <i class="fas fa-arrow-down"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Process"
+                             asp-route-id="@item.Id"
+                                    class="btn btn-secondary" title="Process">
+                                <i class="fas fa-check"></i>
+                            </a>
+                        }                        
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Details"><i class="fas fa-eye"></i></a>
+                        <form asp-action="Delete" method="POST" asp-route-id="@item.Id" 
+                               onclick="return confirm('Are you sure you want to delete this?')"
+                              style="display:inline">
+                          <button type="submit" class="btn btn-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                        </form>
+                        @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,50 +1,96 @@
 ﻿using Frontend.Models;
 using Microsoft.AspNetCore.Mvc;
-using Models.CSR;
+using DAL.Models;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
-using System.IO;
+using Serilog;
 
 namespace Frontend.Controllers
 {
     public class CSRController : Controller
     {
+        private readonly DAL.DB _db;
+
+        public CSRController(DAL.DB db)
+        {
+            Log.Information("Entered CSRController");
+            _db = db;
+        }
+
         public IActionResult Index()
         {
+            Log.Information("Showing CSR Index page.");
             return View(new UploadFileModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upload(UploadFileModel uploadFile)
+        public async Task<IActionResult> Upload(UploadFileModel uploadFile)
         {
-            if (null == uploadFile || !ModelState.IsValid)
+            Log.Information("Started upload function");
+
+            try
             {
-                return RedirectToAction("Index");
-            }
-
-            CSR parsedCSR = new();
-
-            if (uploadFile.FormFile.Length > 0)
-            {
-                using StreamReader sr = new(uploadFile.FormFile.OpenReadStream());
-                PemReader csrReader = new(sr);
-                Pkcs10CertificationRequest csr
-                    = csrReader.ReadObject() as Pkcs10CertificationRequest;
-                CertificationRequestInfo csrInfo = csr.GetCertificationRequestInfo();
-
-                foreach (var item in CSR.ObjectIdentifiers)
+                if (null == uploadFile || !ModelState.IsValid)
                 {
-                    var valueResult = csrInfo.Subject.GetValueList(item.Key);
-                    if (valueResult.Count == 1)
-                    {
-                        parsedCSR.SetProperty(item.Value, valueResult[0].ToString());
-                    }
+                    return RedirectToAction("Index");
                 }
-            }
 
-            return View(parsedCSR);
+                CSR parsedCSR = new();
+
+                if (uploadFile.FormFile.Length > 0)
+                {
+                    parsedCSR.FileName = uploadFile.FormFile.FileName;
+                    parsedCSR.IsSigned = false;
+                    parsedCSR.SubmittedOn = DateTime.Now;
+
+                    using Stream s = uploadFile.FormFile.OpenReadStream();
+                    using (MemoryStream ms = new())
+                    {
+                        await s.CopyToAsync(ms);
+                        parsedCSR.FileContents = ms.ToArray();
+                    }
+
+                    Pkcs10CertificationRequest csr;
+
+                    try
+                    {
+                        csr = Common.Certificate.ImportCSR(parsedCSR.FileContents);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message);
+                    }
+
+                    CertificationRequestInfo csrInfo = csr.GetCertificationRequestInfo();
+
+                    foreach (var item in CSR.ObjectIdentifiers)
+                    {
+                        var valueResult = csrInfo.Subject.GetValueList(item.Key);
+                        if (valueResult.Count == 1)
+                        {
+                            if (valueResult[0] is null)
+                            {
+                                continue;
+                            }
+                            parsedCSR.SetProperty(item.Value, $"{valueResult[0]}");
+                        }
+                    }
+
+                    List<string> alternateNames = Common.Certificate.GetSANs(csr).ToList();
+                    parsedCSR.AlternateNamesList = alternateNames;
+                }
+                await _db.Database.EnsureCreatedAsync();
+                _db.Add<CSR>(parsedCSR);
+                await _db.SaveChangesAsync();
+
+                return View(parsedCSR);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

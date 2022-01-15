@@ -1,0 +1,385 @@
+2021-12-27 13:39:05.653 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:39:05.661 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:39:05.665 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 13:42:19.654 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:42:19.668 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:42:19.670 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 13:42:50.648 +04:00 [INF] Showing CSR Index page.
+2021-12-27 13:48:11.317 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:48:11.325 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:48:11.331 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 13:48:22.091 +04:00 [INF] Showing CSR Index page.
+2021-12-27 13:55:25.227 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:55:25.235 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:55:25.236 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 13:55:27.016 +04:00 [INF] Showing CSR Index page.
+2021-12-27 13:56:25.708 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:56:25.721 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:56:25.725 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 13:56:28.429 +04:00 [INF] Showing CSR Index page.
+2021-12-27 13:59:51.705 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 13:59:51.716 +04:00 [INF] Hosting environment: Development
+2021-12-27 13:59:51.717 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:00:09.848 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:02:04.746 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:02:04.752 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:02:04.755 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:02:04.756 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:02:04.757 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:02:07.655 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:03:47.968 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:03:48.000 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:03:48.030 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:03:48.056 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:03:48.083 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:03:50.821 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:05:05.762 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:05:05.793 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:05:05.822 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:05:05.848 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:05:05.875 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:05:12.135 +04:00 [INF] Entered CSRController
+2021-12-27 14:05:12.135 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:05:47.219 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:05:47.250 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:05:47.279 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:05:47.310 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:05:47.337 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:05:55.137 +04:00 [INF] Entered CSRController
+2021-12-27 14:05:55.137 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:09:02.810 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:09:02.843 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:09:02.873 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:09:02.900 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:09:02.927 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:09:07.439 +04:00 [INF] Entered CSRController
+2021-12-27 14:09:07.439 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:09:22.865 +04:00 [INF] Application is shutting down...
+2021-12-27 14:10:33.452 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:10:33.457 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:10:33.459 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:10:33.459 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:10:33.459 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:10:36.422 +04:00 [INF] Application is shutting down...
+2021-12-27 14:10:50.555 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:10:50.559 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:10:50.561 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:10:50.561 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:10:50.561 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:11:03.825 +04:00 [INF] Entered CSRController
+2021-12-27 14:11:03.826 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:11:11.283 +04:00 [INF] Entered CSRController
+2021-12-27 14:11:11.383 +04:00 [INF] Started upload function
+2021-12-27 14:12:19.214 +04:00 [INF] Application is shutting down...
+2021-12-27 14:13:10.952 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:13:10.957 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:13:10.959 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:13:10.959 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:13:10.959 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:13:20.022 +04:00 [INF] Entered CSRController
+2021-12-27 14:13:20.023 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:13:23.176 +04:00 [INF] Entered CSRController
+2021-12-27 14:13:23.185 +04:00 [INF] Started upload function
+2021-12-27 14:16:35.769 +04:00 [INF] Application is shutting down...
+2021-12-27 14:16:43.439 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:16:43.444 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:16:43.446 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:16:43.446 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:16:43.446 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:16:57.686 +04:00 [INF] Entered CSRController
+2021-12-27 14:16:57.687 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:17:00.968 +04:00 [INF] Entered CSRController
+2021-12-27 14:17:00.978 +04:00 [INF] Started upload function
+2021-12-27 14:22:08.706 +04:00 [INF] Entered CSRController
+2021-12-27 14:22:08.708 +04:00 [INF] Started upload function
+2021-12-27 14:22:11.420 +04:00 [INF] Entered CSRController
+2021-12-27 14:22:11.420 +04:00 [INF] Started upload function
+2021-12-27 14:22:23.580 +04:00 [INF] Entered CSRController
+2021-12-27 14:22:23.581 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:22:27.179 +04:00 [INF] Entered CSRController
+2021-12-27 14:22:27.179 +04:00 [INF] Started upload function
+2021-12-27 14:22:35.134 +04:00 [INF] Entered CSRController
+2021-12-27 14:22:35.134 +04:00 [INF] Started upload function
+2021-12-27 14:24:37.830 +04:00 [INF] Entered CSRController
+2021-12-27 14:24:37.830 +04:00 [INF] Started upload function
+2021-12-27 14:24:45.815 +04:00 [INF] Entered CSRController
+2021-12-27 14:24:45.816 +04:00 [INF] Started upload function
+2021-12-27 14:24:52.809 +04:00 [INF] Entered CSRController
+2021-12-27 14:24:52.809 +04:00 [INF] Started upload function
+2021-12-27 14:25:33.901 +04:00 [INF] Entered CSRController
+2021-12-27 14:25:33.923 +04:00 [ERR] An unhandled exception has occurred while executing the request.
+System.MissingMethodException: Method not found: 'Void Models.CSR.CSR.set_FileName(System.String)'.
+   at Frontend.Controllers.CSRController.Upload(UploadFileModel uploadFile)
+   at lambda_method177(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.MigrationsEndPointMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2021-12-27 14:25:35.561 +04:00 [ERR] An exception occurred while calculating the database error page content. Skipping display of the database error page.
+System.InvalidOperationException: StatusCode cannot be set because the response has already started.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ThrowResponseAlreadyStartedException(String value)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.set_StatusCode(Int32 value)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.Microsoft.AspNetCore.Http.Features.IHttpResponseFeature.set_StatusCode(Int32 value)
+   at Microsoft.AspNetCore.Http.DefaultHttpResponse.set_StatusCode(Int32 value)
+   at Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.Views.DatabaseErrorPage.ExecuteAsync()
+   at Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.DatabaseDeveloperPageExceptionFilter.HandleExceptionAsync(ErrorContext errorContext, Func`2 next)
+2021-12-27 14:25:59.895 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:25:59.900 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:25:59.902 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:25:59.903 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:25:59.903 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:26:00.003 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:00.016 +04:00 [INF] Started upload function
+2021-12-27 14:26:11.575 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:11.575 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:26:15.370 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:15.372 +04:00 [INF] Started upload function
+2021-12-27 14:26:47.372 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:47.372 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:26:50.086 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:50.086 +04:00 [INF] Started upload function
+2021-12-27 14:26:59.951 +04:00 [INF] Entered CSRController
+2021-12-27 14:26:59.951 +04:00 [INF] Started upload function
+2021-12-27 14:27:02.060 +04:00 [INF] Entered CSRController
+2021-12-27 14:27:02.060 +04:00 [INF] Showing CSR Index page.
+2021-12-27 14:27:04.990 +04:00 [INF] Entered CSRController
+2021-12-27 14:27:04.990 +04:00 [INF] Started upload function
+2021-12-27 14:27:08.552 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:27:08.556 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:27:08.559 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:27:08.559 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:27:08.559 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:27:08.654 +04:00 [INF] Entered CSRController
+2021-12-27 14:27:08.665 +04:00 [INF] Started upload function
+2021-12-27 14:27:40.461 +04:00 [INF] Entered CSRController
+2021-12-27 14:27:40.464 +04:00 [INF] Started upload function
+2021-12-27 14:27:45.190 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:27:45.195 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:27:45.197 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:27:45.197 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:27:45.197 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:27:45.290 +04:00 [INF] Entered CSRController
+2021-12-27 14:27:45.300 +04:00 [INF] Started upload function
+2021-12-27 14:29:36.787 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 14:29:36.792 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 14:29:36.794 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 14:29:36.795 +04:00 [INF] Hosting environment: Development
+2021-12-27 14:29:36.795 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 14:29:36.891 +04:00 [INF] Entered CSRController
+2021-12-27 14:29:36.902 +04:00 [INF] Started upload function
+2021-12-27 15:48:49.389 +04:00 [INF] Application is shutting down...
+2021-12-27 16:02:59.336 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 16:02:59.341 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 16:02:59.343 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 16:02:59.343 +04:00 [INF] Hosting environment: Development
+2021-12-27 16:02:59.343 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 16:05:43.999 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 16:05:44.004 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 16:05:44.007 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 16:05:44.007 +04:00 [INF] Hosting environment: Development
+2021-12-27 16:05:44.007 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 16:05:50.174 +04:00 [INF] Entered CSRController
+2021-12-27 16:05:50.174 +04:00 [INF] Showing CSR Index page.
+2021-12-27 16:05:53.892 +04:00 [INF] Entered CSRController
+2021-12-27 16:05:53.902 +04:00 [INF] Started upload function
+2021-12-27 16:08:01.681 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 16:08:01.685 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 16:08:01.688 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 16:08:01.688 +04:00 [INF] Hosting environment: Development
+2021-12-27 16:08:01.688 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 16:08:01.850 +04:00 [INF] Entered CSRController
+2021-12-27 16:08:01.861 +04:00 [INF] Started upload function
+2021-12-27 16:08:02.289 +04:00 [ERR] Failed executing DbCommand (5ms) [Parameters=[@p0='?' (Size = 27), @p1='?' (Size = 2), @p2='?' (Size = 18), @p3='?' (Size = 1037) (DbType = Binary), @p4='?' (Size = 11), @p5='?' (Size = 5), @p6='?' (Size = 14), @p7='?', @p8='?'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "CSRs" ("CommonName", "CountryCode", "EMailAddress", "FileContents", "FileName", "Locality", "Organization", "OrganizationUnitName", "State")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8);
+SELECT "Id"
+FROM "CSRs"
+WHERE changes() = 1 AND "rowid" = last_insert_rowid();
+2021-12-27 16:08:02.311 +04:00 [ERR] An exception occurred in the database while saving changes for context type 'DAL.DB'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: CSRs'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: CSRs'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2021-12-27 16:08:44.975 +04:00 [INF] Application is shutting down...
+2021-12-27 16:56:43.525 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 16:56:43.530 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 16:56:43.532 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 16:56:43.532 +04:00 [INF] Hosting environment: Development
+2021-12-27 16:56:43.533 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 16:56:48.371 +04:00 [INF] Entered CSRController
+2021-12-27 16:56:48.371 +04:00 [INF] Showing CSR Index page.
+2021-12-27 16:56:53.276 +04:00 [INF] Entered CSRController
+2021-12-27 16:56:53.285 +04:00 [INF] Started upload function
+2021-12-27 17:05:55.238 +04:00 [INF] Application is shutting down...
+2021-12-27 17:42:39.994 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 17:42:39.998 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 17:42:40.001 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 17:42:40.001 +04:00 [INF] Hosting environment: Development
+2021-12-27 17:42:40.001 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 17:42:47.144 +04:00 [INF] Entered CSRController
+2021-12-27 17:42:47.144 +04:00 [INF] Showing CSR Index page.
+2021-12-27 17:42:50.802 +04:00 [INF] Entered CSRController
+2021-12-27 17:42:50.812 +04:00 [INF] Started upload function
+2021-12-27 17:43:40.980 +04:00 [INF] Entered CSRController
+2021-12-27 17:43:40.981 +04:00 [INF] Started upload function
+2021-12-27 17:44:42.138 +04:00 [INF] Entered CSRController
+2021-12-27 17:44:42.139 +04:00 [INF] Started upload function
+2021-12-27 17:45:02.133 +04:00 [INF] Entered CSRController
+2021-12-27 17:45:02.134 +04:00 [INF] Started upload function
+2021-12-27 17:46:08.726 +04:00 [INF] Entered CSRController
+2021-12-27 17:46:08.726 +04:00 [INF] Started upload function
+2021-12-27 17:46:22.395 +04:00 [INF] Entered CSRController
+2021-12-27 17:46:22.396 +04:00 [INF] Started upload function
+2021-12-27 17:48:36.683 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 17:48:36.689 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 17:48:36.693 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 17:48:36.693 +04:00 [INF] Hosting environment: Development
+2021-12-27 17:48:36.693 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 17:48:36.871 +04:00 [INF] Entered CSRController
+2021-12-27 17:48:36.884 +04:00 [INF] Started upload function
+2021-12-27 17:51:04.485 +04:00 [INF] Entered CSRController
+2021-12-27 17:51:04.486 +04:00 [INF] Started upload function
+2021-12-27 17:51:43.932 +04:00 [INF] Entered CSRController
+2021-12-27 17:51:43.933 +04:00 [INF] Started upload function
+2021-12-27 17:51:52.310 +04:00 [INF] Entered CSRController
+2021-12-27 17:51:52.311 +04:00 [INF] Started upload function
+2021-12-27 17:51:55.807 +04:00 [INF] Entered CSRController
+2021-12-27 17:51:55.807 +04:00 [INF] Started upload function
+2021-12-27 17:52:13.909 +04:00 [INF] Entered CSRController
+2021-12-27 17:52:13.909 +04:00 [INF] Started upload function
+2021-12-27 17:52:29.944 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 17:52:29.949 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 17:52:29.952 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 17:52:29.952 +04:00 [INF] Hosting environment: Development
+2021-12-27 17:52:29.952 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 17:52:30.154 +04:00 [INF] Entered CSRController
+2021-12-27 17:52:30.169 +04:00 [INF] Started upload function
+2021-12-27 17:58:11.140 +04:00 [INF] Entered CSRController
+2021-12-27 17:58:11.142 +04:00 [INF] Started upload function
+2021-12-27 17:59:06.924 +04:00 [INF] Entered CSRController
+2021-12-27 17:59:06.925 +04:00 [INF] Started upload function
+2021-12-27 18:02:25.520 +04:00 [INF] Now listening on: https://localhost:5001
+2021-12-27 18:02:25.525 +04:00 [INF] Now listening on: http://localhost:5000
+2021-12-27 18:02:25.527 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2021-12-27 18:02:25.527 +04:00 [INF] Hosting environment: Development
+2021-12-27 18:02:25.527 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2021-12-27 18:02:25.690 +04:00 [INF] Entered CSRController
+2021-12-27 18:02:25.700 +04:00 [INF] Started upload function
+2021-12-27 18:02:46.244 +04:00 [INF] Entered CSRController
+2021-12-27 18:02:46.245 +04:00 [INF] Showing CSR Index page.
+2021-12-27 18:02:50.078 +04:00 [INF] Entered CSRController
+2021-12-27 18:02:50.079 +04:00 [INF] Started upload function
+2021-12-30 15:18:39.147 +04:00 [INF] Application is shutting down...
+2022-01-15 00:04:08.193 +04:00 [INF] Now listening on: https://localhost:5001
+2022-01-15 00:04:08.198 +04:00 [INF] Now listening on: http://localhost:5000
+2022-01-15 00:04:08.200 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-01-15 00:04:08.200 +04:00 [INF] Hosting environment: Development
+2022-01-15 00:04:08.201 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-01-15 00:04:12.699 +04:00 [INF] Entered CSRController
+2022-01-15 00:04:12.699 +04:00 [INF] Showing CSR Index page.
+2022-01-15 00:04:29.464 +04:00 [INF] Entered CSRController
+2022-01-15 00:04:29.473 +04:00 [INF] Started upload function
+2022-01-15 00:04:34.672 +04:00 [INF] Entered CSRController
+2022-01-15 00:04:34.672 +04:00 [INF] Showing CSR Index page.
+2022-01-15 11:37:32.341 +04:00 [INF] Entered CSRController
+2022-01-15 11:37:32.342 +04:00 [INF] Showing CSR Index page.
+2022-01-15 11:38:01.721 +04:00 [INF] Entered CSRController
+2022-01-15 11:38:01.721 +04:00 [INF] Showing CSR Index page.
+2022-01-15 12:03:05.516 +04:00 [INF] Entered CSRController
+2022-01-15 12:03:05.516 +04:00 [INF] Showing CSR Index page.
+2022-01-15 12:03:33.910 +04:00 [INF] Entered CSRController
+2022-01-15 12:03:33.911 +04:00 [INF] Started upload function
+2022-01-15 12:03:41.684 +04:00 [INF] Application is shutting down...
+2022-01-15 12:04:02.872 +04:00 [INF] Now listening on: https://localhost:5001
+2022-01-15 12:04:02.879 +04:00 [INF] Now listening on: http://localhost:5000
+2022-01-15 12:04:02.883 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-01-15 12:04:02.885 +04:00 [INF] Hosting environment: Development
+2022-01-15 12:04:02.886 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-01-15 12:04:08.073 +04:00 [INF] Entered CSRController
+2022-01-15 12:04:08.074 +04:00 [INF] Showing CSR Index page.
+2022-01-15 12:05:13.965 +04:00 [INF] Now listening on: https://localhost:5001
+2022-01-15 12:05:13.969 +04:00 [INF] Now listening on: http://localhost:5000
+2022-01-15 12:05:13.972 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-01-15 12:05:13.972 +04:00 [INF] Hosting environment: Development
+2022-01-15 12:05:13.972 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-01-15 12:05:20.766 +04:00 [INF] Entered CSRController
+2022-01-15 12:05:20.776 +04:00 [INF] Started upload function
+2022-01-15 12:07:08.385 +04:00 [INF] Entered CSRController
+2022-01-15 12:07:08.385 +04:00 [INF] Showing CSR Index page.
+2022-01-15 12:07:10.671 +04:00 [INF] Entered CSRController
+2022-01-15 12:07:10.672 +04:00 [INF] Started upload function
+2022-01-15 13:32:55.594 +04:00 [INF] Entered CSRController
+2022-01-15 13:32:55.594 +04:00 [INF] Started upload function
+2022-01-15 13:32:59.150 +04:00 [INF] Entered CSRController
+2022-01-15 13:32:59.151 +04:00 [INF] Started upload function
+2022-01-15 13:33:41.014 +04:00 [INF] Entered CSRController
+2022-01-15 13:33:41.014 +04:00 [INF] Started upload function
+2022-01-15 13:34:24.055 +04:00 [INF] Entered CSRController
+2022-01-15 13:34:24.056 +04:00 [INF] Started upload function
+2022-01-15 13:34:43.462 +04:00 [INF] Application is shutting down...
+2022-01-15 13:41:26.119 +04:00 [INF] Now listening on: https://localhost:5001
+2022-01-15 13:41:26.123 +04:00 [INF] Now listening on: http://localhost:5000
+2022-01-15 13:41:26.126 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-01-15 13:41:26.126 +04:00 [INF] Hosting environment: Development
+2022-01-15 13:41:26.126 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-01-15 13:41:36.147 +04:00 [INF] Entered CSRController
+2022-01-15 13:41:36.157 +04:00 [INF] Started upload function
+2022-01-15 13:43:32.404 +04:00 [INF] Entered CSRController
+2022-01-15 13:43:32.405 +04:00 [INF] Started upload function
+2022-01-15 13:50:39.327 +04:00 [INF] Entered CSRController
+2022-01-15 13:50:39.327 +04:00 [INF] Started upload function
+2022-01-15 14:21:46.909 +04:00 [INF] Application is shutting down...

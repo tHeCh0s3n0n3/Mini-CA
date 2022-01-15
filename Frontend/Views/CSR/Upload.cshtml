@@ -1,11 +1,19 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model Models.CSR.CSR
+@model DAL.Models.CSR
 @{
     var Title = ViewBag.Title;
 }
 
+<dl>
+    <dt>@Html.LabelFor(c => c.FileName)</dt>
+    <dd>@Html.DisplayFor(c => c.FileName)</dd>
+</dl>
+<dl>
+    <dt>@Html.LabelFor(c => c.FileSize)</dt>
+    <dd>@Html.DisplayFor(c => c.FileSize)</dd>
+</dl>
 <dl>
     <dt>
         @Html.LabelFor(c => c.Organization)
@@ -30,6 +38,22 @@
         @Html.DisplayFor(c => c.CommonName)
     </dd>
 </dl>
+@if(Model is not null && !string.IsNullOrEmpty(Model.AlternateNames))
+{
+    <dl>
+        <dt>
+            @Html.LabelFor(c => c.AlternateNamesList)
+        </dt>
+        <dd>
+            <ul>
+            @foreach (string item in Model.AlternateNamesList)
+            {
+                <li>@item</li>
+            }
+            </ul>
+        </dd>
+    </dl>
+}
 <dl>
     <dt>
         @Html.LabelFor(c => c.EMailAddress)

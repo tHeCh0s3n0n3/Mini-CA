@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-string csrPath = @"C:\Users\Tarek\Nextcloud\Development\Mini CA\Data\menphis.csr";
+string csrPath = @"C:\Users\Tarek\Nextcloud\Development\Mini CA\Data\menphis2.csr";
 string caPath = @"C:\Users\Tarek\Nextcloud\Development\Mini CA\Data\ca.crt";
 string caKeyPath = @"C:\Users\Tarek\Nextcloud\Development\Mini CA\Data\ca.key";
 string caKeyPasswordPath = @"C:\Users\Tarek\Nextcloud\Development\Mini CA\Data\ca.key.passwd";
@@ -20,6 +20,12 @@ List<Org.BouncyCastle.Asn1.X509.KeyPurposeID> keyPurposeIDs = new()
 // Read the CSR
 Console.WriteLine("Reading the CSR...");
 var csr = Common.Certificate.ImportCSR(csrPath);
+
+var sans = Common.Certificate.GetSANs(csr);
+foreach(var san in sans)
+{
+    Console.WriteLine(san);
+}
 
 // Grab the CA cert and its key
 Console.WriteLine("Reading the CA cert and its key...");
