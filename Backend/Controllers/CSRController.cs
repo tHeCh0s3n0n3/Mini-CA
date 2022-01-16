@@ -5,8 +5,13 @@ using DAL.Models;
 using Backend.Models;
 using Microsoft.Extensions.Options;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Backend.Filters;
 
 namespace Backend.Controllers;
+
+[Authorize]
+[TypeFilter(typeof(AdminAuthorizationFilterAttribute))]
 public class CSRController : Controller
 {
     private readonly DB _db;
@@ -16,6 +21,12 @@ public class CSRController : Controller
     {
         _db = db;
         _caCertSettings = caCertSettings.Value;
+
+        if (HttpContext?.User?.Identity is not null
+            && HttpContext.User.Identity.IsAuthenticated)
+        {
+
+        }
     }
 
     // GET: CSR

@@ -1,18 +1,10 @@
-using Backend.Data;
+using Common;
 using DAL;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using DAL.Identity;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Backend
 {
@@ -32,14 +24,39 @@ namespace Backend
                 options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
             );
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<IdentityDBContext>(options =>
+                options.UseSqlite(
+                    Configuration.GetConnectionString("IdentityConnection"))
+            );
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<IdentityDBContext>();
             services.AddControllersWithViews();
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie()
+                .AddNextcloud(o =>
+                {
+                    o.ClientId = Configuration["Nextcloud:ClientID"];
+                    o.ClientSecret = Configuration["Nextcloud:Secret"];
+
+                    o.AuthorizationEndpoint = Configuration["Nextcloud:BaseUrl"]
+                                              + NextcloudIdentityProviderDefaults.AuthorizationEndpointPath;
+                    o.TokenEndpoint = Configuration["Nextcloud:BaseUrl"]
+                                      + NextcloudIdentityProviderDefaults.TokenEndpointPath;
+                    o.UserInformationEndpoint = Configuration["Nextcloud:BaseUrl"]
+                                                + NextcloudIdentityProviderDefaults.UserInformationEndpointPath;
+
+                    //o.ClaimActions.MapJsonKey("urn:nextcloud:displayname", "Name", "string");
+                    o.ClaimActions.MapJsonKey("Name", "urn:nextcloud:displayname", "string");
+                    o.SaveTokens = true;
+                });
 
             services.Configure<Models.CACertSettings>(Configuration.GetSection("CACert"));
         }
