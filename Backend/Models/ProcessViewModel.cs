@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Backend.Models;
 public class ProcessViewModel
 {
-    public Guid OriginalRequestId { get; set; }
+    public CSRId OriginalRequestId { get; set; }
 
     [Display(Name = "Country Code")]
     public string? CountryCode { get; set; }
@@ -196,7 +196,6 @@ public class ProcessViewModel
 
     public List<int> RequestedKeyUsages
     {
-#pragma warning disable CS8604 // Possible null reference argument.
         get
         {
             List<int> retval = new();
@@ -212,6 +211,5 @@ public class ProcessViewModel
             if (UsageDecipherOnly) retval.Add(GetKeyUsage(nameof(UsageDecipherOnly)));
             return retval;
         }
-#pragma warning restore CS8604 // Possible null reference argument.
     }
 }

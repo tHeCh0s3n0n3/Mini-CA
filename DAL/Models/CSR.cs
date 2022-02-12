@@ -6,10 +6,15 @@ using Common;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models;
+
+[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+public partial struct CSRId { }
+
 public class CSR
 {
+
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public CSRId Id { get; set; }
 
     [Required]
     [Display(Name ="Country Code")]

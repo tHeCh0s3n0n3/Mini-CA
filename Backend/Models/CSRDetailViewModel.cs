@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Backend.Models;
 public class CSRDetailViewModel
 {
-    public Guid? OriginalRequestId { get; set; }
+    public CSRId? OriginalRequestId { get; set; }
 
     [Display(Name = "Country Code")]
     public string? CountryCode { get; private set; }
@@ -46,7 +46,7 @@ public class CSRDetailViewModel
     public DateTime? SubmittedOn { get; private set; }
 
     /** Signed CSR Properties **/
-    public Guid? Id { get; set; }
+    public SignedCSRId? Id { get; set; }
 
     [Display(Name = "Signed On")]
     public DateTime? SignedOn { get; set; }

@@ -17,12 +17,7 @@ namespace Backend.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        public HomeController() { }
 
         public IActionResult Index()
         {
@@ -54,6 +49,9 @@ namespace Backend.Controllers
             return Challenge(props, NextcloudIdentityProviderDefaults.SchemeName);
         }
 
+
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         [AllowAnonymous]
         [Route("/signin-nextcloud")]
         public async Task<IActionResult> NextcloudSigninCallback()
@@ -89,11 +87,14 @@ namespace Backend.Controllers
 
             await HttpContext.SignInAsync(
                 NextcloudIdentityProviderDefaults.SchemeName, principal);
-             
+
             //await HttpContext.SignInAsync(
             //    CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return LocalRedirect(result.Properties.Items["returnUrl"]);
         }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8604 // Possible null reference argument.
+
     }
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Backend.Models;
 public class CSRIndexViewModel
 {
-    public Guid Id { get; set; }
+    public CSRId Id { get; set; }
 
     [Required]
     [Display(Name = "Country Code")]
@@ -28,7 +28,7 @@ public class CSRIndexViewModel
     [DataType(DataType.Date)]
     public DateTime SubmittedOn { get; set; }
 
-    public Guid? SignedCSRId { get; set; }
+    public SignedCSRId? SignedCSRId { get; set; }
 
     public CSRIndexViewModel(CSR csr, SignedCSR? signedCSR)
     {
@@ -41,7 +41,7 @@ public class CSRIndexViewModel
         FileSize = csr.FileContents.LongLength.GetReadableBytes();
         SignedCSRId = (IsSigned
                        && signedCSR is not null
-                       ? signedCSR.Id
+                       ?    signedCSR.Id
                        : null);
     }
 }

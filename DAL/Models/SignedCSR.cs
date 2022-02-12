@@ -1,9 +1,13 @@
 ﻿namespace DAL.Models;
+
+[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+public partial struct SignedCSRId { }
+
 public class SignedCSR
 {
-    public Guid Id { get; set; }
+    public SignedCSRId Id { get; set; }
 
-    public Guid OriginalRequestId { get; set; }
+    public CSRId OriginalRequestId { get; set; }
 
     public DateTime SignedOn { get; set; }
 
@@ -17,7 +21,7 @@ public class SignedCSR
 
     public SignedCSR() { }
 
-    public SignedCSR(Guid originalRequestId
+    public SignedCSR(CSRId originalRequestId
                      , DateTime signedOn
                      , byte[] certificate
                      , DateTime notBefore
@@ -30,8 +34,8 @@ public class SignedCSR
         NotAfter = notAfter;
     }
 
-    public SignedCSR(Guid id
-                     , Guid originalRequestId
+    public SignedCSR(SignedCSRId id
+                     , CSRId originalRequestId
                      , DateTime signedOn
                      , byte[] certificate
                      , DateTime notBefore
