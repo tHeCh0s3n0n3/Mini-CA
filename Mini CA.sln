@@ -14,7 +14,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend", "Backend\Backend.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{0AD33629-B051-4D1C-AF8E-54B3E93F3983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTestApp", "DevTestApp\DevTestApp.csproj", "{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTestApp", "DevTestApp\DevTestApp.csproj", "{450FB16B-BB39-4438-AFE5-8ACF5C9B1F19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3AC770B9-6DD3-4A80-9308-316460D495A2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
