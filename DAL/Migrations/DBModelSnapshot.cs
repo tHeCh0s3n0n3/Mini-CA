@@ -99,7 +99,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SignedCSRs");
+                    b.ToTable("SignedCSRs", (string)null);
                 });
 #pragma warning restore 612, 618
         }

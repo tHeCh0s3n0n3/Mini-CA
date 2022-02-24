@@ -2,19 +2,16 @@
 using Org.BouncyCastle.Asn1.X509;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using Common;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models;
 
-[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+[StronglyTypedId]
 public partial struct CSRId { }
 
 public class CSR
 {
-
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public CSRId Id { get; set; }
+    public CSRId Id { get; set; } = new CSRId(Guid.NewGuid());
 
     [Required]
     [Display(Name ="Country Code")]

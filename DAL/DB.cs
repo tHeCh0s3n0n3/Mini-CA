@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL;
 
@@ -9,19 +10,27 @@ public class DB : DbContext
     public DB(DbContextOptions<DB> options)
         : base(options)
     { }
+
+    protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ReplaceService<IValueConverterSelector
+                                       , StronglyTypedIdValueConverterSelector>();
+        base.OnConfiguring (optionsBuilder);
+    }
         
     public DbSet<CSR> CSRs { get; set; }
     public DbSet<SignedCSR> SignedCSRs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var conv = typeof(CSRId).GetNestedType("EfCoreValueConverter");
+
         modelBuilder.Entity<CSR>(entity => {
 
             entity.ToTable("CSRs");
 
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id)
-                  .ValueGeneratedOnAdd()
                   .IsRequired();
             entity.Property(e => e.CountryCode)
                   .HasMaxLength(2)
@@ -50,7 +59,6 @@ public class DB : DbContext
             entity.HasKey(e => e.Id);
 
             entity.Property(e => e.Id)
-                  .ValueGeneratedOnAdd()
                   .IsRequired();
             entity.Property(e => e.OriginalRequestId)
                   .IsRequired();
@@ -75,7 +83,10 @@ public class DBContextFactory : IDesignTimeDbContextFactory<DB>
     public DB CreateDbContext(string[] args)
     {
         DbContextOptionsBuilder<DB> optionsBuilder = new();
-        optionsBuilder.UseSqlite("Data Source=C:\\Users\\Tarek\\Nextcloud\\Development\\Mini CA\\Source Code\\Mini CA\\db.sqlite");
+        optionsBuilder
+            .ReplaceService<IValueConverterSelector
+                            , StronglyTypedIdValueConverterSelector>()
+            .UseSqlite("Data Source=C:\\Users\\Tarek\\Nextcloud\\Development\\Mini CA\\Source Code\\Mini CA\\db.sqlite");
 
         return new DB(optionsBuilder.Options);
     }

@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Backend.Filters;
+using Backend.Models;
 using DAL;
 using DAL.Models;
-using Backend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Backend.Filters;
 
 namespace Backend.Controllers;
 
@@ -32,9 +32,9 @@ public class CSRController : Controller
     // GET: CSR
     public async Task<IActionResult> Index()
     {
-        var csrs = await _db.CSRs.ToListAsync();
-        var model = new List<CSRIndexViewModel>();
-        foreach(var csr in csrs)
+        List<CSR> csrs = await _db.CSRs.ToListAsync();
+        List<CSRIndexViewModel> model = new();
+        foreach(CSR csr in csrs)
         {
             SignedCSR? signedCSR = null;
             if (csr.IsSigned)
@@ -50,15 +50,13 @@ public class CSRController : Controller
     // GET: CSR/Details/5
     public async Task<IActionResult> Details(Guid? id)
     {
-        if (id is null)
+        if (id is null || !id.HasValue)
         {
             return NotFound();
         }
 
-        var csr = await _db.CSRs
-            .FirstOrDefaultAsync(m => m.Id.Equals(id));
-        var signedCSR = await _db.SignedCSRs
-                .FirstOrDefaultAsync(m => m.OriginalRequestId.Equals(id));
+        CSR? csr = await _db.CSRs.FindAsync(new CSRId(id.Value));
+        SignedCSR? signedCSR = await _db.SignedCSRs.FirstOrDefaultAsync(m => m.OriginalRequestId.Equals(new CSRId(id.Value)));
         return csr is null
                ? NotFound()
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -69,13 +67,13 @@ public class CSRController : Controller
     // GET: CSR/Delete/5
     public async Task<IActionResult> Delete(Guid? id)
     {
-        if (id is null)
+        if (id is null || !id.HasValue)
         {
             return NotFound();
         }
 
-        var csr = await _db.CSRs
-            .FirstOrDefaultAsync(m => m.Id.Equals(id));
+        CSR? csr = await _db.CSRs.FindAsync(new CSRId(id.Value));
+
         if (csr is null)
         {
             return NotFound();
@@ -89,7 +87,7 @@ public class CSRController : Controller
     //[ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(Guid id)
     {
-        var csr = await _db.CSRs.FindAsync(id);
+        CSR? csr = await _db.CSRs.FindAsync(new CSRId(id));
         if (csr is not null)
         {
             _db.CSRs.Remove(csr);
@@ -101,13 +99,12 @@ public class CSRController : Controller
     // GET: CSR/Process/5
     public async Task<IActionResult> Process(Guid? id)
     {
-        if (id is null)
+        if (id is null || !id.HasValue)
         {
             return NotFound();
         }
 
-        var csr = await _db.CSRs
-            .FirstOrDefaultAsync(m => m.Id.Equals(id));
+        CSR? csr = await _db.CSRs.FindAsync(new CSRId(id.Value));
 
         if (csr is null)
         {
@@ -133,26 +130,27 @@ public class CSRController : Controller
             return View();
         }
 
-        var dbCSR = await _db.CSRs.FindAsync(processViewModel.OriginalRequestId);
+        CSR? dbCSR = await _db.CSRs.FindAsync(processViewModel.OriginalRequestId);
         if (dbCSR is not null)
         {
             // Get the certificates
-            var keyUsages = processViewModel.RequestedKeyUsages;
-            var keyPurposeIDs = processViewModel.RequestedKeyPurposes;
+            List<int> keyUsages = processViewModel.RequestedKeyUsages;
+            List<Org.BouncyCastle.Asn1.X509.KeyPurposeID> keyPurposeIDs = processViewModel.RequestedKeyPurposes;
 
             // Read the CSR
-            Console.WriteLine("Reading the CSR...");
-            var csr = Common.Certificate.ImportCSR(dbCSR.FileContents);
+            //Console.WriteLine("Reading the CSR...");
+            Org.BouncyCastle.Pkcs.Pkcs10CertificationRequest csr = Common.Certificate.ImportCSR(dbCSR.FileContents);
 
             // Grab the CA cert and its key
-            var caCert = Common.Certificate.ImportCACert(_caCertSettings.CertFilePath);
-            var caKey = Common.Certificate.ImportCAKey(_caCertSettings.CertKeyFilePath
-                                                       , _caCertSettings.CertKeyPasswordFilePath);
+            Org.BouncyCastle.X509.X509Certificate caCert = Common.Certificate.ImportCACert(_caCertSettings.CertFilePath);
+            Org.BouncyCastle.Crypto.AsymmetricCipherKeyPair caKey
+                = Common.Certificate.ImportCAKey(_caCertSettings.CertKeyFilePath
+                                                 , _caCertSettings.CertKeyPasswordFilePath);
 
             // Sign the cert
-            Console.WriteLine("Signing the CSR...");
-            var signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposeIDs);
-            var newCertFileContents = Common.Certificate.CertToFile(signedCert);
+            //Console.WriteLine("Signing the CSR...");
+            Org.BouncyCastle.X509.X509Certificate signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposeIDs);
+            string newCertFileContents = Common.Certificate.CertToFile(signedCert);
 
             // Save signed cert
             SignedCSR signedCSR = new(dbCSR.Id
@@ -173,14 +171,14 @@ public class CSRController : Controller
     [HttpGet]
     public async Task<IActionResult> DownloadCertificate(Guid Id)
     {
-        var signedCSR = await _db.SignedCSRs.FindAsync(Id);
+        SignedCSR? signedCSR = await _db.SignedCSRs.FindAsync(new SignedCSRId(Id));
 
         if (signedCSR is null)
         {
             return NotFound();
         }
 
-        var origCSR = await _db.CSRs.FindAsync(signedCSR.OriginalRequestId);
+        CSR? origCSR = await _db.CSRs.FindAsync(signedCSR.OriginalRequestId);
         if (origCSR is null)
         {
             return NotFound();
@@ -196,8 +194,8 @@ public class CSRController : Controller
                     );
     }
 
-    private bool CSRExists(Guid id)
-    {
-        return _db.CSRs.Any(e => e.Id.Equals(id));
-    }
+    //private bool CSRExists(Guid id)
+    //{
+    //    return _db.CSRs.Any(e => e.Id.Equals(new CSRId(id)));
+    //}
 }

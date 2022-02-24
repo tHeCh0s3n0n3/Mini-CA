@@ -383,3 +383,58 @@ Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving 
 2022-01-15 13:50:39.327 +04:00 [INF] Entered CSRController
 2022-01-15 13:50:39.327 +04:00 [INF] Started upload function
 2022-01-15 14:21:46.909 +04:00 [INF] Application is shutting down...
+2022-02-12 14:17:07.889 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:17:07.893 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:17:07.896 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:17:07.896 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:17:07.896 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:17:12.269 +04:00 [INF] Entered CSRController
+2022-02-12 14:17:12.269 +04:00 [INF] Showing CSR Index page.
+2022-02-12 14:17:41.667 +04:00 [INF] Entered CSRController
+2022-02-12 14:17:41.677 +04:00 [INF] Started upload function
+2022-02-12 14:20:05.838 +04:00 [INF] Application is shutting down...
+2022-02-12 14:20:11.067 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:20:11.073 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:20:11.077 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:20:11.077 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:20:11.077 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:20:17.591 +04:00 [INF] Entered CSRController
+2022-02-12 14:20:17.601 +04:00 [INF] Started upload function
+2022-02-12 14:20:36.438 +04:00 [INF] Application is shutting down...
+2022-02-12 14:20:46.665 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:20:46.671 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:20:46.675 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:20:46.676 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:20:46.677 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:21:06.728 +04:00 [INF] Entered CSRController
+2022-02-12 14:21:06.728 +04:00 [INF] Showing CSR Index page.
+2022-02-12 14:21:27.521 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:21:27.525 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:21:27.528 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:21:27.528 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:21:27.528 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:24:15.290 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:24:15.295 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:24:15.298 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:24:15.298 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:24:15.298 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:26:56.185 +04:00 [INF] Entered CSRController
+2022-02-12 14:26:59.538 +04:00 [INF] Started upload function
+2022-02-12 14:30:17.445 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:30:17.450 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:30:17.452 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:30:17.452 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:30:17.453 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:31:11.616 +04:00 [INF] Entered CSRController
+2022-02-12 14:31:13.529 +04:00 [INF] Started upload function
+2022-02-12 14:33:05.620 +04:00 [INF] Started upload function
+2022-02-12 14:34:52.664 +04:00 [INF] Now listening on: https://localhost:5001
+2022-02-12 14:34:52.669 +04:00 [INF] Now listening on: http://localhost:5000
+2022-02-12 14:34:52.671 +04:00 [INF] Application started. Press Ctrl+C to shut down.
+2022-02-12 14:34:52.671 +04:00 [INF] Hosting environment: Development
+2022-02-12 14:34:52.671 +04:00 [INF] Content root path: C:\Users\Tarek\Nextcloud\Development\Mini CA\Source Code\Mini CA\Frontend
+2022-02-12 14:34:52.842 +04:00 [INF] Entered CSRController
+2022-02-12 14:34:52.854 +04:00 [INF] Started upload function
+2022-02-12 14:35:09.235 +04:00 [INF] Entered CSRController
+2022-02-12 14:35:11.423 +04:00 [INF] Started upload function
+2022-02-12 14:35:53.015 +04:00 [INF] Application is shutting down...

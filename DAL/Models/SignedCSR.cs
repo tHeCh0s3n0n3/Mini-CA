@@ -1,6 +1,6 @@
 ﻿namespace DAL.Models;
 
-[StronglyTypedId(jsonConverter: StronglyTypedIdJsonConverter.SystemTextJson)]
+[StronglyTypedId]
 public partial struct SignedCSRId { }
 
 public class SignedCSR
@@ -27,6 +27,7 @@ public class SignedCSR
                      , DateTime notBefore
                      , DateTime notAfter)
     {
+        Id = new SignedCSRId(Guid.NewGuid());
         OriginalRequestId = originalRequestId;
         SignedOn = signedOn;
         Certificate = certificate;

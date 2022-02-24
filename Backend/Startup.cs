@@ -1,10 +1,12 @@
 using Common;
 using DAL;
 using DAL.Identity;
+using DAL.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Backend
 {
@@ -21,7 +23,9 @@ namespace Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DB>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
+                options.ReplaceService<IValueConverterSelector
+                                       , StronglyTypedIdValueConverterSelector>()
+                       .UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
             );
 
             services.AddDbContext<IdentityDBContext>(options =>

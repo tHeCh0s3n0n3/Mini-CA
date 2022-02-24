@@ -1,7 +1,9 @@
 using DAL;
+using DAL.Models;
 using Frontend.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Serilog;
 
 namespace Frontend
@@ -23,7 +25,9 @@ namespace Frontend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DB>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
+                options.ReplaceService<IValueConverterSelector
+                                       , StronglyTypedIdValueConverterSelector>()
+                       .UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
             );
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
