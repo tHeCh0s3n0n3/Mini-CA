@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "EAB Created Successfully";
+}
+
+<h1>EAB Credentials Created</h1>
+
+<div class="alert alert-warning">
+    <strong>CRITICAL:</strong> This is the ONLY time you will see the HMAC Key. Please save it securely now (e.g., in a password manager).
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Credentials</h5>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Key Identifier (KID)</dt>
+            <dd class="col-sm-9"><code>@ViewBag.Kid</code></dd>
+
+            <dt class="col-sm-3">HMAC Key</dt>
+            <dd class="col-sm-9"><code>@ViewBag.HmacKey</code></dd>
+        </dl>
+        <div class="mt-3">
+            <button class="btn btn-outline-primary" onclick="downloadCredentials()">Download as JSON</button>
+            <a asp-action="Index" class="btn btn-success">I have saved these credentials</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function downloadCredentials() {
+    const data = {
+        kid: "@ViewBag.Kid",
+        hmacKey: "@ViewBag.HmacKey",
+        caUrl: window.location.origin + "/acme/directory"
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `minica-eab-${data.kid}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>

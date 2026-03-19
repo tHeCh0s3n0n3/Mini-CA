@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Create ACME EAB";
+}
+
+<h1>Create ACME EAB</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div class="form-group mb-3">
+                <label name="description" class="control-label">Description</label>
+                <input name="description" class="form-control" placeholder="e.g. Traefik Production" required />
+            </div>
+            <div class="form-group mb-3">
+                <label name="allowedIdentifierPattern" class="control-label">Allowed Identifier Pattern (Regex)</label>
+                <input name="allowedIdentifierPattern" class="form-control" placeholder="e.g. .*\.internal\.company\.com" />
+                <small class="form-text text-muted">Regex to restrict which domains/IPs this EAB can request. Leave empty for no restriction.</small>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Generate Credentials</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

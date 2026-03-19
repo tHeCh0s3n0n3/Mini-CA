@@ -1,0 +1,42 @@
+@model IEnumerable<DAL.Models.AcmeEab>
+
+@{
+    ViewData["Title"] = "ACME EAB Management";
+}
+
+<h1>ACME External Account Binding (EAB)</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New EAB</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>KID</th>
+            <th>Allowed Pattern</th>
+            <th>Created At</th>
+            <th>Last Used</th>
+            <th>Usage Count</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>@item.Description</td>
+            <td><code>@item.KID</code></td>
+            <td><code>@item.AllowedIdentifierPattern</code></td>
+            <td>@item.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+            <td>@(item.LastUsedAt?.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") ?? "Never")</td>
+            <td>@item.UsageCount</td>
+            <td>
+                <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to revoke this EAB? New accounts will not be able to register with these credentials.');">
+                    <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

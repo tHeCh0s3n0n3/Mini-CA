@@ -1,8 +1,10 @@
-﻿using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations.Schema;
+
+#nullable enable
 
 namespace DAL.Models;
 
@@ -15,19 +17,19 @@ public class CSR
 
     [Required]
     [Display(Name ="Country Code")]
-    public string CountryCode { get; set; }
+    public string CountryCode { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Organization")]
-    public string Organization { get; set; }
+    public string Organization { get; set; } = string.Empty;
 
     [Display(Name = "Department")]
     [DisplayFormat(NullDisplayText = "-- not specified --")]
-    public string OrganizationUnitName { get; set; }
+    public string OrganizationUnitName { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "Common Name")]
-    public string CommonName { get; set; }
+    public string CommonName { get; set; } = string.Empty;
 
     [NotMapped]
     [Display(Name = "Alternate Names")]
@@ -51,26 +53,26 @@ public class CSR
         }
     }
 
-    public string AlternateNames { get; set; }
+    public string AlternateNames { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "City")]
-    public string Locality { get; set; }
+    public string Locality { get; set; } = string.Empty;
 
     [Display(Name = "State/Province")]
     [DisplayFormat(NullDisplayText = "-- not specified --")]
-    public string State { get; set; }
+    public string State { get; set; } = string.Empty;
 
     [Required]
     [Display(Name = "E-Mail Address")]
-    public string EMailAddress { get; set; }
+    public string EMailAddress { get; set; } = string.Empty;
 
     [Required]
-    public byte[] FileContents { get; set; }
+    public byte[] FileContents { get; set; } = Array.Empty<byte>();
 
     [Required]
     [Display(Name = "Filename")]
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     [Display(Name = "File Size")]
     public string FileSize
@@ -95,7 +97,7 @@ public class CSR
 
     public void SetProperty(string propertyName, string value)
     {
-        PropertyInfo propertyInfo = this.GetType().GetProperty(propertyName);
+        PropertyInfo? propertyInfo = this.GetType().GetProperty(propertyName);
         if(null != propertyInfo && propertyInfo.CanWrite)
         {
             propertyInfo.SetValue(this, value);
