@@ -78,6 +78,8 @@ public class CSR
 
     public bool IsSigned { get; set; }
 
+    public string? UserId { get; set; }
+
     public DateTime SubmittedOn { get; set; }
 
     public static readonly Dictionary<DerObjectIdentifier, string> ObjectIdentifiers = new()
