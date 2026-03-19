@@ -1,20 +1,173 @@
-﻿@model Frontend.Models.UploadFileModel
+@model Frontend.Models.UserDashboardViewModel
 
-@using (Html.BeginForm("Upload", "CSR", null, FormMethod.Post, true, new { @enctype = "multipart/form-data" }))
-{
-    <dl>
-        <dt>
-            @Html.LabelFor(f => f.FormFile)
-        </dt>
-        <dd>
-            @Html.EditorFor(f => f.FormFile)
-            @Html.ValidationMessageFor(f => f.FormFile)
-        </dd>
-    </dl>
-    <input class="btn-primary" type="submit" value="Upload" />
+@{
+    ViewData["Title"] = "My Certificates";
 }
 
+<div class="container">
+    <h1 class="mb-4">Certificate Dashboard</h1>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Request New Certificate</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Upload" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="row align-items-end">
+                    <div class="col-md-8">
+                        <label asp-for="UploadModel.FormFile" class="form-label">Upload CSR (.csr)</label>
+                        <input asp-for="UploadModel.FormFile" class="form-control" type="file" accept=".csr" required>
+                        <span asp-validation-for="UploadModel.FormFile" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-success w-100">Upload & Request</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">My Requests</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Requested</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CSRs)
+                    {
+                        var isExpired = item.SignedCSR != null && item.SignedCSR.NotAfter < DateTime.UtcNow;
+                        var isExpiringSoon = item.SignedCSR != null && !isExpired && item.SignedCSR.NotAfter < DateTime.UtcNow.AddDays(30);
+                        
+                        <tr class="@(isExpired ? "table-secondary text-muted" : "")">
+                            <td>
+                                @item.CSR.SubmittedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                            </td>
+                            <td>
+                                <strong>@item.CSR.CommonName</strong><br />
+                                @foreach (var san in item.CSR.AlternateNamesList)
+                                {
+                                    <small class="text-muted d-block">@san</small>
+                                }
+                            </td>
+                            <td>
+                                @if (item.SignedCSR != null)
+                                {
+                                    if (isExpired)
+                                    {
+                                        <span class="badge bg-danger">Expired ❌</span>
+                                    }
+                                    else if (isExpiringSoon)
+                                    {
+                                        <span class="badge bg-warning text-dark">Expiring Soon ⚠️</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Signed</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info text-dark">Pending</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.SignedCSR != null)
+                                {
+                                    <div class="btn-group">
+                                        <a asp-action="DownloadPem" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">PEM</a>
+                                        <a asp-action="DownloadDer" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">DER</a>
+                                        <a asp-action="DownloadP7b" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">P7B</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Waiting for CA</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (!Model.CSRs.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4">No certificate requests found.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Trust this Certificate Authority</h5>
+        </div>
+        <div class="card-body">
+            <p>To avoid security warnings in your browser, you must install the Mini CA Root Certificate on your device.</p>
+            
+            <div class="mb-4">
+                <a asp-action="DownloadRoot" class="btn btn-outline-dark">
+                    <i class="bi bi-download"></i> Download Root CA Certificate
+                </a>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="osSelector" class="form-label font-weight-bold">Select your Platform:</label>
+                <select id="osSelector" class="form-select w-auto d-inline-block ml-2" onchange="showInstructions(this.value)">
+                    <option value="windows">Windows</option>
+                    <option value="linux">Linux</option>
+                    <option value="chrome">Chrome / Chromium</option>
+                    <option value="android">Android</option>
+                </select>
+            </div>
+
+            <div id="instructions-windows" class="instruction-block">
+                <h6>Windows (PowerShell)</h6>
+                <p>Run the following command in an <strong>Administrator</strong> PowerShell window:</p>
+                <pre class="bg-light p-3 border rounded"><code>Import-Certificate -FilePath "minica-root.crt" -CertStoreLocation Cert:\LocalMachine\Root</code></pre>
+            </div>
+
+            <div id="instructions-linux" class="instruction-block" style="display:none;">
+                <h6>Linux (Ubuntu/Debian)</h6>
+                <pre class="bg-light p-3 border rounded"><code>sudo cp minica-root.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates</code></pre>
+            </div>
+
+            <div id="instructions-chrome" class="instruction-block" style="display:none;">
+                <h6>Chrome / Chromium</h6>
+                <p>Chrome usually inherits the OS certificate store (Windows/macOS). On Linux, you may need to add it to the NSS database:</p>
+                <pre class="bg-light p-3 border rounded"><code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Mini CA" -i minica-root.crt</code></pre>
+            </div>
+
+            <div id="instructions-android" class="instruction-block" style="display:none;">
+                <h6>Android</h6>
+                <ol>
+                    <li>Transfer the certificate to your phone.</li>
+                    <li>Go to <strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Encryption &amp; credentials</strong>.</li>
+                    <li>Tap <strong>Install from storage</strong> &gt; <strong>CA certificate</strong>.</li>
+                    <li>Select the downloaded file.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
+    <script>
+        function showInstructions(os) {
+            document.querySelectorAll('.instruction-block').forEach(el => el.style.display = 'none');
+            document.getElementById('instructions-' + os).style.display = 'block';
+        }
+    </script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 }

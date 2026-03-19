@@ -1,5 +1,5 @@
 <ul class="navbar-nav">
-@if (User.Identity.IsAuthenticated)
+@if (User?.Identity?.IsAuthenticated == true)
 {
     var friendlyName = User.Identity.Name;
 

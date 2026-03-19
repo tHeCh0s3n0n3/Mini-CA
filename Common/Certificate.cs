@@ -216,6 +216,18 @@ public static class Certificate
         return sb.ToString();
     }
 
+    public static byte[] CertToP7B(X509Certificate signedCert, X509Certificate caCert)
+    {
+        var store = new Org.BouncyCastle.X509.Store.X509CollectionStoreParameters(new List<X509Certificate> { signedCert, caCert });
+        var storeProvider = Org.BouncyCastle.X509.Store.X509StoreFactory.Create("Certificate/Collection", store);
+        
+        var gen = new Org.BouncyCastle.Cms.CmsSignedDataGenerator();
+        gen.AddCertificates(storeProvider);
+        
+        var msg = gen.Generate(new Org.BouncyCastle.Cms.CmsProcessableByteArray(Array.Empty<byte>()), false);
+        return msg.GetEncoded();
+    }
+
     /// <summary>
     /// 
     /// </summary>
