@@ -6,17 +6,18 @@
 This document specifies the software requirements for **Mini CA**, an internal Public Key Infrastructure (PKI) system designed to manage Certificate Signing Requests (CSRs) and issue X.509 v3 certificates. It serves as a centralized authority for securing internal infrastructure via HTTPS.
 
 ### 1.2 Scope
-Mini CA provides a self-service portal for users to submit CSRs and an administrative backend for approving and signing those requests using a trusted internal Root Certificate Authority (CA) key.
+Mini CA provides a self-service portal for users to submit CSRs, an administrative backend for approving and signing requests, and an automated ACME server for infrastructure components.
 
 ## 2. Overall Description
 
 ### 2.1 System Architecture
-The system employs a decoupled, multi-tiered architecture based on ASP.NET Core MVC:
+The system employs a decoupled, multi-tiered architecture based on ASP.NET Core MVC and OpenID Connect:
 
-*   **Frontend (User Portal):** A public-facing web interface acting as a Registration Authority (RA). It accepts `.csr` uploads, parses their contents, and stores the pending requests.
-*   **Backend (Admin Portal):** A secure administrative interface acting as the Certificate Authority (CA). It allows authorized users to review pending CSRs, specify key usages, set expiration dates, and cryptographically sign the certificates.
+*   **Frontend (User Portal):** A public-facing web interface acting as a Registration Authority (RA). It accepts `.csr` uploads, displays request history, and provides instructions for trusting the Root CA.
+*   **Backend (Admin Portal):** A secure administrative interface acting as the Certificate Authority (CA). It allows authorized users to manage CSRs, ACME EAB credentials, and audit logs.
+*   **ACME Server:** An RFC 8555 compliant server integrated into the Backend, allowing automated issuance for tools like Traefik and Certbot via External Account Binding (EAB).
 *   **Data Access Layer (DAL):** A shared Entity Framework Core library managing persistence to a SQLite database (`db.sqlite`).
-*   **Common Library:** A shared library encapsulating core cryptographic operations, abstracting complex interactions with the BouncyCastle PKI engine.
+*   **Common Library:** A shared library encapsulating core cryptographic operations (BouncyCastle) and AES-256 encryption for secrets.
 
 ### 2.2 Illustrative Figure: System Flow
 
@@ -33,8 +34,8 @@ The system employs a decoupled, multi-tiered architecture based on ASP.NET Core 
 [Admin]                                   |            |
   |                   +-------------------+     ^
   |                   |                   |     |
-   ------------------>|  Backend Web App  |-----/ Reads pending CSRs &
-    Auth via Nextcloud|  (Admin Portal)   |       Saves Signed Certs
+   ------------------>|  Backend Web App  |-----/ Reads pending CSRs,
+    Auth via Authentik|  (Admin Portal)   |       EABs & Audit Logs
                       |                   |
                       +-------------------+
                                |
@@ -52,35 +53,109 @@ The system employs a decoupled, multi-tiered architecture based on ASP.NET Core 
 
 ### 3.1 Functional Requirements
 
-*   **REQ-1 (CSR Upload):** The Frontend shall allow users to upload PKCS#10 Certificate Signing Requests (`.csr` files).
-*   **REQ-2 (CSR Parsing):** The system shall parse uploaded CSRs to extract standard X.509 attributes, including Country (C), Organization (O), Organizational Unit (OU), Common Name (CN), Locality (L), State/Province (ST), Email (E), and Subject Alternative Names (SANs).
-*   **REQ-3 (CSR Validation):** The system shall cryptographically verify the signature of the uploaded CSR before accepting it.
-*   **REQ-4 (Admin Dashboard):** The Backend shall display a list of all submitted CSRs, indicating their signing status.
-*   **REQ-5 (Certificate Signing):** The Backend shall allow administrators to sign pending CSRs using a configured CA certificate and private key.
-*   **REQ-6 (Extension Configuration):** During the signing process, administrators shall be able to configure the certificate's validity period, Key Usages, and Extended Key Usages.
-*   **REQ-7 (Certificate Download):** The system shall allow administrators to download the resulting signed X.509 certificate (`.crt` file).
-*   **REQ-8 (Deletion):** Administrators shall be able to delete pending or processed CSR records from the database.
+*   **REQ-1 (CSR Upload):** The Frontend shall allow users to upload PKCS#10 CSR files.
+*   **REQ-2 (User Dashboard):** The Frontend shall display a history of CSRs submitted by the authenticated user, including signing status and expiration alerts.
+*   **REQ-3 (Multi-Format Download):** The system shall allow users to download signed certificates in PEM (.crt), DER (.cer), and P7B (with chain) formats.
+*   **REQ-4 (ACME Server):** The Backend shall provide an ACME v2 compliant directory for automated certificate lifecycle management.
+*   **REQ-5 (EAB Restriction):** ACME registration shall be restricted to pre-provisioned accounts using External Account Binding (EAB).
+*   **REQ-6 (Identifier Whitelisting):** ACME EAB records shall support Regex patterns to restrict allowable FQDNs or IP addresses.
+*   **REQ-7 (Audit Logging):** The system shall maintain an immutable log of all certificate issuance events (Manual and ACME).
+*   **REQ-8 (Root CA Distribution):** The Frontend shall provide dynamic instructions and scripts for installing the Root CA on Windows, Linux, Chrome, and Android.
 
 ### 3.2 Security and Authentication Requirements
 
-*   **Authentication Method:** The Backend portal shall enforce authentication via **Nextcloud OAuth 2.0**.
-*   **Authorization:** Access to the Backend portal shall be strictly limited to users authenticated via Nextcloud who are members of the designated `admin` group (enforced via `AdminAuthorizationFilterAttribute`).
-*   **Key Protection:** The CA Private Key shall be stored securely on the filesystem, separate from the application code. It must be encrypted, and the decryption password must be read from a separate, secured file (`CAKeyPasswordFinder`).
-*   **Strong Typing:** The system shall use Strongly-Typed IDs (e.g., `CSRId`, `SignedCSRId`) to prevent ID manipulation and transposition errors in data access.
+*   **Authentication Method:** Both portals enforce authentication via **Authentik (OpenID Connect)**.
+*   **Authorization:** Backend access is restricted to users in the `admin` group.
+*   **Secret Protection:** EAB HMAC keys are encrypted at rest using **AES-256**. The master encryption key is read from a local file.
+*   **CA Key Protection:** The Root CA private key password is read from a separate, secured local file.
 
 ## 4. Technology Stack & Dependencies
 
-### 4.1 Frameworks
 *   **Runtime:** .NET 10.0
-*   **Web Framework:** ASP.NET Core MVC (Frontend and Backend)
-*   **ORM:** Entity Framework Core
+*   **Web Framework:** ASP.NET Core MVC
+*   **ACME Provider:** OpenCertServer.Acme
+*   **Crypto Engine:** BouncyCastle
+*   **Database:** Entity Framework Core + SQLite
 
-### 4.2 Key Libraries
-*   **Portable.BouncyCastle:** Core cryptographic engine for parsing CSRs, generating random numbers, building X.509 v3 certificates, and creating RSA signatures.
-*   **Microsoft.EntityFrameworkCore.Sqlite:** Database provider for SQLite.
-*   **AspNet.Security.OAuth.Nextcloud:** OAuth 2.0 provider for Nextcloud integration.
-*   **Microsoft.AspNetCore.Identity:** Core identity management framework.
-*   **Serilog (and Serilog.Sinks.File):** Structured logging framework.
+## 5. Setup Instructions
 
-### 4.3 Infrastructure
-*   **Database:** SQLite (Primary application data in `db.sqlite`, Identity data likely in a separate context).
+### 5.1 Authentik Setup
+1.  **Create Provider:** Resources > Providers > Create "OAuth2/OpenID Provider".
+    *   **Name:** `MiniCA`
+    *   **Client Type:** `Confidential`
+    *   **Redirect URIs:** `https://<your-domain>/signin-oidc`
+2.  **Create Application:** Resources > Applications > Create Application.
+    *   **Name:** `Mini CA`
+    *   **Provider:** Select `MiniCA`.
+3.  **Scopes:** Ensure `openid`, `profile`, `email`, and `groups` are enabled.
+4.  **Admin Group:** Ensure an `admin` group exists and relevant users are members.
+
+### 5.2 Encryption Key Generation
+For EAB HMAC protection, generate a 32-byte Base64 string and save it to the file specified in `Acme:MasterKeyPath`:
+
+```bash
+# Linux
+openssl rand -base64 32 > master.key
+
+# PowerShell
+$bytes = New-Object Byte[] 32
+[Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+[Convert]::ToBase64String($bytes) | Out-File -FilePath "master.key" -Encoding utf8
+```
+
+## 6. Configuration (appsettings.json)
+
+### 6.1 Settings Explanation
+
+| Setting | Description | Example |
+| :--- | :--- | :--- |
+| `Authentik:Authority` | The OIDC discovery URL for Authentik. | `https://auth.domain.com/application/o/minica/` |
+| `Authentik:ClientId` | The Client ID from Authentik. | `minica-client-id` |
+| `Authentik:ClientSecret` | The Client Secret from Authentik. | `your-long-secret` |
+| `Acme:BaseUri` | The external URL of your Mini CA instance. | `https://minica.internal.com` |
+| `Acme:MasterKeyPath` | Path to the 32-byte Base64 master key file. | `C:\Keys\master.key` |
+| `CACert:CertFilePath` | Path to the public Root CA certificate. | `/etc/minica/ca.crt` |
+| `CACert:CertKeyFilePath` | Path to the Root CA private key. | `/etc/minica/ca.key` |
+| `CACert:CertKeyPasswordFilePath` | Path to the file containing the CA key password. | `/etc/minica/ca.key.passwd` |
+
+### 6.2 Full Example (Backend)
+```json
+{
+  "ConnectionStrings": {
+    "SQLiteConnection": "Data Source=..\\db.sqlite;",
+    "IdentityConnection": "Data Source=..\\identity.sqlite;"
+  },
+  "Authentik": {
+    "Authority": "https://authentik.company.com/application/o/minica/",
+    "ClientId": "my-client-id",
+    "ClientSecret": "my-client-secret"
+  },
+  "Acme": {
+    "BaseUri": "https://minica.local",
+    "MaxOrdersPerMinute": 10,
+    "MasterKeyPath": "master.key"
+  },
+  "CACert": {
+    "CertFilePath": "C:\\Data\\ca.crt",
+    "CertKeyFilePath": "C:\\Data\\ca.key",
+    "CertKeyPasswordFilePath": "C:\\Data\\ca.key.passwd"
+  }
+}
+```
+
+### 6.3 Full Example (Frontend)
+```json
+{
+  "ConnectionStrings": {
+    "SQLiteConnection": "Data Source=..\\db.sqlite;"
+  },
+  "Authentik": {
+    "Authority": "https://authentik.company.com/application/o/minica/",
+    "ClientId": "my-client-id",
+    "ClientSecret": "my-client-secret"
+  },
+  "CACert": {
+    "CertFilePath": "C:\\Data\\ca.crt"
+  }
+}
+```
