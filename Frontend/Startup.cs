@@ -1,6 +1,8 @@
 using DAL;
 using DAL.Models;
 using Frontend.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -36,6 +38,26 @@ public class Startup
 
         services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.AddAuthentication(o =>
+        {
+            o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+        })
+            .AddCookie()
+            .AddOpenIdConnect(o =>
+            {
+                o.Authority = Configuration["Authentik:Authority"];
+                o.ClientId = Configuration["Authentik:ClientId"];
+                o.ClientSecret = Configuration["Authentik:ClientSecret"];
+                o.ResponseType = "code";
+                o.SaveTokens = true;
+                o.GetClaimsFromUserInfoEndpoint = true;
+                o.Scope.Add("openid");
+                o.Scope.Add("profile");
+                o.Scope.Add("email");
+            });
+
         services.AddControllersWithViews();
         services.AddRazorPages()
                 .AddRazorRuntimeCompilation();

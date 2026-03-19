@@ -4,6 +4,7 @@ using DAL.Identity;
 using DAL.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -41,25 +42,23 @@ public class Startup
         services.AddAuthentication(o =>
         {
             o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            o.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
             .AddCookie()
-            .AddNextcloud(o =>
+            .AddOpenIdConnect(o =>
             {
-                o.ClientId = Configuration["Nextcloud:ClientID"] ?? string.Empty;
-                o.ClientSecret = Configuration["Nextcloud:Secret"] ?? string.Empty;
-
-                o.AuthorizationEndpoint = Configuration["Nextcloud:BaseUrl"]
-                                          + NextcloudIdentityProviderDefaults.AuthorizationEndpointPath;
-                o.TokenEndpoint = Configuration["Nextcloud:BaseUrl"]
-                                  + NextcloudIdentityProviderDefaults.TokenEndpointPath;
-                o.UserInformationEndpoint = Configuration["Nextcloud:BaseUrl"]
-                                            + NextcloudIdentityProviderDefaults.UserInformationEndpointPath;
-
-                //o.ClaimActions.MapJsonKey("urn:nextcloud:displayname", "Name", "string");
-                o.ClaimActions.MapJsonKey("Name", "urn:nextcloud:displayname", "string");
+                o.Authority = Configuration["Authentik:Authority"];
+                o.ClientId = Configuration["Authentik:ClientId"];
+                o.ClientSecret = Configuration["Authentik:ClientSecret"];
+                o.ResponseType = "code";
                 o.SaveTokens = true;
+                o.GetClaimsFromUserInfoEndpoint = true;
+                o.Scope.Add("openid");
+                o.Scope.Add("profile");
+                o.Scope.Add("email");
+                o.Scope.Add("groups");
+
+                o.ClaimActions.MapJsonKey("groups", "groups");
             });
 
         services.Configure<Models.CACertSettings>(Configuration.GetSection("CACert"));
