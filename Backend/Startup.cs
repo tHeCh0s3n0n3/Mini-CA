@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Backend.Services;
+using OpenCertServer.Acme.Server.Extensions;
+using OpenCertServer.Acme.Abstractions.Services;
+using OpenCertServer.Acme.Abstractions.IssuanceServices;
+using OpenCertServer.Acme.Server;
 
 namespace Backend;
 
@@ -20,7 +25,6 @@ public class Startup
         Configuration = configuration;
     }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddDbContext<DB>(options =>
@@ -61,10 +65,19 @@ public class Startup
                 o.ClaimActions.MapJsonKey("groups", "groups");
             });
 
+        // ACME Server Configuration
+        services.AddAcmeServer(Configuration);
+        services.AddAcmeInMemoryStore();
+        
+        // Custom ACME Services
+        services.AddScoped<IAccountService, AcmeAccountService>();
+        services.AddScoped<IIssueCertificates, AcmeIssuanceService>();
+        
+        services.AddMemoryCache();
+
         services.Configure<Models.CACertSettings>(Configuration.GetSection("CACert"));
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
@@ -75,7 +88,6 @@ public class Startup
         else
         {
             app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
         app.UseHttpsRedirection();
@@ -85,6 +97,9 @@ public class Startup
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        // ACME Middleware
+        app.UseAcmeServer();
 
         app.UseEndpoints(endpoints =>
         {

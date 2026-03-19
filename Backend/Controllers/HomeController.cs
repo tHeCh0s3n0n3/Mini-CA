@@ -1,11 +1,9 @@
-﻿using AspNet.Security.OAuth.Nextcloud;
 using Backend.Models;
-using Common;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Security.Claims;
 
 namespace Backend.Controllers;
 
@@ -30,64 +28,19 @@ public class HomeController : Controller
     }
 
     [AllowAnonymous]
-    public IActionResult LogInWithNextcloud(string returnUrl = "/")
+    public IActionResult LogIn(string returnUrl = "/")
     {
-        AuthenticationProperties props = new()
+        var props = new AuthenticationProperties
         {
-            RedirectUri = Url.Action("NextcloudSigninCallback"),
-            Items =
-            {
-                { "returnUrl", returnUrl }
-            }
+            RedirectUri = returnUrl
         };
-        return Challenge(props, NextcloudIdentityProviderDefaults.SchemeName);
+        return Challenge(props, OpenIdConnectDefaults.AuthenticationScheme);
     }
 
-
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-    [AllowAnonymous]
-    [Route("/signin-nextcloud")]
-    public async Task<IActionResult> NextcloudSigninCallback()
+    public async Task<IActionResult> LogOut()
     {
-        // read google identity from the temporary cookie
-        AuthenticateResult? result
-            = await HttpContext.AuthenticateAsync(NextcloudAuthenticationDefaults.AuthenticationScheme);
-
-        //var externalClaims = result.Principal.Claims.ToList();
-
-        //var subjectIdClaim = externalClaims.FirstOrDefault(
-        //    x => x.Type == ClaimTypes.NameIdentifier);
-        //var subjectValue = subjectIdClaim.Value;
-
-        //var user = userRepository.GetByGoogleId(subjectValue);
-
-        //var claims = new List<Claim>
-        //{
-        //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        //    new Claim(ClaimTypes.Name, user.Name),
-        //    new Claim(ClaimTypes.Role, user.Role),
-        //    new Claim("FavoriteColor", user.FavoriteColor)
-        //};
-
-        //var identity = new ClaimsIdentity(claims,
-        //    CookieAuthenticationDefaults.AuthenticationScheme);
-        //var principal = new ClaimsPrincipal(identity);
-        ClaimsPrincipal? principal = result.Principal;
-
-        // delete temporary cookie used during google authentication
-        //await HttpContext.SignOutAsync(
-        //    NextcloudIdentityProviderDefaults.SchemeName);
-
-        await HttpContext.SignInAsync(
-            NextcloudIdentityProviderDefaults.SchemeName, principal);
-
-        //await HttpContext.SignInAsync(
-        //    CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        return LocalRedirect(result.Properties.Items["returnUrl"]);
+        await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+        await HttpContext.SignOutAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index");
     }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-#pragma warning restore CS8604 // Possible null reference argument.
-
 }
