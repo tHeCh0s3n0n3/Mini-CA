@@ -31,10 +31,7 @@ public static class Certificate
 
     public static Pkcs10CertificationRequest ImportCSR(byte[] fileContents)
     {
-        if (fileContents is null)
-        {
-            throw new ArgumentNullException(nameof(fileContents));
-        }
+        ArgumentNullException.ThrowIfNull(fileContents);
 
         using MemoryStream ms = new(fileContents);
         using StreamReader sr = new(ms);
@@ -66,10 +63,7 @@ public static class Certificate
 
     public static X509Certificate ImportCACert(byte[] caCertContents)
     {
-        if (caCertContents is null)
-        {
-            throw new ArgumentNullException(nameof(caCertContents));
-        }
+        ArgumentNullException.ThrowIfNull(caCertContents);
 
         using MemoryStream ms = new(caCertContents);
         using StreamReader caSR = new(ms);
@@ -101,10 +95,7 @@ public static class Certificate
 
     public static AsymmetricCipherKeyPair ImportCAKey(byte[] caKeyContents, string caKeyPasswordPath)
     {
-        if (caKeyContents is null)
-        {
-            throw new ArgumentNullException(nameof(caKeyContents));
-        }
+        ArgumentNullException.ThrowIfNull(caKeyContents);
 
         if (string.IsNullOrEmpty(caKeyPasswordPath))
         {
@@ -132,21 +123,10 @@ public static class Certificate
                                           , IEnumerable<int> keyUsages
                                           , IEnumerable<KeyPurposeID> keyPurposes)
     {
-        if (csr is null)
-        {
-            throw new ArgumentNullException(nameof(csr));
-        }
-
-        if (caCert is null)
-        {
-            throw new ArgumentNullException(nameof(caCert));
-        }
-
-        if (caKey is null)
-        {
-            throw new ArgumentNullException(nameof(caKey));
-        }
-
+        ArgumentNullException.ThrowIfNull(csr);
+        ArgumentNullException.ThrowIfNull(caCert);
+        ArgumentNullException.ThrowIfNull(caKey);
+        
         if (!csr.Verify())
         {
             throw new Exception("CSR is invalid.");
@@ -179,7 +159,7 @@ public static class Certificate
         // Serial Number
         BigInteger serialNumber
             = BigIntegers.CreateRandomInRange(BigInteger.One
-                                              , BigInteger.ValueOf(Int64.MaxValue)
+                                              , BigInteger.ValueOf(long.MaxValue)
                                               , random);
         certGen.SetSerialNumber(serialNumber);
 
@@ -243,7 +223,7 @@ public static class Certificate
     /// <returns></returns>
     public static IEnumerable<string> GetSANs(Pkcs10CertificationRequest csr)
     {
-        List<string> retval = new();
+        List<string> retval = [];
 
         Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
         if (attributes is not null)
@@ -257,11 +237,11 @@ public static class Certificate
                     foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
                     {
                         X509Extension ext = extensions.GetExtension(oid);
-                        var pv = (Asn1Sequence)ext.GetParsedValue();
+                        Asn1Sequence pv = (Asn1Sequence)ext.GetParsedValue();
                         foreach(Asn1TaggedObject obj in pv)
                         {
                             string str = Encoding.UTF8.GetString(obj.GetObject().GetEncoded());
-                            retval.Add(new string(str.Where(c => !char.IsControl(c)).ToArray()));
+                            retval.Add(new string([.. str.Where(c => !char.IsControl(c))]));
                         }
                     }
                 }
@@ -271,19 +251,10 @@ public static class Certificate
         return retval;
     }
 
-    private class CAKeyPasswordFinder : IPasswordFinder
+    private class CAKeyPasswordFinder(string path) : IPasswordFinder
     {
-        private readonly string _passwordFilePath;
-
-        public CAKeyPasswordFinder(string path)
-        {
-            _passwordFilePath = path;
-        }
-
         public char[] GetPassword()
-        {
-            return File.ReadAllText(_passwordFilePath, Encoding.UTF8)
-                        .ToCharArray();
-        }
+            => File.ReadAllText(path, Encoding.UTF8)
+                   .ToCharArray();
     }
 }

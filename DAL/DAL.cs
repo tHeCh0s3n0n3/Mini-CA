@@ -1,6 +1,5 @@
-﻿namespace Models
+﻿namespace Models;
+
+public class DAL
 {
-    public class DAL
-    {
-    }
 }

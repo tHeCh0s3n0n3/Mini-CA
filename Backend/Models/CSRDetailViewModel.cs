@@ -21,7 +21,7 @@ public class CSRDetailViewModel
     public string? CommonName { get; private set; }
 
     [Display(Name = "Alternate Names")]
-    public List<string> AlternateNames { get; private set; } = new List<string>();
+    public List<string> AlternateNames { get; private set; } = [];
 
     [Display(Name = "City")]
     public string? Locality { get; private set; }

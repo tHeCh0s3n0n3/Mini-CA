@@ -37,11 +37,12 @@ public class CSR
         {
             if (string.IsNullOrEmpty(AlternateNames))
             {
-                return new List<string>();
+                return [];
             }
             else
             {
-                return AlternateNames.Split('|').ToList();
+                return AlternateNames.Split('|')
+                                     .ToList();
             }
         }
         set

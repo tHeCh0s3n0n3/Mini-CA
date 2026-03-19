@@ -33,7 +33,7 @@ public class CSRController : Controller
     public async Task<IActionResult> Index()
     {
         List<CSR> csrs = await _db.CSRs.ToListAsync();
-        List<CSRIndexViewModel> model = new();
+        List<CSRIndexViewModel> model = [];
         foreach(CSR csr in csrs)
         {
             SignedCSR? signedCSR = null;

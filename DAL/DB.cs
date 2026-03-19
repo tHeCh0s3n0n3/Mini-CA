@@ -23,7 +23,7 @@ public class DB : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var conv = typeof(CSRId).GetNestedType("EfCoreValueConverter");
+        Type conv = typeof(CSRId).GetNestedType("EfCoreValueConverter");
 
         modelBuilder.Entity<CSR>(entity => {
 

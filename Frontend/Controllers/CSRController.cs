@@ -4,6 +4,8 @@ using DAL.Models;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Pkcs;
 using Serilog;
+using Org.BouncyCastle.Asn1;
+using System.Collections;
 
 namespace Frontend.Controllers;
 
@@ -64,9 +66,9 @@ public class CSRController : Controller
 
                 CertificationRequestInfo csrInfo = csr.GetCertificationRequestInfo();
 
-                foreach (var item in CSR.ObjectIdentifiers)
+                foreach (KeyValuePair<DerObjectIdentifier, string> item in CSR.ObjectIdentifiers)
                 {
-                    var valueResult = csrInfo.Subject.GetValueList(item.Key);
+                    IList valueResult = csrInfo.Subject.GetValueList(item.Key);
                     if (valueResult.Count == 1)
                     {
                         if (valueResult[0] is null)
@@ -77,7 +79,9 @@ public class CSRController : Controller
                     }
                 }
 
-                List<string> alternateNames = Common.Certificate.GetSANs(csr).ToList();
+                List<string> alternateNames = Common.Certificate
+                                                    .GetSANs(csr)
+                                                    .ToList();
                 parsedCSR.AlternateNamesList = alternateNames;
             }
             await _db.Database.EnsureCreatedAsync();

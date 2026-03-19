@@ -22,7 +22,7 @@ public class ProcessViewModel
     public string? CommonName { get; set; }
 
     [Display(Name = "Alternate Names")]
-    public List<string> AlternateNames { get; set; } = new();
+    public List<string> AlternateNames { get; set; } = [];
 
     [Display(Name = "City")]
     public string? Locality { get; set; }
@@ -172,43 +172,42 @@ public class ProcessViewModel
 
     public List<KeyPurposeID> RequestedKeyPurposes
     {
-#pragma warning disable CS8604 // Possible null reference argument.
         get
         {
-            List<KeyPurposeID> retval = new();
+            List<KeyPurposeID> retval = [];
 
-            if (PurposeAll) retval.Add(GetKeyPurpose(nameof(PurposeAll)));
-            if (PurposeServerAuth) retval.Add(GetKeyPurpose(nameof(PurposeServerAuth)));
-            if (PurposeClientAuth) retval.Add(GetKeyPurpose(nameof(PurposeClientAuth)));
-            if (PurposeCodeSigning) retval.Add(GetKeyPurpose(nameof(PurposeCodeSigning)));
-            if (PurposeEMailProtection) retval.Add(GetKeyPurpose(nameof(PurposeEMailProtection)));
-            if (PurposeIPsecEndSystem) retval.Add(GetKeyPurpose(nameof(PurposeIPsecEndSystem)));
-            if (PurposeIPsecTunnel) retval.Add(GetKeyPurpose(nameof(PurposeIPsecTunnel)));
-            if (PurposeIPsecUser) retval.Add(GetKeyPurpose(nameof(PurposeIPsecUser)));
-            if (PurposeTimeStamping) retval.Add(GetKeyPurpose(nameof(PurposeTimeStamping)));
-            if (PurposeOCSPSigning) retval.Add(GetKeyPurpose(nameof(PurposeOCSPSigning)));
-            if (PurposeSmartCardLogon) retval.Add(GetKeyPurpose(nameof(PurposeSmartCardLogon)));
-            if (PurposeMACAddress) retval.Add(GetKeyPurpose(nameof(PurposeMACAddress)));
+            retval.AddIfNotFalse( PurposeAll, GetKeyPurpose(nameof(PurposeAll)) );
+            retval.AddIfNotFalse( PurposeServerAuth, GetKeyPurpose(nameof(PurposeServerAuth)) );
+            retval.AddIfNotFalse( PurposeClientAuth, GetKeyPurpose(nameof(PurposeClientAuth)) );
+            retval.AddIfNotFalse( PurposeCodeSigning, GetKeyPurpose(nameof(PurposeCodeSigning)) );
+            retval.AddIfNotFalse( PurposeEMailProtection, GetKeyPurpose(nameof(PurposeEMailProtection)) );
+            retval.AddIfNotFalse( PurposeIPsecEndSystem, GetKeyPurpose(nameof(PurposeIPsecEndSystem)) );
+            retval.AddIfNotFalse( PurposeIPsecTunnel, GetKeyPurpose(nameof(PurposeIPsecTunnel)) );
+            retval.AddIfNotFalse( PurposeIPsecUser, GetKeyPurpose(nameof(PurposeIPsecUser)) );
+            retval.AddIfNotFalse( PurposeTimeStamping, GetKeyPurpose(nameof(PurposeTimeStamping)) );
+            retval.AddIfNotFalse( PurposeOCSPSigning, GetKeyPurpose(nameof(PurposeOCSPSigning)) );
+            retval.AddIfNotFalse( PurposeSmartCardLogon, GetKeyPurpose(nameof(PurposeSmartCardLogon)) );
+            retval.AddIfNotFalse( PurposeMACAddress, GetKeyPurpose(nameof(PurposeMACAddress)) );
             return retval;
         }
-#pragma warning restore CS8604 // Possible null reference argument.
     }
 
     public List<int> RequestedKeyUsages
     {
         get
         {
-            List<int> retval = new();
+            List<int> retval = [];
 
-            if (UsageDigitalSignature) retval.Add(GetKeyUsage(nameof(UsageDigitalSignature)));
-            if (UsageNonRepudiation) retval.Add(GetKeyUsage(nameof(UsageNonRepudiation)));
-            if (UsageKeyEncipherment) retval.Add(GetKeyUsage(nameof(UsageKeyEncipherment)));
-            if (UsageDataEncipherment) retval.Add(GetKeyUsage(nameof(UsageDataEncipherment)));
-            if (UsageKeyAgreement) retval.Add(GetKeyUsage(nameof(UsageKeyAgreement)));
-            if (UsageKeyCertSigning) retval.Add(GetKeyUsage(nameof(UsageKeyCertSigning)));
-            if (UsageCRLSigning) retval.Add(GetKeyUsage(nameof(UsageCRLSigning)));
-            if (UsageEncipherOnly) retval.Add(GetKeyUsage(nameof(UsageEncipherOnly)));
-            if (UsageDecipherOnly) retval.Add(GetKeyUsage(nameof(UsageDecipherOnly)));
+            retval.AddIfNotFalse(UsageDigitalSignature, GetKeyUsage(nameof(UsageDigitalSignature)) );
+            retval.AddIfNotFalse(UsageNonRepudiation, GetKeyUsage(nameof(UsageNonRepudiation)) );
+            retval.AddIfNotFalse(UsageKeyEncipherment, GetKeyUsage(nameof(UsageKeyEncipherment)) );
+            retval.AddIfNotFalse(UsageDataEncipherment, GetKeyUsage(nameof(UsageDataEncipherment)) );
+            retval.AddIfNotFalse(UsageKeyAgreement, GetKeyUsage(nameof(UsageKeyAgreement)) );
+            retval.AddIfNotFalse(UsageKeyCertSigning, GetKeyUsage(nameof(UsageKeyCertSigning)) );
+            retval.AddIfNotFalse(UsageCRLSigning, GetKeyUsage(nameof(UsageCRLSigning)) );
+            retval.AddIfNotFalse(UsageEncipherOnly, GetKeyUsage(nameof(UsageEncipherOnly)) );
+            retval.AddIfNotFalse(UsageDecipherOnly, GetKeyUsage(nameof(UsageDecipherOnly)) );
+
             return retval;
         }
     }
