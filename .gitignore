@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /identity.sqlite-shm
 /db.sqlite-wal
 /db.sqlite-shm
+db.sqlite
