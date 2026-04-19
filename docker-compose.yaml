@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Backend/Dockerfile
+    ports:
+      - "8081:80"
+    volumes:
+      - mini-ca-data:/app/data
+      - ./secrets:/app/secrets:ro
+      - ./logs/backend:/app/logs
+    restart: always
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Frontend/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - mini-ca-data:/app/data
+      - ./secrets:/app/secrets:ro
+      - ./logs/frontend:/app/logs
+    restart: always
+
+volumes:
+  mini-ca-data:

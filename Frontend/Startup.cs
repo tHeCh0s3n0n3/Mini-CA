@@ -3,6 +3,7 @@ using DAL.Models;
 using Frontend.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -16,7 +17,7 @@ public class Startup
     {
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
-            .WriteTo.File("Log.txt")
+            .WriteTo.File("/app/logs/Log.txt")
             .CreateLogger();
         Configuration = configuration;
     }
@@ -32,8 +33,8 @@ public class Startup
                    .UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
         );
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlite(
+                Configuration.GetConnectionString("SQLiteConnection")));
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -82,6 +83,10 @@ public class Startup
             app.UseHsts();
         }
         app.UseHttpsRedirection();
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
         app.UseStaticFiles();
 
         app.UseRouting();
