@@ -1,8 +1,37 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Mini CA - User Portal";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="p-5 mb-4 bg-primary text-white rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Internal Security Made Easy</h1>
+        <p class="col-md-8 fs-4">Secure your internal servers and services with certificates from our internal Mini CA.</p>
+        <a asp-controller="CSR" asp-action="Index" class="btn btn-light btn-lg">Get Started</a>
+    </div>
+</div>
+
+<div class="row align-items-md-stretch g-4">
+    <div class="col-md-6">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Certificate Dashboard</h2>
+            <p>Upload your CSRs, track their status, and download your signed certificates in PEM, DER, or P7B formats.</p>
+            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-light">My Certificates</a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Trust the Authority</h2>
+            <p>To avoid security warnings in your browser, you need to install our Root CA certificate. We provide easy instructions for all major platforms.</p>
+            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-secondary">How to Trust</a>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 p-4 border rounded shadow-sm bg-white">
+    <h4 class="text-primary">Automation with ACME</h4>
+    <p>Are you a developer? You can automate your certificate lifecycle using the ACME protocol. Use the following Directory URL in your ACME client:</p>
+    <div class="bg-light p-3 border rounded">
+        <code>@($"{Context.Request.Scheme}://{Context.Request.Host.Value?.Replace("8080", "8081")}/acme/directory")</code>
+    </div>
+    <p class="small text-muted mt-2">Note: Automated issuance requires an ACME EAB credential. Please contact an administrator to request one.</p>
 </div>

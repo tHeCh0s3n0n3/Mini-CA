@@ -1,35 +1,51 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Mini CA - Administrative Portal";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="jumbotron bg-light p-5 rounded-3 mb-4">
+    <h1 class="display-4">Mini CA Admin</h1>
+    <p class="lead">Internal Certificate Authority management and infrastructure security.</p>
+    <hr class="my-4">
+    <p>Use this portal to manage manual CSRs, ACME EAB credentials, and view issuance audit logs.</p>
 </div>
 
-@if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
-{
-    <table class="table table-sm">
-        <tr>
-            <td>Name</td>
-            <td>@User.Identity.Name</td>
-        </tr>
-        <tr>
-            <td>IsAuthenticated</td>
-            <td>@User.Identity.IsAuthenticated</td>
-        </tr>
-        <tr>
-            <td>AuthenticationType</td>
-            <td>@User.Identity.AuthenticationType</td>
-        </tr>
-    </table>
-    <table class="table table-sm">
-        @foreach (var claim in User.Claims)
-        {
-            <tr>
-                <td>@claim.Type</td>
-                <td>@claim.Value</td>
-            </tr>
-        }
-    </table>
-}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Pending CSRs</h5>
+                <p class="card-text">Review and sign certificate requests submitted by users.</p>
+                <a asp-controller="CSR" asp-action="Index" class="btn btn-primary">Go to CSRs</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-primary">
+            <div class="card-body">
+                <h5 class="card-title text-primary">ACME EAB</h5>
+                <p class="card-text">Manage External Account Binding credentials for automated issuance.</p>
+                <a asp-controller="AcmeEab" asp-action="Index" class="btn btn-outline-primary">Manage EABs</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Audit Logs</h5>
+                <p class="card-text">View an immutable history of all certificate issuance events.</p>
+                <a asp-controller="Audit" asp-action="Index" class="btn btn-secondary">View Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4 bg-dark text-white">
+    <div class="card-body">
+        <h5 class="card-title text-warning">Infrastructure Configuration</h5>
+        <p class="card-text">Use the following Directory URL for ACME clients (Certbot, Traefik, etc.):</p>
+        <div class="bg-secondary p-3 rounded">
+            <code class="text-white" id="acmeUrl">@($"{Context.Request.Scheme}://{Context.Request.Host}/acme/directory")</code>
+        </div>
+        <small class="text-muted d-block mt-2">Note: Registration requires a valid EAB Key ID and HMAC Key.</small>
+    </div>
+</div>

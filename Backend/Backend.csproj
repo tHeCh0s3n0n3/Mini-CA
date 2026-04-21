@@ -21,6 +21,8 @@
     <PackageReference Include="opencertserver.acme.abstractions" Version="2.4.4" />
     <PackageReference Include="opencertserver.acme.server" Version="2.4.4" />
     <PackageReference Include="opencertserver.ca.utils" Version="2.4.4" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

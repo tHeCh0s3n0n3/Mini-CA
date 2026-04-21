@@ -9,7 +9,7 @@
 - **Cryptography:** BouncyCastle (Granular X.509 operations)
 - **ACME Server:** OpenCertServer (RFC 8555 compliant)
 - **Authentication:** Authentik (OpenID Connect)
-- **Data Access:** Entity Framework Core with SQLite
+- **Data Access:** Entity Framework Core with dual SQLite databases (`db.sqlite` for application data, `identity.sqlite` for user identity).
 - **Architecture:** Multi-tiered (Frontend, Backend, DAL, Common)
 
 ## Project Structure

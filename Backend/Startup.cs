@@ -14,6 +14,7 @@ using OpenCertServer.Acme.Server.Extensions;
 using OpenCertServer.Acme.Abstractions.Services;
 using OpenCertServer.Acme.Abstractions.IssuanceServices;
 using OpenCertServer.Acme.Server;
+using Serilog;
 
 namespace Backend;
 
@@ -23,6 +24,10 @@ public class Startup
 
     public Startup(IConfiguration configuration)
     {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.File("/app/logs/Log.txt")
+            .CreateLogger();
         Configuration = configuration;
     }
 
@@ -73,14 +78,18 @@ public class Startup
         // Custom ACME Services
         services.AddScoped<IAccountService, AcmeAccountService>();
         services.AddScoped<IIssueCertificates, AcmeIssuanceService>();
+        services.AddScoped<IAcmeContext, AcmeContext>();
+        services.AddHttpContextAccessor();
         
         services.AddMemoryCache();
 
         services.Configure<Models.CACertSettings>(Configuration.GetSection("CACert"));
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
     {
+        loggerFactory.AddSerilog();
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -96,6 +105,13 @@ public class Startup
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
+        
+        app.Use((context, next) =>
+        {
+            context.Request.EnableBuffering();
+            return next();
+        });
+
         app.UseStaticFiles();
 
         app.UseRouting();

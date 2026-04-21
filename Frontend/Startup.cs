@@ -1,6 +1,6 @@
 using DAL;
+using DAL.Identity;
 using DAL.Models;
-using Frontend.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -32,13 +32,13 @@ public class Startup
                                    , StronglyTypedIdValueConverterSelector>()
                    .UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))
         );
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<IdentityDBContext>(options =>
             options.UseSqlite(
-                Configuration.GetConnectionString("SQLiteConnection")));
+                Configuration.GetConnectionString("IdentityConnection")));
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddEntityFrameworkStores<IdentityDBContext>();
 
         services.AddAuthentication(o =>
         {

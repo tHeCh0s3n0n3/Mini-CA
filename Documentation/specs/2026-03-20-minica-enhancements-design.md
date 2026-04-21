@@ -30,7 +30,7 @@ Automated certificate issuance via ACME (RFC 8555), restricted to internal infra
 To prevent unauthorized use, public registration is disabled.
 *   **Mechanism:** Accounts must be pre-provisioned in the database.
 *   **Credentials:** Each infrastructure component (Traefik/Certbot) will use a unique Key ID (KID) and HMAC Key.
-*   **Server Framework:** `TGIT.ACME.Server` (or compatible ASP.NET Core middleware).
+*   **Server Framework:** `OpenCertServer.Acme` (or compatible ASP.NET Core middleware).
 
 ### 3.2 Issuance Logic
 The ACME challenge verification will trigger the existing `Common.Certificate.SignCSR` logic using the Root CA key.
@@ -83,6 +83,6 @@ The following features are identified for future consideration but are not part 
 ## 6. Technology Stack Summary
 *   **Framework:** .NET 10.0
 *   **Auth:** Microsoft.AspNetCore.Authentication.OpenIdConnect
-*   **ACME:** TGIT.ACME.Server
+*   **ACME:** OpenCertServer.Acme
 *   **Crypto:** BouncyCastle + AES-256 (for EAB key encryption)
 *   **Database:** SQLite (EF Core)

@@ -16,7 +16,7 @@ The system employs a decoupled, multi-tiered architecture based on ASP.NET Core 
 *   **Frontend (User Portal):** A public-facing web interface acting as a Registration Authority (RA). It accepts `.csr` uploads, displays request history, and provides instructions for trusting the Root CA.
 *   **Backend (Admin Portal):** A secure administrative interface acting as the Certificate Authority (CA). It allows authorized users to manage CSRs, ACME EAB credentials, and audit logs.
 *   **ACME Server:** An RFC 8555 compliant server integrated into the Backend, allowing automated issuance for tools like Traefik and Certbot via External Account Binding (EAB).
-*   **Data Access Layer (DAL):** A shared Entity Framework Core library managing persistence to a SQLite database (`db.sqlite`).
+*   **Data Access Layer (DAL):** A shared Entity Framework Core library managing persistence to two SQLite databases: `db.sqlite` (CSRs, EABs, Audit Logs) and `identity.sqlite` (OIDC User cache).
 *   **Common Library:** A shared library encapsulating core cryptographic operations (BouncyCastle) and AES-256 encryption for secrets.
 
 ### 2.2 Illustrative Figure: System Flow
@@ -122,8 +122,8 @@ $bytes = New-Object Byte[] 32
 ```json
 {
   "ConnectionStrings": {
-    "SQLiteConnection": "Data Source=..\\db.sqlite;",
-    "IdentityConnection": "Data Source=..\\identity.sqlite;"
+    "SQLiteConnection": "Data Source=/app/data/db.sqlite;Cache=Shared;",
+    "IdentityConnection": "Data Source=/app/data/identity.sqlite;Cache=Shared;"
   },
   "Authentik": {
     "Authority": "https://authentik.company.com/application/o/minica/",
@@ -133,12 +133,12 @@ $bytes = New-Object Byte[] 32
   "Acme": {
     "BaseUri": "https://minica.local",
     "MaxOrdersPerMinute": 10,
-    "MasterKeyPath": "master.key"
+    "MasterKeyPath": "/app/secrets/master.key"
   },
   "CACert": {
-    "CertFilePath": "C:\\Data\\ca.crt",
-    "CertKeyFilePath": "C:\\Data\\ca.key",
-    "CertKeyPasswordFilePath": "C:\\Data\\ca.key.passwd"
+    "CertFilePath": "/app/secrets/ca.crt",
+    "CertKeyFilePath": "/app/secrets/ca.key",
+    "CertKeyPasswordFilePath": "/app/secrets/ca.key.passwd"
   }
 }
 ```
@@ -147,7 +147,8 @@ $bytes = New-Object Byte[] 32
 ```json
 {
   "ConnectionStrings": {
-    "SQLiteConnection": "Data Source=..\\db.sqlite;"
+    "SQLiteConnection": "Data Source=/app/data/db.sqlite;Cache=Shared;",
+    "IdentityConnection": "Data Source=/app/data/identity.sqlite;Cache=Shared;"
   },
   "Authentik": {
     "Authority": "https://authentik.company.com/application/o/minica/",
@@ -155,7 +156,7 @@ $bytes = New-Object Byte[] 32
     "ClientSecret": "my-client-secret"
   },
   "CACert": {
-    "CertFilePath": "C:\\Data\\ca.crt"
+    "CertFilePath": "/app/secrets/ca.crt"
   }
 }
 ```

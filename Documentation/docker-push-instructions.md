@@ -17,12 +17,35 @@ docker tag mini-ca-frontend:latest <your-registry-url>/mini-ca-frontend:latest
 ```
 
 ### 3. Log in to your registry
+
+#### Generic Registry:
 ```bash
 docker login <your-registry-url>
 ```
 
+#### GitHub Container Registry (GHCR):
+1.  Create a **Personal Access Token (classic)** with `write:packages` scope.
+2.  Authenticate via CLI:
+```bash
+echo $CR_PAT | docker login ghcr.io -u <your-github-username> --password-stdin
+```
+
 ### 4. Push the images
+
+#### Generic Registry:
 ```bash
 docker push <your-registry-url>/mini-ca-backend:latest
 docker push <your-registry-url>/mini-ca-frontend:latest
+```
+
+#### GitHub Container Registry (GHCR):
+Assuming your GitHub organization or username is `my-org`:
+```bash
+# Tag for GHCR
+docker tag mini-ca-backend:latest ghcr.io/my-org/mini-ca-backend:latest
+docker tag mini-ca-frontend:latest ghcr.io/my-org/mini-ca-frontend:latest
+
+# Push to GHCR
+docker push ghcr.io/my-org/mini-ca-backend:latest
+docker push ghcr.io/my-org/mini-ca-frontend:latest
 ```
