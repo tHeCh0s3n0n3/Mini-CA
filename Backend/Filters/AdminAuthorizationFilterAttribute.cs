@@ -1,47 +1,40 @@
+#nullable enable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Routing;
 
 namespace Backend.Filters;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AdminAuthorizationFilterAttribute : Attribute, IAuthorizationFilter
 {
-    private readonly IConfiguration _configuration;
+    private readonly string[] _adminGroups;
 
     public AdminAuthorizationFilterAttribute(IConfiguration configuration)
     {
-        _configuration = configuration;
+        _adminGroups = configuration.GetSection("Authentik:AdminGroups").Get<string[]>() ?? new[] { "admin" };
+        if (_adminGroups.Length == 0)
+        {
+            _adminGroups = new[] { "admin" };
+        }
     }
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var configuredAdminGroups = _configuration.GetSection("Authentik:AdminGroups").Get<string[]>() ?? new[] { "admin" };
-        if (configuredAdminGroups.Length == 0)
-        {
-            configuredAdminGroups = new[] { "admin" };
-        }
+        var userGroups = context.HttpContext.User.FindAll("groups")
+            .SelectMany(c => c.Value.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            .Select(g => g.Trim());
 
-        var groups = context.HttpContext.User.FindAll("groups").Select(c => c.Value).ToList();
-
-        // Also check if they are comma separated in a single claim
-        var commaSeparatedGroups = context.HttpContext.User.FindFirstValue("groups");
-        if (!string.IsNullOrEmpty(commaSeparatedGroups))
-        {
-            groups.AddRange(commaSeparatedGroups.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(g => g.Trim()));
-        }
-
-        if (!groups.Intersect(configuredAdminGroups, StringComparer.OrdinalIgnoreCase).Any())
+        if (!userGroups.Any(g => _adminGroups.Contains(g, StringComparer.OrdinalIgnoreCase)))
         {
             context.Result = new RedirectToRouteResult(
                 new RouteValueDictionary(new
                 {
                     action = "Error",
-                    controller = "Error"
+                    controller = "Home"
                 })
             );
-            return;
         }
     }
 }
