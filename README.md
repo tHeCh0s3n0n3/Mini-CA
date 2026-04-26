@@ -49,6 +49,26 @@ openssl rand -base64 32 > secrets/master.key
 ### 4. Configure App Settings
 Update `Backend/appsettings.json` and `Frontend/appsettings.json` with your Authentik `ClientId`, `ClientSecret`, and `Authority`.
 
+#### Advanced Configuration
+You can customize the following settings in `appsettings.json` or via environment variables:
+
+*   **Admin Groups (Backend):** By default, users in the `admin` group have access to the Backend. You can override this by adding an `AdminGroups` array to the `Authentik` section:
+    ```json
+    "Authentik": {
+      "AdminGroups": [ "sysadmin", "pki-admins" ]
+    }
+    ```
+    *Environment Variable:* `Authentik__AdminGroups__0=sysadmin`
+
+*   **ACME Directory URL (Frontend):** If running behind a reverse proxy, you can customize the ACME Directory URL shown on the dashboard:
+    ```json
+    "Acme": {
+      "DirectoryHostname": "acme.example.com",
+      "DirectoryPath": "/acme/directory"
+    }
+    ```
+    *Environment Variables:* `Acme__DirectoryHostname=acme.example.com`, `Acme__DirectoryPath=/acme/directory`
+
 ### 5. Deployment
 Launch the solution using Docker Compose:
 ```bash
@@ -66,7 +86,7 @@ Mini CA uses Authentik as the source of truth. You do not need to create users m
 1.  Navigate to the User Portal or Admin Portal.
 2.  Click **Log In**.
 3.  Sign in via Authentik. The system will automatically register your identity.
-4.  To grant **Admin Access**, simply add the user to the `admin` group in Authentik.
+4.  To grant **Admin Access**, add the user to the `admin` group in Authentik (or the custom group(s) configured in `AdminGroups`).
 
 ---
 
