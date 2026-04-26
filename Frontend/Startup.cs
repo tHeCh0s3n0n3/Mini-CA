@@ -62,6 +62,7 @@ public class Startup
         services.AddControllersWithViews();
         services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
+        services.AddHealthChecks();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +97,7 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHealthChecks("/health");
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

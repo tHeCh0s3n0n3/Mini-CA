@@ -84,6 +84,8 @@ public class Startup
         services.AddMemoryCache();
 
         services.Configure<Models.CACertSettings>(Configuration.GetSection("CACert"));
+
+        services.AddHealthChecks();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -124,6 +126,7 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHealthChecks("/health");
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
