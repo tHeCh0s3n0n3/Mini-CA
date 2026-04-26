@@ -79,6 +79,15 @@ docker-compose up -d --build
 
 ---
 
+## 🏥 Healthchecks
+Mini CA provides a lightweight `/health` endpoint on both the Frontend and Backend services for monitoring and automated healthchecks.
+*   **Frontend Health:** `http://localhost:8080/health`
+*   **Backend Health:** `http://localhost:8081/health`
+
+The `docker-compose.yaml` is pre-configured to use these endpoints to monitor container health.
+
+---
+
 ## 👤 User Management
 
 ### Creating your first user
