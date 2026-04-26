@@ -1,5 +1,12 @@
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "Mini CA - User Portal";
+    var acmeHostname = Configuration["Acme:DirectoryHostname"];
+    var acmePath = Configuration["Acme:DirectoryPath"] ?? "/acme/directory";
+    var acmeUrl = !string.IsNullOrEmpty(acmeHostname)
+        ? $"https://{acmeHostname}{acmePath}"
+        : $"{Context.Request.Scheme}://{Context.Request.Host.Value?.Replace("8080", "8081")}{acmePath}";
 }
 
 <div class="p-5 mb-4 bg-primary text-white rounded-3">
@@ -31,7 +38,7 @@
     <h4 class="text-primary">Automation with ACME</h4>
     <p>Are you a developer? You can automate your certificate lifecycle using the ACME protocol. Use the following Directory URL in your ACME client:</p>
     <div class="bg-light p-3 border rounded">
-        <code>@($"{Context.Request.Scheme}://{Context.Request.Host.Value?.Replace("8080", "8081")}/acme/directory")</code>
+        <code>@acmeUrl</code>
     </div>
     <p class="small text-muted mt-2">Note: Automated issuance requires an ACME EAB credential. Please contact an administrator to request one.</p>
 </div>
