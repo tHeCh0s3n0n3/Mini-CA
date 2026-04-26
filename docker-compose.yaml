@@ -10,6 +10,12 @@ services:
       - ./secrets:/app/secrets:ro
       - ./logs/backend:/app/logs
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   frontend:
     build:
@@ -22,6 +28,12 @@ services:
       - ./secrets:/app/secrets:ro
       - ./logs/frontend:/app/logs
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mini-ca-data:
