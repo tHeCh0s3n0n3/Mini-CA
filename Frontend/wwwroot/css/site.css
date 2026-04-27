@@ -8,6 +8,7 @@ for details on configuring this project to bundle and minify static web assets. 
   --card-bg: #ffffff;
   --border-color: #dee2e6;
   --link-color: #0366d6;
+  --primary-color: #FDD835;
   --muted-text: #6c757d;
 }
 
@@ -17,7 +18,7 @@ for details on configuring this project to bundle and minify static web assets. 
   --nav-bg: #1e1e1e;
   --card-bg: #1e1e1e;
   --border-color: #333333;
-  --link-color: #3b82f6;
+  --link-color: #FDD835;
   --muted-text: #a0a0a0;
 }
 
@@ -37,10 +38,20 @@ a.navbar-brand {
   text-align: center;
   word-break: break-all;
   color: var(--text-color) !important;
+  font-weight: bold;
+}
+
+.navbar-brand img {
+  max-height: 40px;
+  width: auto;
 }
 
 a {
   color: var(--link-color);
+}
+
+.text-primary, .text-info {
+  color: var(--link-color) !important;
 }
 
 .text-dark, .nav-link {
@@ -63,15 +74,22 @@ a {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #212529;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: #e6c52f;
+  border-color: #e6c52f;
+  color: #000;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #212529;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 /* Sticky footer styles
