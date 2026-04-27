@@ -130,15 +130,15 @@ public class Startup
             return next();
         });
 
+        // ACME Middleware
+        app.UseAcmeServer();
+
         app.UseStaticFiles();
 
         app.UseRouting();
 
         app.UseAuthentication();
         app.UseAuthorization();
-
-        // ACME Middleware
-        app.UseAcmeServer();
 
         app.UseEndpoints(endpoints =>
         {
