@@ -74,22 +74,47 @@ a {
 }
 
 .btn-primary {
-  color: #212529;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  color: #212529 !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
   font-weight: 600;
 }
 
 .btn-primary:hover {
-  background-color: #e6c52f;
-  border-color: #e6c52f;
-  color: #000;
+  background-color: #e6c52f !important;
+  border-color: #e6c52f !important;
+  color: #000 !important;
+}
+
+.btn-outline-primary {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color) !important;
+  color: #212529 !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+  color: #212529 !important;
+}
+
+.card-header.bg-primary {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #212529;
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  color: #212529 !important;
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Fix for the blue badge in Request New Certificate */
+.badge.bg-info {
+    background-color: var(--link-color) !important;
+    color: #fff !important;
 }
 
 /* Sticky footer styles
