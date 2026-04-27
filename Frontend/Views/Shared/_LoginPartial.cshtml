@@ -1,7 +1,7 @@
 <ul class="navbar-nav">
 @if (User?.Identity?.IsAuthenticated == true)
 {
-    var friendlyName = User.Identity.Name;
+    var friendlyName = User.FindFirst("name")?.Value ?? User.Identity.Name;
 
     <li class="nav-item">
         <span class="nav-link text-dark">Hello @friendlyName!</span>
