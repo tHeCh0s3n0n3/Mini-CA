@@ -35,6 +35,27 @@
 - **Update Database:** 
   `dotnet ef database update --project DAL --startup-project Backend --context DB`
 
+## CI/CD and DevOps
+- **GitHub Actions:** Automated Docker builds are triggered on git tags (e.g., `v1.0.0-alphaX`).
+  - **Registry:** Pushes to `ghcr.io` as `mini-ca-frontend` and `mini-ca-backend`.
+  - **Tags:** Each build is tagged with both `:latest` and the specific git tag name.
+- **Docker Healthchecks:** Both Frontend and Backend containers include healthchecks using `curl` against local `/health` endpoints.
+
+## UI and Aesthetics
+- **Dark Mode:** Native dark mode is enabled by default with a user-toggle available in the navigation bar. Theme preference is persisted in `localStorage`.
+- **Brand Customization:** 
+  - **Color Scheme:** Primary accents and buttons use the brand color `RGB(253, 216, 53)` (#FDD835).
+  - **Logo:** Customizable via `Site:LogoUrl` in `appsettings.json`.
+  - **Favicon:** Brand-consistent SVG favicon (`favicon.svg`).
+
+## Configuration Overrides
+The system supports several overrides via `appsettings.json` or environment variables:
+- **Admin Groups:** `Authentik:AdminGroups` (Array, defaults to `["admin"]`) allows specifying which Authentik groups grant backend access.
+- **ACME Directory:**
+  - `Acme:DirectoryHostname`: Overrides the ACME directory hostname shown to users.
+  - `Acme:DirectoryPath`: Overrides the path (defaults to `/acme/directory`).
+- **Site Branding:** `Site:LogoUrl` for the navigation bar logo.
+
 ## Development Workflow
 
 ### Tool Verification
