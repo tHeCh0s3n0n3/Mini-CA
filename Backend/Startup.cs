@@ -45,7 +45,7 @@ public class Startup
         );
         services.AddDatabaseDeveloperPageExceptionFilter();
 
-        services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
             .AddEntityFrameworkStores<IdentityDBContext>();
         services.AddControllersWithViews();
 
@@ -62,6 +62,7 @@ public class Startup
             })
             .AddOpenIdConnect(o =>
             {
+                o.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 o.Authority = Configuration["Authentik:Authority"];
                 o.ClientId = Configuration["Authentik:ClientId"];
                 o.ClientSecret = Configuration["Authentik:ClientSecret"];
