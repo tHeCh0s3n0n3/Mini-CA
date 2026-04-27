@@ -47,6 +47,7 @@ public class Startup
         })
             .AddCookie(options =>
             {
+                options.Cookie.Name = "MiniCA.Frontend.Auth";
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
                 options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             })
@@ -81,6 +82,14 @@ public class Startup
     {
         loggerFactory.AddSerilog();
 
+        var forwardedHeadersOptions = new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+        forwardedHeadersOptions.KnownIPNetworks.Clear();
+        forwardedHeadersOptions.KnownProxies.Clear();
+        app.UseForwardedHeaders(forwardedHeadersOptions);
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -93,13 +102,6 @@ public class Startup
             app.UseHsts();
         }
         app.UseHttpsRedirection();
-        var forwardedHeadersOptions = new ForwardedHeadersOptions
-        {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-        };
-        forwardedHeadersOptions.KnownIPNetworks.Clear();
-        forwardedHeadersOptions.KnownProxies.Clear();
-        app.UseForwardedHeaders(forwardedHeadersOptions);
         app.UseStaticFiles();
 
         app.UseRouting();
