@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     function updateIcon(theme) {
         if (themeIcon) {
-            themeIcon.textContent = theme === 'dark' ? '🌙' : '☀️';
+            themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
         }
     }
 
