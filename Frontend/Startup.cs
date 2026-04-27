@@ -45,7 +45,11 @@ public class Startup
             o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
-            .AddCookie()
+            .AddCookie(options =>
+            {
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+            })
             .AddOpenIdConnect(o =>
             {
                 o.Authority = Configuration["Authentik:Authority"];
@@ -57,6 +61,11 @@ public class Startup
                 o.Scope.Add("openid");
                 o.Scope.Add("profile");
                 o.Scope.Add("email");
+
+                o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    NameClaimType = "preferred_username"
+                };
             });
 
         services.AddControllersWithViews();
