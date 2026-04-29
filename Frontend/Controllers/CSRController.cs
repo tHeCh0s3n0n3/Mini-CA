@@ -47,32 +47,43 @@ public class CSRController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Upload(UploadFileModel uploadFile)
+    public async Task<IActionResult> Upload([FromForm(Name = "UploadModel")] UploadFileModel model)
     {
-        Log.Information("Started upload function");
+        Log.Information("Started upload function. File present: {FilePresent}", model?.FormFile != null);
 
         try
         {
-            if (null == uploadFile || !ModelState.IsValid)
+            if (model?.FormFile == null || !ModelState.IsValid)
             {
+                if (model?.FormFile == null) Log.Warning("Upload failed: FormFile is null.");
+                foreach (var state in ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Log.Warning("ModelState Error in {Key}: {ErrorMessage}", state.Key, error.ErrorMessage);
+                    }
+                }
                 return RedirectToAction("Index");
             }
 
             CSR parsedCSR = new();
             parsedCSR.UserId = User.Identity?.Name;
 
-            if (uploadFile.FormFile.Length > 0)
+            if (model.FormFile.Length > 0)
             {
-                parsedCSR.FileName = uploadFile.FormFile.FileName;
+                parsedCSR.FileName = model.FormFile.FileName;
                 parsedCSR.IsSigned = false;
                 parsedCSR.SubmittedOn = DateTime.UtcNow;
 
-                using Stream s = uploadFile.FormFile.OpenReadStream();
+                using Stream s = model.FormFile.OpenReadStream();
                 using (MemoryStream ms = new())
                 {
                     await s.CopyToAsync(ms);
                     parsedCSR.FileContents = ms.ToArray();
                 }
+
+                Log.Information("Processing file: {FileName}, Size: {Size}", parsedCSR.FileName, parsedCSR.FileContents.Length);
+
 
                 Pkcs10CertificationRequest csr;
 
