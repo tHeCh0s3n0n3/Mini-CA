@@ -17,7 +17,7 @@ public class SignedCSR
 
     public DateTime NotAfter { get; set; }
 
-    public bool IsValid => DateTime.Now >= NotBefore && DateTime.Now <= NotAfter;
+    public bool IsValid => DateTime.UtcNow >= NotBefore && DateTime.UtcNow <= NotAfter;
 
     public SignedCSR() { }
 
