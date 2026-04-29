@@ -65,7 +65,7 @@ public class CSRController : Controller
             {
                 parsedCSR.FileName = uploadFile.FormFile.FileName;
                 parsedCSR.IsSigned = false;
-                parsedCSR.SubmittedOn = DateTime.Now;
+                parsedCSR.SubmittedOn = DateTime.UtcNow;
 
                 using Stream s = uploadFile.FormFile.OpenReadStream();
                 using (MemoryStream ms = new())
