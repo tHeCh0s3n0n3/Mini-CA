@@ -156,6 +156,29 @@ html {
 [data-theme="dark"] .table th, [data-theme="dark"] .table td {
   border-color: var(--border-color);
 }
+[data-theme="dark"] .table-hover tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+}
+
+/* Form control overrides for dark mode */
+[data-theme="dark"] .form-control {
+  background-color: #2b2b2b !important;
+  border-color: #444 !important;
+  color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .form-control::file-selector-button {
+  background-color: #3d3d3d !important;
+  color: var(--text-color) !important;
+  border-color: #555 !important;
+}
+
+[data-theme="dark"] code, [data-theme="dark"] pre {
+  background-color: #2b2b2b !important;
+  color: #f8f8f2 !important;
+  border-color: #444 !important;
+}
 
 /* Custom Toggle */
 #theme-toggle {
