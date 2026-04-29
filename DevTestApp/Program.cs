@@ -1,4 +1,7 @@
 using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Pkcs;
 using System.Text;
 
 try {
@@ -23,9 +26,30 @@ HXhkgfU6Z18B4oLG3RK7qryv2ZiRaSbCCyTMimxrSvy5HRYyWb03aaaBM7XQBT9C
 -----END CERTIFICATE REQUEST-----";
     byte[] csrBytes = Encoding.UTF8.GetBytes(csrPem);
     Pkcs10CertificationRequest csr = Common.Certificate.ImportCSR(csrBytes);
-    Console.WriteLine("Import successful.");
-    var sans = Common.Certificate.GetSANs(csr);
-    Console.WriteLine("SANs found: " + string.Join(", ", sans));
+    Console.WriteLine("Subject: " + csr.GetCertificationRequestInfo().Subject);
+    
+    Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+    if (attributes != null)
+    {
+        for (int i = 0; i != attributes.Count; i++)
+        {
+            AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
+            if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+            {
+                X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
+                X509Extension sanExt = extensions.GetExtension(X509Extensions.SubjectAlternativeName);
+                if (sanExt != null)
+                {
+                    GeneralNames gns = GeneralNames.GetInstance(sanExt.GetParsedValue());
+                    Console.WriteLine("SANs in CSR:");
+                    foreach (GeneralName gn in gns.GetNames())
+                    {
+                        Console.WriteLine($"- Type: {gn.TagNo}, Value: {gn.Name}");
+                    }
+                }
+            }
+        }
+    }
 } catch (Exception ex) {
     Console.WriteLine("Error: " + ex.ToString());
 }

@@ -22,6 +22,22 @@ for details on configuring this project to bundle and minify static web assets. 
   --muted-text: #a0a0a0;
 }
 
+[data-theme="dark"] a {
+  color: var(--link-color) !important;
+}
+
+[data-theme="dark"] a:hover {
+  filter: brightness(1.2);
+}
+
+[data-theme="dark"] .text-muted {
+  color: var(--muted-text) !important;
+}
+
+[data-theme="dark"] .btn-link {
+  color: var(--link-color) !important;
+}
+
 html {
   position: relative;
   min-height: 100%;
