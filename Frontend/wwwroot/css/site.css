@@ -22,11 +22,11 @@ for details on configuring this project to bundle and minify static web assets. 
   --muted-text: #a0a0a0;
 }
 
-[data-theme="dark"] a {
+[data-theme="dark"] a:not(.btn) {
   color: var(--link-color) !important;
 }
 
-[data-theme="dark"] a:hover {
+[data-theme="dark"] a:hover:not(.btn) {
   filter: brightness(1.2);
 }
 
@@ -36,6 +36,10 @@ for details on configuring this project to bundle and minify static web assets. 
 
 [data-theme="dark"] .btn-link {
   color: var(--link-color) !important;
+}
+
+[data-theme="dark"] .btn-primary, [data-theme="dark"] .btn-success {
+    color: #212529 !important;
 }
 
 html {
