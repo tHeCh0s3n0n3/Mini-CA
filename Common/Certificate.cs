@@ -248,12 +248,18 @@ public static class Certificate
                     X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
                     foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
                     {
-                        X509Extension ext = extensions.GetExtension(oid);
-                        Asn1Sequence pv = (Asn1Sequence)ext.GetParsedValue();
-                        foreach(Asn1TaggedObject obj in pv)
+                        if (oid.Equals(X509Extensions.SubjectAlternativeName))
                         {
-                            string str = Encoding.UTF8.GetString(obj.GetObject().GetEncoded());
-                            retval.Add(new string([.. str.Where(c => !char.IsControl(c))]));
+                            X509Extension ext = extensions.GetExtension(oid);
+                            GeneralNames gns = GeneralNames.GetInstance(ext.GetParsedValue());
+                            foreach (GeneralName gn in gns.GetNames())
+                            {
+                                string? name = gn.Name?.ToString();
+                                if (name != null)
+                                {
+                                    retval.Add(name);
+                                }
+                            }
                         }
                     }
                 }
