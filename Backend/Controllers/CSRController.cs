@@ -154,14 +154,26 @@ public class CSRController : Controller
 
             // Save signed cert
             SignedCSR signedCSR = new(dbCSR.Id
-                                      , DateTime.Now
+                                      , DateTime.UtcNow
                                       , Encoding.UTF8.GetBytes(newCertFileContents)
-                                      , DateTime.Now
+                                      , DateTime.UtcNow
                                       , processViewModel.ExpieryDate);
             dbCSR.IsSigned = true;
 
             _db.CSRs.Update(dbCSR);
             _db.SignedCSRs.Add(signedCSR);
+
+            // Audit Log
+            var audit = new AuditLog
+            {
+                Actor = User.Identity?.Name ?? "Unknown Admin",
+                Action = "Manual Sign",
+                Subject = csr.GetCertificationRequestInfo().Subject.ToString(),
+                Timestamp = DateTime.UtcNow,
+                Details = $"Signed manually from UI. Valid until {processViewModel.ExpieryDate:O}"
+            };
+            _db.AuditLogs.Add(audit);
+
             await _db.SaveChangesAsync();
         }
 
