@@ -33,7 +33,7 @@
             <td>@item.UsageCount</td>
             <td>
                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to revoke this EAB? New accounts will not be able to register with these credentials.');">
-                    <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                    <button type="submit" class="btn btn-danger btn-sm" title="Revoke"><i class="bi bi-trash"></i></button>
                 </form>
             </td>
         </tr>
