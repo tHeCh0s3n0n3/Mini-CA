@@ -77,7 +77,7 @@ The system supports several overrides via `appsettings.json` or environment vari
 
 ### Security Practices
 - **Secret Protection:** EAB HMAC keys are encrypted at rest using AES-256. The master key must be stored in a local file (referenced in `appsettings.json`) and never committed.
-- **CA Protection:** The Root CA private key and its password are read from local files, separate from the codebase.
+- **CA Protection:** The Root CA private key and its password (if protected) are read from local files, separate from the codebase. The password file is optional; if missing, the key is assumed to be non-protected.
 - **Authorization:** Backend access is strictly enforced via the `AdminAuthorizationFilterAttribute`, which checks for the `admin` group claim from Authentik.
 - **Data Protection:** ASP.NET Core Data Protection keys MUST be persisted to a volume (e.g., `/app/asp-keys`) in Docker environments to prevent Antiforgery (CSRF) token invalidation after container restarts. Each service (Frontend/Backend) must have an isolated key ring.
 
