@@ -9,11 +9,11 @@
         : $"{Context.Request.Scheme}://{Context.Request.Host.Value?.Replace("8080", "8081")}{acmePath}";
 }
 
-<div class="p-5 mb-4 bg-primary text-white rounded-3">
+<div class="p-5 mb-4 bg-primary text-dark rounded-3">
     <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Internal Security Made Easy</h1>
-        <p class="col-md-8 fs-4">Secure your internal servers and services with certificates from our internal Mini CA.</p>
-        <a asp-controller="CSR" asp-action="Index" class="btn btn-light btn-lg">Get Started</a>
+        <h1 class="display-5 fw-bold text-dark">Internal Security Made Easy</h1>
+        <p class="col-md-8 fs-4 text-dark">Secure your internal servers and services with certificates from our internal Mini CA.</p>
+        <a asp-controller="CSR" asp-action="Index" class="btn btn-dark btn-lg"><i class="bi bi-rocket-takeoff"></i> Get Started</a>
     </div>
 </div>
 
@@ -22,14 +22,14 @@
         <div class="h-100 p-5 text-white bg-dark rounded-3">
             <h2>Certificate Dashboard</h2>
             <p>Upload your CSRs, track their status, and download your signed certificates in PEM, DER, or P7B formats.</p>
-            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-light">My Certificates</a>
+            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-primary"><i class="bi bi-grid-3x3-gap"></i> My Certificates</a>
         </div>
     </div>
     <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">
             <h2>Trust the Authority</h2>
             <p>To avoid security warnings in your browser, you need to install our Root CA certificate. We provide easy instructions for all major platforms.</p>
-            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-secondary">How to Trust</a>
+            <a asp-controller="CSR" asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-shield-check"></i> How to Trust</a>
         </div>
     </div>
 </div>
