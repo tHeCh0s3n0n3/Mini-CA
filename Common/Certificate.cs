@@ -78,40 +78,52 @@ public static class Certificate
         return caObj;
     }
 
-    public static AsymmetricCipherKeyPair ImportCAKey(string caKeyPath, string caKeyPasswordPath)
+    public static AsymmetricCipherKeyPair ImportCAKey(string caKeyPath, string? caKeyPasswordPath)
     {
         if (string.IsNullOrEmpty(caKeyPath))
         {
             throw new ArgumentException($"'{nameof(caKeyPath)}' cannot be null or empty.", nameof(caKeyPath));
         }
 
-        if (string.IsNullOrEmpty(caKeyPasswordPath))
-        {
-            throw new ArgumentException($"'{nameof(caKeyPasswordPath)}' cannot be null or empty.", nameof(caKeyPasswordPath));
-        }
-
         return ImportCAKey(File.ReadAllBytes(caKeyPath), caKeyPasswordPath);
     }
 
-    public static AsymmetricCipherKeyPair ImportCAKey(byte[] caKeyContents, string caKeyPasswordPath)
+    public static AsymmetricCipherKeyPair ImportCAKey(byte[] caKeyContents, string? caKeyPasswordPath)
     {
         ArgumentNullException.ThrowIfNull(caKeyContents);
 
-        if (string.IsNullOrEmpty(caKeyPasswordPath))
-        {
-            throw new ArgumentException($"'{nameof(caKeyPasswordPath)}' cannot be null or empty.", nameof(caKeyPasswordPath));
-        }
-
         using MemoryStream ms = new(caKeyContents);
         using StreamReader caKeySR = new(ms);
-        PemReader caKeyReader = new(caKeySR
-                                    , new CAKeyPasswordFinder(caKeyPasswordPath));
-
-        if (caKeyReader.ReadObject()
-            is not AsymmetricCipherKeyPair caKeyObj)
+        
+        PemReader caKeyReader;
+        
+        // If password path is provided and exists, use the password finder
+        if (!string.IsNullOrEmpty(caKeyPasswordPath) && File.Exists(caKeyPasswordPath))
         {
+            caKeyReader = new PemReader(caKeySR, new CAKeyPasswordFinder(caKeyPasswordPath));
+        }
+        else
+        {
+            // Otherwise, assume it's a non-protected key
+            caKeyReader = new PemReader(caKeySR);
+        }
+
+        var keyObject = caKeyReader.ReadObject();
+
+        if (keyObject is not AsymmetricCipherKeyPair caKeyObj)
+        {
+            // In some cases (e.g. PKCS#8), ReadObject returns the private key parameter directly instead of a pair
+            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate)
+            {
+                // We typically expect a pair. If we only have the private key, it's enough for signing
+                // but our SignCSR method signature expects AsymmetricCipherKeyPair.
+                // However, BouncyCastle's PemReader usually returns AsymmetricCipherKeyPair for PKCS#1.
+                // If it's PKCS#8, we might need to handle it.
+                // For now, let's keep the existing expectation but add a clearer error.
+            }
+
             Console.WriteLine("Not a certificate key file.");
-            throw new ArgumentException("Not a certificate key file", nameof(caKeyContents));
+            throw new ArgumentException("Not a certificate key file or format not supported (expected AsymmetricCipherKeyPair)", nameof(caKeyContents));
         }
         return caKeyObj;
     }
