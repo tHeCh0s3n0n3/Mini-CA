@@ -64,6 +64,7 @@ The system supports several overrides via `appsettings.json` or environment vari
 ### Git & Commit Standards
 - **Build Before Commit:** A successful build (`dotnet build`) with **zero errors** and **zero nullable warnings** is a mandatory prerequisite for any git commit. 
 - **Atomic Commits:** Prefer small, focused commits that correspond to specific tasks in an implementation plan.
+- **Tagging Discipline:** Do NOT tag a new release for non-functional changes (e.g., documentation, comments, `docker-compose.yaml` tweaks) to avoid unnecessary CI/CD image builds.
 
 ## Development Conventions
 
@@ -71,12 +72,14 @@ The system supports several overrides via `appsettings.json` or environment vari
 - **Strongly-Typed IDs:** Uses the `StronglyTypedId` package to prevent primitive obsession (e.g., `CSRId` instead of `Guid`).
 - **Nullable Safety:** `#nullable enable` should be used in all new or modified files. Treat nullable warnings as errors.
 - **Asynchronous Patterns:** Use `async/await` for all I/O and database operations.
+- **Time Handling:** ALWAYS use `DateTime.UtcNow` for timestamps and validity checks to ensure consistency across audit logs and certificate lifecycle.
 - **Logging:** Structured logging via **Serilog**.
 
 ### Security Practices
 - **Secret Protection:** EAB HMAC keys are encrypted at rest using AES-256. The master key must be stored in a local file (referenced in `appsettings.json`) and never committed.
 - **CA Protection:** The Root CA private key and its password are read from local files, separate from the codebase.
 - **Authorization:** Backend access is strictly enforced via the `AdminAuthorizationFilterAttribute`, which checks for the `admin` group claim from Authentik.
+- **Data Protection:** ASP.NET Core Data Protection keys MUST be persisted to a volume (e.g., `/app/asp-keys`) in Docker environments to prevent Antiforgery (CSRF) token invalidation after container restarts. Each service (Frontend/Backend) must have an isolated key ring.
 
 ### Testing
 - **DevTestApp:** A console project used for rapid prototyping and unit-level verification of cryptographic or logic changes.
