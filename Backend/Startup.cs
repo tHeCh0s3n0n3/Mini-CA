@@ -16,6 +16,9 @@ using OpenCertServer.Acme.Abstractions.IssuanceServices;
 using OpenCertServer.Acme.Server;
 using Serilog;
 
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
+
 namespace Backend;
 
 public class Startup
@@ -33,6 +36,10 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/asp-keys/backend/"))
+            .SetApplicationName("MiniCA-Backend");
+
         services.AddDbContext<DB>(options =>
             options.ReplaceService<IValueConverterSelector
                                    , StronglyTypedIdValueConverterSelector>()
