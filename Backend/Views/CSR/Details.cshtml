@@ -112,21 +112,21 @@
                 <a asp-action="DownloadCertificate"
                  asp-route-id="@Model.Id"
                         class="btn btn-success">
-                    <i class="fas fa-arrow-down"></i> Download
+                    <i class="bi bi-download"></i> Download
                 </a>
             </dt>
         </dl>
     }
 </div>
 <div>
-    <a asp-action="Index" class="btn btn-default"><i class="fas fa-arrow-left"></i> Back to List</a>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
 
     @if (Model is not null
          && Model.OriginalRequestId is not null
          && Model.IsSigned.Equals(false))
     {
         <a asp-action="Process" asp-route-id="@Model.OriginalRequestId" class="btn btn-secondary">
-            <i class="fas fa-check"></i> Process
+            <i class="bi bi-check-lg"></i> Process
         </a> 
     }
 </div>
