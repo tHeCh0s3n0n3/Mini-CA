@@ -16,6 +16,7 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
+    @await RenderSectionAsync("HeadScripts", required: false)
 </head>
 <body>
     <header>
