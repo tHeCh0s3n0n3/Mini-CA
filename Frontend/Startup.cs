@@ -30,7 +30,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddDataProtection()
-            .PersistKeysToFileSystem(new DirectoryInfo("/app/asp-keys/frontend/"))
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/asp-keys/"))
             .SetApplicationName("MiniCA-Frontend");
 
         services.AddDbContext<DB>(options =>
