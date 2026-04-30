@@ -9,6 +9,7 @@ services:
       - mini-ca-data:/app/data
       - ./secrets:/app/secrets:ro
       - ./logs/backend:/app/logs
+      - ./asp-keys/backend:/app/asp-keys
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
@@ -27,6 +28,7 @@ services:
       - mini-ca-data:/app/data
       - ./secrets:/app/secrets:ro
       - ./logs/frontend:/app/logs
+      - ./asp-keys/frontend:/app/asp-keys
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
