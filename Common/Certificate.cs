@@ -91,18 +91,18 @@ public static class Certificate
     public static AsymmetricCipherKeyPair ImportCAKey(byte[] caKeyContents, string? caKeyPasswordPath)
     {
         ArgumentNullException.ThrowIfNull(caKeyContents);
+        string keyHead = Encoding.UTF8.GetString(caKeyContents.Take(Math.Min(caKeyContents.Length, 100)).ToArray());
+        Console.WriteLine($"Importing CA Key. Header: {keyHead.Replace("\n", " ").Replace("\r", " ")}");
 
         char[]? password = null;
         if (!string.IsNullOrEmpty(caKeyPasswordPath) && File.Exists(caKeyPasswordPath))
         {
             string passText = File.ReadAllText(caKeyPasswordPath, Encoding.UTF8).Trim();
-            if (!string.IsNullOrEmpty(passText))
-            {
-                password = passText.ToCharArray();
-            }
+            password = passText.ToCharArray();
+            Console.WriteLine($"Password file found. Trimmed length: {passText.Length}");
         }
 
-        // Stage 1: Try with the password (if we found a non-empty one)
+        // Stage 1: Try with the password (if we found a finder path)
         if (password != null)
         {
             try
@@ -111,6 +111,7 @@ public static class Certificate
                 using StreamReader caKeySR = new(ms);
                 PemReader caKeyReader = new(caKeySR, new StaticPasswordFinder(password));
                 var keyObject = caKeyReader.ReadObject();
+                Console.WriteLine($"Stage 1 ReadObject returned: {keyObject?.GetType().Name ?? "null"}");
                 var result = WrapKeyObject(keyObject);
                 if (result != null) return result;
             }
@@ -121,13 +122,13 @@ public static class Certificate
         }
 
         // Stage 2: Try with a Null Password Finder (Empty array)
-        // Some BouncyCastle formats THROW if no finder is provided, even if the password is empty
         try
         {
             using MemoryStream ms = new(caKeyContents);
             using StreamReader caKeySR = new(ms);
             PemReader caKeyReader = new(caKeySR, new NullPasswordFinder());
             var keyObject = caKeyReader.ReadObject();
+            Console.WriteLine($"Stage 2 ReadObject returned: {keyObject?.GetType().Name ?? "null"}");
             var result = WrapKeyObject(keyObject);
             if (result != null) return result;
         }
@@ -143,6 +144,7 @@ public static class Certificate
             using StreamReader caKeySR = new(ms);
             PemReader caKeyReader = new(caKeySR);
             var keyObject = caKeyReader.ReadObject();
+            Console.WriteLine($"Stage 3 ReadObject returned: {keyObject?.GetType().Name ?? "null"}");
             var result = WrapKeyObject(keyObject);
             if (result != null) return result;
         }
@@ -158,7 +160,15 @@ public static class Certificate
     {
         if (keyObject is AsymmetricCipherKeyPair pair) return pair;
         if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
-            return new AsymmetricCipherKeyPair(null, privateKey);
+        {
+            if (privateKey is Org.BouncyCastle.Crypto.Parameters.RsaPrivateCrtKeyParameters rsaPrivate)
+            {
+                var rsaPublic = new Org.BouncyCastle.Crypto.Parameters.RsaKeyParameters(false, rsaPrivate.Modulus, rsaPrivate.PublicExponent);
+                return new AsymmetricCipherKeyPair(rsaPublic, rsaPrivate);
+            }
+            // For other key types, we might need a different derivation, but RSA is the primary target
+            return new AsymmetricCipherKeyPair(null!, privateKey);
+        }
         return null;
     }
 
@@ -195,6 +205,8 @@ public static class Certificate
         X509V3CertificateGenerator certGen = new();
 
         Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+        // Collect extensions from CSR
+        var requestedExtensions = new Dictionary<DerObjectIdentifier, X509Extension>();
         if (attributes != null)
         {
             for (int i = 0; i != attributes.Count; i++)
@@ -205,10 +217,27 @@ public static class Certificate
                     X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
                     foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
                     {
-                        X509Extension ext = extensions.GetExtension(oid);
-                        certGen.AddExtension(oid, ext.IsCritical, ext.GetParsedValue());
+                        requestedExtensions[oid] = extensions.GetExtension(oid);
                     }
                 }
+            }
+        }
+
+        // Add extensions, prioritizing requested ones but overriding with CA requirements
+        // 1. Copy from CSR (excluding ones we will override)
+        var overridenExtensions = new HashSet<DerObjectIdentifier> {
+            X509Extensions.BasicConstraints,
+            X509Extensions.KeyUsage,
+            X509Extensions.ExtendedKeyUsage,
+            X509Extensions.AuthorityKeyIdentifier,
+            X509Extensions.SubjectKeyIdentifier
+        };
+
+        foreach (var kvp in requestedExtensions)
+        {
+            if (!overridenExtensions.Contains(kvp.Key))
+            {
+                certGen.AddExtension(kvp.Key, kvp.Value.IsCritical, kvp.Value.GetParsedValue());
             }
         }
 
@@ -232,18 +261,15 @@ public static class Certificate
 
         certGen.SetPublicKey(csr.GetPublicKey());
 
-        // Add basic constraints
+        // Add CA-mandated extensions
         certGen.AddExtension(X509Extensions.BasicConstraints
                              , true
                              , new BasicConstraints(false));
-        int ku = 0;
-        foreach(int item in keyUsages)
-        {
-            ku |= item;
-        }
+        
         certGen.AddExtension(X509Extensions.KeyUsage
                              , true
                              , new KeyUsage(keyUsages.Aggregate(0, (ku, next) => ku |= next)));
+        
         certGen.AddExtension(X509Extensions.ExtendedKeyUsage
                              , true
                              , new ExtendedKeyUsage(keyPurposes.ToArray()));
@@ -253,6 +279,10 @@ public static class Certificate
         certGen.AddExtension(X509Extensions.AuthorityKeyIdentifier
                              , true
                              , new AuthorityKeyIdentifier(spkif));
+
+        // Add Subject Key Identifier
+        var ski = new SubjectKeyIdentifier(SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(csr.GetPublicKey()));
+        certGen.AddExtension(X509Extensions.SubjectKeyIdentifier, false, ski);
 
         ISignatureFactory signatureFactory
             = new Asn1SignatureFactory("SHA256WITHRSA", caKey.Private, random);
