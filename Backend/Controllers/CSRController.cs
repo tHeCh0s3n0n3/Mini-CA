@@ -96,6 +96,26 @@ public class CSRController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    // GET: CSR/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: CSR/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CSR csr)
+    {
+        if (ModelState.IsValid)
+        {
+            _db.CSRs.Add(csr);
+            await _db.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(csr);
+    }
+
     // GET: CSR/Process/5
     public async Task<IActionResult> Process(Guid? id)
     {
@@ -170,7 +190,7 @@ public class CSRController : Controller
                 Action = "Manual Sign",
                 Subject = csr.GetCertificationRequestInfo().Subject.ToString(),
                 Timestamp = DateTime.UtcNow,
-                Details = $"Signed manually from UI. Valid until {processViewModel.ExpieryDate:O}"
+                Details = $"Signed manually from UI. Valid until {processViewModel.ExpieryDate:yyyy-MM-dd HH:mm:ss} Z"
             };
             _db.AuditLogs.Add(audit);
 
