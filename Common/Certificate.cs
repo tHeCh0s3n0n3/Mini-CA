@@ -92,18 +92,27 @@ public static class Certificate
     {
         ArgumentNullException.ThrowIfNull(caKeyContents);
 
-        // Stage 1: Try with the provided password if it exists
+        char[]? password = null;
         if (!string.IsNullOrEmpty(caKeyPasswordPath) && File.Exists(caKeyPasswordPath))
+        {
+            string passText = File.ReadAllText(caKeyPasswordPath, Encoding.UTF8).Trim();
+            if (!string.IsNullOrEmpty(passText))
+            {
+                password = passText.ToCharArray();
+            }
+        }
+
+        // Stage 1: Try with the password (if we found a non-empty one)
+        if (password != null)
         {
             try
             {
                 using MemoryStream ms = new(caKeyContents);
                 using StreamReader caKeySR = new(ms);
-                PemReader caKeyReader = new(caKeySR, new CAKeyPasswordFinder(caKeyPasswordPath));
+                PemReader caKeyReader = new(caKeySR, new StaticPasswordFinder(password));
                 var keyObject = caKeyReader.ReadObject();
-                if (keyObject is AsymmetricCipherKeyPair pair) return pair;
-                if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
-                    return new AsymmetricCipherKeyPair(null, privateKey);
+                var result = WrapKeyObject(keyObject);
+                if (result != null) return result;
             }
             catch (Exception ex)
             {
@@ -119,9 +128,8 @@ public static class Certificate
             using StreamReader caKeySR = new(ms);
             PemReader caKeyReader = new(caKeySR, new NullPasswordFinder());
             var keyObject = caKeyReader.ReadObject();
-            if (keyObject is AsymmetricCipherKeyPair pair) return pair;
-            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
-                return new AsymmetricCipherKeyPair(null, privateKey);
+            var result = WrapKeyObject(keyObject);
+            if (result != null) return result;
         }
         catch (Exception ex)
         {
@@ -135,9 +143,8 @@ public static class Certificate
             using StreamReader caKeySR = new(ms);
             PemReader caKeyReader = new(caKeySR);
             var keyObject = caKeyReader.ReadObject();
-            if (keyObject is AsymmetricCipherKeyPair pair) return pair;
-            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
-                return new AsymmetricCipherKeyPair(null, privateKey);
+            var result = WrapKeyObject(keyObject);
+            if (result != null) return result;
         }
         catch (Exception ex)
         {
@@ -145,6 +152,19 @@ public static class Certificate
         }
 
         throw new ArgumentException("Unable to parse CA private key. Ensure the format is supported and the password (if any) is correct.", nameof(caKeyContents));
+    }
+
+    private static AsymmetricCipherKeyPair? WrapKeyObject(object? keyObject)
+    {
+        if (keyObject is AsymmetricCipherKeyPair pair) return pair;
+        if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
+            return new AsymmetricCipherKeyPair(null, privateKey);
+        return null;
+    }
+
+    private class StaticPasswordFinder(char[] password) : IPasswordFinder
+    {
+        public char[] GetPassword() => password;
     }
 
     private class NullPasswordFinder : IPasswordFinder
