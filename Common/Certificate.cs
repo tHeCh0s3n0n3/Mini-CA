@@ -92,14 +92,27 @@ public static class Certificate
     {
         ArgumentNullException.ThrowIfNull(caKeyContents);
         string keyHead = Encoding.UTF8.GetString(caKeyContents.Take(Math.Min(caKeyContents.Length, 100)).ToArray());
-        Console.WriteLine($"Importing CA Key. Header: {keyHead.Replace("\n", " ").Replace("\r", " ")}");
+        bool isEncrypted = keyHead.Contains("ENCRYPTED");
+        Console.WriteLine($"Importing CA Key. Encrypted: {isEncrypted}. Header: {keyHead.Replace("\n", " ").Replace("\r", " ")}");
 
         char[]? password = null;
-        if (!string.IsNullOrEmpty(caKeyPasswordPath) && File.Exists(caKeyPasswordPath))
+        if (!string.IsNullOrEmpty(caKeyPasswordPath))
         {
-            string passText = File.ReadAllText(caKeyPasswordPath, Encoding.UTF8).Trim();
-            password = passText.ToCharArray();
-            Console.WriteLine($"Password file found. Trimmed length: {passText.Length}");
+            string absolutePath = Path.GetFullPath(caKeyPasswordPath);
+            bool fileExists = File.Exists(absolutePath);
+            Console.WriteLine($"Checking for password file at: {absolutePath} (Exists: {fileExists})");
+            
+            if (fileExists)
+            {
+                string passText = File.ReadAllText(absolutePath, Encoding.UTF8).Trim();
+                password = passText.ToCharArray();
+                Console.WriteLine($"Password file loaded. Trimmed length: {passText.Length}");
+            }
+        }
+
+        if (isEncrypted && password == null)
+        {
+            Console.WriteLine("CRITICAL: CA key is encrypted but no valid password file was found.");
         }
 
         // Stage 1: Try with the password (if we found a finder path)
