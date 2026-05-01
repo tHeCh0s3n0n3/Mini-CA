@@ -92,7 +92,7 @@ public static class Certificate
     {
         ArgumentNullException.ThrowIfNull(caKeyContents);
 
-        // Try with password first if provided
+        // Stage 1: Try with the provided password if it exists
         if (!string.IsNullOrEmpty(caKeyPasswordPath) && File.Exists(caKeyPasswordPath))
         {
             try
@@ -102,32 +102,54 @@ public static class Certificate
                 PemReader caKeyReader = new(caKeySR, new CAKeyPasswordFinder(caKeyPasswordPath));
                 var keyObject = caKeyReader.ReadObject();
                 if (keyObject is AsymmetricCipherKeyPair pair) return pair;
+                if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
+                    return new AsymmetricCipherKeyPair(null, privateKey);
             }
             catch (Exception ex)
             {
-                // Log or trace that password-based decryption failed, falling back
-                Console.WriteLine($"Password-based key import failed, falling back to non-encrypted: {ex.Message}");
+                Console.WriteLine($"Stage 1 (Real Password) failed: {ex.Message}");
             }
         }
 
-        // Fallback: Try as a non-encrypted key
-        using (MemoryStream ms = new(caKeyContents))
-        using (StreamReader caKeySR = new(ms))
+        // Stage 2: Try with a Null Password Finder (Empty array)
+        // Some BouncyCastle formats THROW if no finder is provided, even if the password is empty
+        try
         {
+            using MemoryStream ms = new(caKeyContents);
+            using StreamReader caKeySR = new(ms);
+            PemReader caKeyReader = new(caKeySR, new NullPasswordFinder());
+            var keyObject = caKeyReader.ReadObject();
+            if (keyObject is AsymmetricCipherKeyPair pair) return pair;
+            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
+                return new AsymmetricCipherKeyPair(null, privateKey);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Stage 2 (Null Finder) failed: {ex.Message}");
+        }
+
+        // Stage 3: Final fallback - plain reader
+        try
+        {
+            using MemoryStream ms = new(caKeyContents);
+            using StreamReader caKeySR = new(ms);
             PemReader caKeyReader = new(caKeySR);
             var keyObject = caKeyReader.ReadObject();
-
             if (keyObject is AsymmetricCipherKeyPair pair) return pair;
-            
-            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate)
-            {
-                // If it's just the private key (common in PKCS#8), we still need the public key for a pair.
-                // For signing, we only need the private part, but our API uses the pair.
-                // Most users will have a pair in the PEM.
-            }
-
-            throw new ArgumentException("Not a certificate key file or format not supported. Ensure the key is either non-encrypted or the password file is correct.", nameof(caKeyContents));
+            if (keyObject is AsymmetricKeyParameter privateKey && privateKey.IsPrivate) 
+                return new AsymmetricCipherKeyPair(null, privateKey);
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Stage 3 (Plain Reader) failed: {ex.Message}");
+        }
+
+        throw new ArgumentException("Unable to parse CA private key. Ensure the format is supported and the password (if any) is correct.", nameof(caKeyContents));
+    }
+
+    private class NullPasswordFinder : IPasswordFinder
+    {
+        public char[] GetPassword() => Array.Empty<char>();
     }
 
     public static X509Certificate SignCSR(Pkcs10CertificationRequest csr
