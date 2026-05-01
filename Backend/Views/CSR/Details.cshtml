@@ -118,15 +118,15 @@
         </dl>
     }
 </div>
-<div>
+<div class="mt-4">
     <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
 
     @if (Model is not null
          && Model.OriginalRequestId is not null
          && Model.IsSigned.Equals(false))
     {
-        <a asp-action="Process" asp-route-id="@Model.OriginalRequestId" class="btn btn-secondary">
-            <i class="bi bi-check-lg"></i> Process
+        <a asp-action="Process" asp-route-id="@Model.OriginalRequestId" class="btn btn-secondary ms-2">
+            <i class="bi bi-check-lg"></i> Process CSR
         </a> 
     }
 </div>

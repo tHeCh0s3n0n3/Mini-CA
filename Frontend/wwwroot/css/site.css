@@ -120,11 +120,15 @@ a.navbar-brand {
   word-break: break-all;
   color: var(--text-color) !important;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  text-decoration: none !important;
 }
 
 .navbar-brand img {
   max-height: 40px;
   width: auto;
+  margin-right: 10px;
 }
 
 a {
