@@ -1,6 +1,8 @@
-﻿using Common;
+using Common;
 using DAL.Models;
 using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1;
 using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models;
@@ -45,6 +47,10 @@ public class ProcessViewModel
 
     [Display(Name = "Submitted On")]
     public DateTime? SubmittedOn { get; set; }
+
+    /* Source tracking for UI (CSR vs Default) */
+    public HashSet<string> UsagesFromCSR { get; set; } = [];
+    public HashSet<string> PurposesFromCSR { get; set; } = [];
 
     /** Signed CSR Properties **/
     [Display(Name = "Not After")]
@@ -135,6 +141,85 @@ public class ProcessViewModel
         IsSigned = csr.IsSigned;
         SubmittedOn = csr.SubmittedOn;
         FileSize = csr.FileContents.LongLength.GetReadableBytes();
+
+        ParseRequestedExtensions(csr);
+        ApplySmartDefaults();
+    }
+
+    private void ParseRequestedExtensions(CSR csr)
+    {
+        try
+        {
+            var pkcs10 = Common.Certificate.ImportCSR(csr.FileContents);
+            var attr = pkcs10.GetCertificationRequestInfo().Attributes;
+            if (attr == null) return;
+
+            for (int i = 0; i != attr.Count; i++)
+            {
+                var pkcsAttr = AttributePkcs.GetInstance(attr[i]);
+                if (pkcsAttr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                {
+                    var extensions = X509Extensions.GetInstance(pkcsAttr.AttrValues[0]);
+
+                    // Parse Key Usage
+                    var kuExt = extensions.GetExtension(X509Extensions.KeyUsage);
+                    if (kuExt != null)
+                    {
+                        var ku = KeyUsage.GetInstance(kuExt.GetParsedValue());
+                        int bits = ku.PadBits == 0 ? ku.GetBytes()[0] : ku.GetBytes()[0] & (0xff << ku.PadBits);
+
+                        if ((bits & KeyUsage.DigitalSignature) != 0) { UsageDigitalSignature = true; UsagesFromCSR.Add(nameof(UsageDigitalSignature)); }
+                        if ((bits & KeyUsage.NonRepudiation) != 0) { UsageNonRepudiation = true; UsagesFromCSR.Add(nameof(UsageNonRepudiation)); }
+                        if ((bits & KeyUsage.KeyEncipherment) != 0) { UsageKeyEncipherment = true; UsagesFromCSR.Add(nameof(UsageKeyEncipherment)); }
+                        if ((bits & KeyUsage.DataEncipherment) != 0) { UsageDataEncipherment = true; UsagesFromCSR.Add(nameof(UsageDataEncipherment)); }
+                        if ((bits & KeyUsage.KeyAgreement) != 0) { UsageKeyAgreement = true; UsagesFromCSR.Add(nameof(UsageKeyAgreement)); }
+                        if ((bits & KeyUsage.KeyCertSign) != 0) { UsageKeyCertSigning = true; UsagesFromCSR.Add(nameof(UsageKeyCertSigning)); }
+                        if ((bits & KeyUsage.CrlSign) != 0) { UsageCRLSigning = true; UsagesFromCSR.Add(nameof(UsageCRLSigning)); }
+                        if ((bits & KeyUsage.EncipherOnly) != 0) { UsageEncipherOnly = true; UsagesFromCSR.Add(nameof(UsageEncipherOnly)); }
+                        if ((bits & KeyUsage.DecipherOnly) != 0) { UsageDecipherOnly = true; UsagesFromCSR.Add(nameof(UsageDecipherOnly)); }
+                    }
+
+                    // Parse EKU (Purposes)
+                    var ekuExt = extensions.GetExtension(X509Extensions.ExtendedKeyUsage);
+                    if (ekuExt != null)
+                    {
+                        var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
+                        foreach (var purpose in eku.GetAllUsages())
+                        {
+                            if (purpose.Equals(KeyPurposeID.AnyExtendedKeyUsage)) { PurposeAll = true; PurposesFromCSR.Add(nameof(PurposeAll)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPServerAuth)) { PurposeServerAuth = true; PurposesFromCSR.Add(nameof(PurposeServerAuth)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPClientAuth)) { PurposeClientAuth = true; PurposesFromCSR.Add(nameof(PurposeClientAuth)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPCodeSigning)) { PurposeCodeSigning = true; PurposesFromCSR.Add(nameof(PurposeCodeSigning)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPEmailProtection)) { PurposeEMailProtection = true; PurposesFromCSR.Add(nameof(PurposeEMailProtection)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPIpsecEndSystem)) { PurposeIPsecEndSystem = true; PurposesFromCSR.Add(nameof(PurposeIPsecEndSystem)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPIpsecTunnel)) { PurposeIPsecTunnel = true; PurposesFromCSR.Add(nameof(PurposeIPsecTunnel)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPIpsecUser)) { PurposeIPsecUser = true; PurposesFromCSR.Add(nameof(PurposeIPsecUser)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPTimeStamping)) { PurposeTimeStamping = true; PurposesFromCSR.Add(nameof(PurposeTimeStamping)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPOcspSigning)) { PurposeOCSPSigning = true; PurposesFromCSR.Add(nameof(PurposeOCSPSigning)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPSmartCardLogon)) { PurposeSmartCardLogon = true; PurposesFromCSR.Add(nameof(PurposeSmartCardLogon)); }
+                            if (purpose.Equals(KeyPurposeID.IdKPMacAddress)) { PurposeMACAddress = true; PurposesFromCSR.Add(nameof(PurposeMACAddress)); }
+                        }
+                    }
+                }
+            }
+        }
+        catch { /* Best effort */ }
+    }
+
+    private void ApplySmartDefaults()
+    {
+        // If no purposes were requested, default to Server Auth
+        if (PurposesFromCSR.Count == 0)
+        {
+            PurposeServerAuth = true;
+        }
+
+        // If no usages were requested, default to standard TLS pair
+        if (UsagesFromCSR.Count == 0)
+        {
+            UsageDigitalSignature = true;
+            UsageKeyEncipherment = true;
+        }
     }
 
     public static KeyPurposeID? GetKeyPurpose(string purpose)

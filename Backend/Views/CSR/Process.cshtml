@@ -109,91 +109,136 @@
             <div class="col-3">
                 <h6>Certificate Purpose</h6>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeAll" data-type="purpose" class="form-check-input" onclick="AllPurposesSelected(this);" />
+                    @{ var isCSR_PurposeAll = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeAll)) ?? false; }
+                    <input asp-for="PurposeAll" data-type="purpose" class="form-check-input" onclick="AllPurposesSelected(this);" disabled="@(isCSR_PurposeAll ? "disabled" : null)" />
                     <label asp-for="PurposeAll" class="form-check-label"></label>
+                    @if (isCSR_PurposeAll) { <input type="hidden" asp-for="PurposeAll" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeServerAuth" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeServerAuth = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeServerAuth)) ?? false; }
+                    <input asp-for="PurposeServerAuth" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeServerAuth ? "disabled" : null)" />
                     <label asp-for="PurposeServerAuth" class="form-check-label"></label>
+                    @if (isCSR_PurposeServerAuth) { <input type="hidden" asp-for="PurposeServerAuth" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
+                    else if (Model?.PurposeServerAuth ?? false) { <span class="badge bg-secondary ms-1" title="Recommended Default">Default</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeClientAuth" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeClientAuth = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeClientAuth)) ?? false; }
+                    <input asp-for="PurposeClientAuth" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeClientAuth ? "disabled" : null)" />
                     <label asp-for="PurposeClientAuth" class="form-check-label"></label>
+                    @if (isCSR_PurposeClientAuth) { <input type="hidden" asp-for="PurposeClientAuth" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeCodeSigning" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeCodeSigning = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeCodeSigning)) ?? false; }
+                    <input asp-for="PurposeCodeSigning" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeCodeSigning ? "disabled" : null)" />
                     <label asp-for="PurposeCodeSigning" class="form-check-label"></label>
+                    @if (isCSR_PurposeCodeSigning) { <input type="hidden" asp-for="PurposeCodeSigning" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeEMailProtection" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeEMailProtection = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeEMailProtection)) ?? false; }
+                    <input asp-for="PurposeEMailProtection" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeEMailProtection ? "disabled" : null)" />
                     <label asp-for="PurposeEMailProtection" class="form-check-label"></label>
+                    @if (isCSR_PurposeEMailProtection) { <input type="hidden" asp-for="PurposeEMailProtection" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeIPsecEndSystem" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeIPsecEndSystem = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeIPsecEndSystem)) ?? false; }
+                    <input asp-for="PurposeIPsecEndSystem" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeIPsecEndSystem ? "disabled" : null)" />
                     <label asp-for="PurposeIPsecEndSystem" class="form-check-label"></label>
+                    @if (isCSR_PurposeIPsecEndSystem) { <input type="hidden" asp-for="PurposeIPsecEndSystem" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeIPsecTunnel" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeIPsecTunnel = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeIPsecTunnel)) ?? false; }
+                    <input asp-for="PurposeIPsecTunnel" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeIPsecTunnel ? "disabled" : null)" />
                     <label asp-for="PurposeIPsecTunnel" class="form-check-label"></label>
+                    @if (isCSR_PurposeIPsecTunnel) { <input type="hidden" asp-for="PurposeIPsecTunnel" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeIPsecUser" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeIPsecUser = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeIPsecUser)) ?? false; }
+                    <input asp-for="PurposeIPsecUser" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeIPsecUser ? "disabled" : null)" />
                     <label asp-for="PurposeIPsecUser" class="form-check-label"></label>
+                    @if (isCSR_PurposeIPsecUser) { <input type="hidden" asp-for="PurposeIPsecUser" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeTimeStamping" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeTimeStamping = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeTimeStamping)) ?? false; }
+                    <input asp-for="PurposeTimeStamping" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeTimeStamping ? "disabled" : null)" />
                     <label asp-for="PurposeTimeStamping" class="form-check-label"></label>
+                    @if (isCSR_PurposeTimeStamping) { <input type="hidden" asp-for="PurposeTimeStamping" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeOCSPSigning" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeOCSPSigning = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeOCSPSigning)) ?? false; }
+                    <input asp-for="PurposeOCSPSigning" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeOCSPSigning ? "disabled" : null)" />
                     <label asp-for="PurposeOCSPSigning" class="form-check-label"></label>
+                    @if (isCSR_PurposeOCSPSigning) { <input type="hidden" asp-for="PurposeOCSPSigning" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeSmartCardLogon" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeSmartCardLogon = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeSmartCardLogon)) ?? false; }
+                    <input asp-for="PurposeSmartCardLogon" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeSmartCardLogon ? "disabled" : null)" />
                     <label asp-for="PurposeSmartCardLogon" class="form-check-label"></label>
+                    @if (isCSR_PurposeSmartCardLogon) { <input type="hidden" asp-for="PurposeSmartCardLogon" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="PurposeMACAddress" data-type="purpose" class="form-check-input" />
+                    @{ var isCSR_PurposeMACAddress = Model?.PurposesFromCSR.Contains(nameof(Model.PurposeMACAddress)) ?? false; }
+                    <input asp-for="PurposeMACAddress" data-type="purpose" class="form-check-input" disabled="@(isCSR_PurposeMACAddress ? "disabled" : null)" />
                     <label asp-for="PurposeMACAddress" class="form-check-label"></label>
+                    @if (isCSR_PurposeMACAddress) { <input type="hidden" asp-for="PurposeMACAddress" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
             </div>
             <div class="col-3">
                 <h6>Certificate Usage</h6>
                 <div class="form-group form-check">
-                    <input asp-for="UsageDigitalSignature" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageDigitalSignature = Model?.UsagesFromCSR.Contains(nameof(Model.UsageDigitalSignature)) ?? false; }
+                    <input asp-for="UsageDigitalSignature" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageDigitalSignature ? "disabled" : null)" />
                     <label asp-for="UsageDigitalSignature" class="form-check-label"></label>
+                    @if (isCSR_UsageDigitalSignature) { <input type="hidden" asp-for="UsageDigitalSignature" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
+                    else if (Model?.UsageDigitalSignature ?? false) { <span class="badge bg-secondary ms-1" title="Recommended Default">Default</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageNonRepudiation" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageNonRepudiation = Model?.UsagesFromCSR.Contains(nameof(Model.UsageNonRepudiation)) ?? false; }
+                    <input asp-for="UsageNonRepudiation" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageNonRepudiation ? "disabled" : null)" />
                     <label asp-for="UsageNonRepudiation" class="form-check-label"></label>
+                    @if (isCSR_UsageNonRepudiation) { <input type="hidden" asp-for="UsageNonRepudiation" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageKeyEncipherment" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageKeyEncipherment = Model?.UsagesFromCSR.Contains(nameof(Model.UsageKeyEncipherment)) ?? false; }
+                    <input asp-for="UsageKeyEncipherment" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageKeyEncipherment ? "disabled" : null)" />
                     <label asp-for="UsageKeyEncipherment" class="form-check-label"></label>
+                    @if (isCSR_UsageKeyEncipherment) { <input type="hidden" asp-for="UsageKeyEncipherment" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
+                    else if (Model?.UsageKeyEncipherment ?? false) { <span class="badge bg-secondary ms-1" title="Recommended Default">Default</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageDataEncipherment" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageDataEncipherment = Model?.UsagesFromCSR.Contains(nameof(Model.UsageDataEncipherment)) ?? false; }
+                    <input asp-for="UsageDataEncipherment" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageDataEncipherment ? "disabled" : null)" />
                     <label asp-for="UsageDataEncipherment" class="form-check-label"></label>
+                    @if (isCSR_UsageDataEncipherment) { <input type="hidden" asp-for="UsageDataEncipherment" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageKeyAgreement" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageKeyAgreement = Model?.UsagesFromCSR.Contains(nameof(Model.UsageKeyAgreement)) ?? false; }
+                    <input asp-for="UsageKeyAgreement" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageKeyAgreement ? "disabled" : null)" />
                     <label asp-for="UsageKeyAgreement" class="form-check-label"></label>
+                    @if (isCSR_UsageKeyAgreement) { <input type="hidden" asp-for="UsageKeyAgreement" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageKeyCertSigning" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageKeyCertSigning = Model?.UsagesFromCSR.Contains(nameof(Model.UsageKeyCertSigning)) ?? false; }
+                    <input asp-for="UsageKeyCertSigning" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageKeyCertSigning ? "disabled" : null)" />
                     <label asp-for="UsageKeyCertSigning" class="form-check-label"></label>
+                    @if (isCSR_UsageKeyCertSigning) { <input type="hidden" asp-for="UsageKeyCertSigning" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageCRLSigning" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageCRLSigning = Model?.UsagesFromCSR.Contains(nameof(Model.UsageCRLSigning)) ?? false; }
+                    <input asp-for="UsageCRLSigning" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageCRLSigning ? "disabled" : null)" />
                     <label asp-for="UsageCRLSigning" class="form-check-label"></label>
+                    @if (isCSR_UsageCRLSigning) { <input type="hidden" asp-for="UsageCRLSigning" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageEncipherOnly" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageEncipherOnly = Model?.UsagesFromCSR.Contains(nameof(Model.UsageEncipherOnly)) ?? false; }
+                    <input asp-for="UsageEncipherOnly" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageEncipherOnly ? "disabled" : null)" />
                     <label asp-for="UsageEncipherOnly" class="form-check-label"></label>
+                    @if (isCSR_UsageEncipherOnly) { <input type="hidden" asp-for="UsageEncipherOnly" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
                 <div class="form-group form-check">
-                    <input asp-for="UsageDecipherOnly" data-type="usage" class="form-check-input" />
+                    @{ var isCSR_UsageDecipherOnly = Model?.UsagesFromCSR.Contains(nameof(Model.UsageDecipherOnly)) ?? false; }
+                    <input asp-for="UsageDecipherOnly" data-type="usage" class="form-check-input" disabled="@(isCSR_UsageDecipherOnly ? "disabled" : null)" />
                     <label asp-for="UsageDecipherOnly" class="form-check-label"></label>
+                    @if (isCSR_UsageDecipherOnly) { <input type="hidden" asp-for="UsageDecipherOnly" /> <span class="badge bg-info text-dark ms-1" title="Requested in CSR">CSR</span> }
                 </div>
             </div>
         </div>

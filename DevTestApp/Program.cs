@@ -1,7 +1,8 @@
 using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Pkcs;
 using System.Text;
-using Org.BouncyCastle.X509;
-using Org.BouncyCastle.Crypto;
 
 try {
     string csrPem = @"-----BEGIN CERTIFICATE REQUEST-----
@@ -25,29 +26,38 @@ HXhkgfU6Z18B4oLG3RK7qryv2ZiRaSbCCyTMimxrSvy5HRYyWb03aaaBM7XQBT9C
 -----END CERTIFICATE REQUEST-----";
     byte[] csrBytes = Encoding.UTF8.GetBytes(csrPem);
     Pkcs10CertificationRequest csr = Common.Certificate.ImportCSR(csrBytes);
-    Console.WriteLine("CSR Import successful.");
-
-    string caCertPath = "rootca.crt";
-    string caKeyPath = "rootca.key";
     
-    X509Certificate caCert = Common.Certificate.ImportCACert(caCertPath);
-    Console.WriteLine("CA Cert Import successful.");
+    Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+    if (attributes != null)
+    {
+        for (int i = 0; i != attributes.Count; i++)
+        {
+            AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
+            if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+            {
+                X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
+                
+                var kuExt = extensions.GetExtension(X509Extensions.KeyUsage);
+                if (kuExt != null) {
+                    var ku = KeyUsage.GetInstance(kuExt.GetParsedValue());
+                    Console.WriteLine($"Key Usage in CSR: {ku.GetBytes()[0]:X}");
+                } else {
+                    Console.WriteLine("No Key Usage in CSR.");
+                }
 
-    AsymmetricCipherKeyPair caKey = Common.Certificate.ImportCAKey(caKeyPath, null);
-    Console.WriteLine("CA Key Import successful.");
-
-    var keyUsages = new List<int> { 
-        Org.BouncyCastle.Asn1.X509.KeyUsage.DigitalSignature, 
-        Org.BouncyCastle.Asn1.X509.KeyUsage.KeyEncipherment 
-    };
-    var keyPurposes = new List<Org.BouncyCastle.Asn1.X509.KeyPurposeID> { 
-        Org.BouncyCastle.Asn1.X509.KeyPurposeID.IdKPServerAuth 
-    };
-
-    X509Certificate signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposes);
-    Console.WriteLine("CSR Signing successful!");
-    Console.WriteLine(Common.Certificate.CertToFile(signedCert));
-
+                var ekuExt = extensions.GetExtension(X509Extensions.ExtendedKeyUsage);
+                if (ekuExt != null) {
+                    var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
+                    Console.WriteLine("EKUs in CSR:");
+                    foreach (KeyPurposeID p in eku.GetUsages()) {
+                        Console.WriteLine($"- {p}");
+                    }
+                } else {
+                    Console.WriteLine("No EKU (Purposes) in CSR.");
+                }
+            }
+        }
+    }
 } catch (Exception ex) {
     Console.WriteLine("Error: " + ex.ToString());
 }
