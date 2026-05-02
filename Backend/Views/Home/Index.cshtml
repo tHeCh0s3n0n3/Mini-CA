@@ -43,8 +43,8 @@
     <div class="card-body">
         <h5 class="card-title text-warning">Infrastructure Configuration</h5>
         <p class="card-text">Use the following Directory URL for ACME clients (Certbot, Traefik, etc.):</p>
-        <div class="bg-secondary p-3 rounded">
-            <code class="text-white" id="acmeUrl">@($"{Context.Request.Scheme}://{Context.Request.Host}/acme/directory")</code>
+        <div class="bg-light p-3 rounded">
+            <code id="acmeUrl">@($"{Context.Request.Scheme}://{Context.Request.Host}/acme/directory")</code>
         </div>
         <small class="text-muted d-block mt-2">Note: Registration requires a valid EAB Key ID and HMAC Key.</small>
     </div>

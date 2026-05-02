@@ -260,9 +260,13 @@ html {
 }
 
 [data-theme="dark"] code, [data-theme="dark"] pre {
-  background-color: #2b2b2b !important;
+  background-color: transparent !important;
   color: #f8f8f2 !important;
   border-color: #444 !important;
+}
+
+code {
+  background-color: transparent !important;
 }
 
 /* Custom Toggle */
