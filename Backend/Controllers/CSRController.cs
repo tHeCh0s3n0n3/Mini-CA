@@ -104,22 +104,58 @@ public class CSRController : Controller
     // GET: CSR/Create
     public IActionResult Create()
     {
-        return View();
+        return View(new CreateCSRViewModel());
     }
 
     // POST: CSR/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CSR csr)
+    public async Task<IActionResult> Create(CreateCSRViewModel model)
     {
         if (ModelState.IsValid)
         {
+            var sans = model.AlternateNames?.Select(s => (s.Type, s.Value)).ToList() ?? [];
+            var (csrPem, keyPem) = Common.Certificate.GenerateCSR(
+                model.CommonName, 
+                model.Organization, 
+                model.OrganizationUnitName ?? "", 
+                model.CountryCode, 
+                model.Locality ?? "", 
+                model.State ?? "", 
+                model.EMailAddress, 
+                sans, 
+                model.RequestedKeyUsages, 
+                model.RequestedKeyPurposes);
+
+            CSR csr = new()
+            {
+                CommonName = model.CommonName,
+                Organization = model.Organization,
+                OrganizationUnitName = model.OrganizationUnitName ?? "",
+                CountryCode = model.CountryCode,
+                Locality = model.Locality ?? "",
+                State = model.State ?? "",
+                EMailAddress = model.EMailAddress,
+                AlternateNamesList = model.AlternateNames?.Select(s => s.Value).ToList() ?? [],
+                FileContents = csrPem,
+                FileName = $"{model.CommonName}.csr",
+                SubmittedOn = DateTime.UtcNow,
+                IsSigned = false,
+                UserId = User.Identity?.Name
+            };
+
             _db.CSRs.Add(csr);
             await _db.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            return View("CreateSuccess", new CSRGeneratedSuccessViewModel 
+            { 
+                CSR = csr, 
+                PrivateKeyPem = Encoding.UTF8.GetString(keyPem) 
+            });
         }
-        return View(csr);
+        return View(model);
     }
+
 
     public IActionResult Upload()
     {

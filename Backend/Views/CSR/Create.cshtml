@@ -1,69 +1,171 @@
-﻿@model DAL.Models.CSR
+@model Backend.Models.CreateCSRViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Generate New CSR & Key";
 }
 
-<h1>Create</h1>
+<h1>Generate New CSR</h1>
 
-<h4>CSR</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-8">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="CountryCode" class="control-label"></label>
-                <input asp-for="CountryCode" class="form-control" />
-                <span asp-validation-for="CountryCode" class="text-danger"></span>
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Subject Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CommonName" class="control-label"></label>
+                            <input asp-for="CommonName" class="form-control" placeholder="e.g. server.local" />
+                            <span asp-validation-for="CommonName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EMailAddress" class="control-label"></label>
+                            <input asp-for="EMailAddress" class="form-control" />
+                            <span asp-validation-for="EMailAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Organization" class="control-label"></label>
+                            <input asp-for="Organization" class="form-control" />
+                            <span asp-validation-for="Organization" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OrganizationUnitName" class="control-label"></label>
+                            <input asp-for="OrganizationUnitName" class="form-control" />
+                            <span asp-validation-for="OrganizationUnitName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="CountryCode" class="control-label"></label>
+                            <input asp-for="CountryCode" class="form-control" />
+                            <span asp-validation-for="CountryCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Locality" class="control-label"></label>
+                            <input asp-for="Locality" class="form-control" />
+                            <span asp-validation-for="Locality" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="State" class="control-label"></label>
+                            <input asp-for="State" class="form-control" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Organization" class="control-label"></label>
-                <input asp-for="Organization" class="form-control" />
-                <span asp-validation-for="Organization" class="text-danger"></span>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Alternate Names (SANs)</h5>
+                </div>
+                <div class="card-body">
+                    <div id="san-container">
+                        @for (int i = 0; i < Model.AlternateNames.Count; i++)
+                        {
+                            <div class="input-group mb-2 san-row">
+                                <select name="AlternateNames[@i].Type" class="form-select" style="max-width: 150px;">
+                                    <option value="2" selected="@(Model.AlternateNames[i].Type == 2)">DNS Name</option>
+                                    <option value="7" selected="@(Model.AlternateNames[i].Type == 7)">IP Address</option>
+                                    <option value="1" selected="@(Model.AlternateNames[i].Type == 1)">Email</option>
+                                    <option value="6" selected="@(Model.AlternateNames[i].Type == 6)">URI</option>
+                                </select>
+                                <input name="AlternateNames[@i].Value" value="@Model.AlternateNames[i].Value" class="form-control" />
+                                <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        }
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSanRow()"><i class="bi bi-plus"></i> Add Alternate Name</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="OrganizationUnitName" class="control-label"></label>
-                <input asp-for="OrganizationUnitName" class="form-control" />
-                <span asp-validation-for="OrganizationUnitName" class="text-danger"></span>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Purposes</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input asp-for="PurposeServerAuth" class="form-check-input" />
+                                <label asp-for="PurposeServerAuth" class="form-check-label"></label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="PurposeClientAuth" class="form-check-input" />
+                                <label asp-for="PurposeClientAuth" class="form-check-label"></label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="PurposeCodeSigning" class="form-check-input" />
+                                <label asp-for="PurposeCodeSigning" class="form-check-label"></label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="PurposeEMailProtection" class="form-check-input" />
+                                <label asp-for="PurposeEMailProtection" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Key Usage</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-check mb-2">
+                                <input asp-for="UsageDigitalSignature" class="form-check-input" />
+                                <label asp-for="UsageDigitalSignature" class="form-check-label"></label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input asp-for="UsageKeyEncipherment" class="form-check-input" />
+                                <label asp-for="UsageKeyEncipherment" class="form-check-label"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CommonName" class="control-label"></label>
-                <input asp-for="CommonName" class="form-control" />
-                <span asp-validation-for="CommonName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Locality" class="control-label"></label>
-                <input asp-for="Locality" class="form-control" />
-                <span asp-validation-for="Locality" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <input asp-for="State" class="form-control" />
-                <span asp-validation-for="State" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EMailAddress" class="control-label"></label>
-                <input asp-for="EMailAddress" class="form-control" />
-                <span asp-validation-for="EMailAddress" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FileContents" class="control-label"></label>
-                <input asp-for="FileContents" class="form-control" />
-                <span asp-validation-for="FileContents" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FileName" class="control-label"></label>
-                <input asp-for="FileName" class="form-control" />
-                <span asp-validation-for="FileName" class="text-danger"></span>
-            </div>
+
             <div class="form-group mt-4">
                 <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
-                <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-plus-lg"></i> Create CSR</button>
+                <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-gear-fill"></i> Generate CSR & Private Key</button>
             </div>
         </form>
     </div>
 </div>
+
+@section HeadScripts {
+    <script>
+        function removeSanRow(btn) {
+            $(btn).closest('.san-row').remove();
+            reindexSanRows();
+        }
+
+        function addSanRow() {
+            var index = $('.san-row').length;
+            var rowHtml = `
+                <div class="input-group mb-2 san-row">
+                    <select name="AlternateNames[${index}].Type" class="form-select" style="max-width: 150px;">
+                        <option value="2">DNS Name</option>
+                        <option value="7">IP Address</option>
+                        <option value="1">Email</option>
+                        <option value="6">URI</option>
+                    </select>
+                    <input name="AlternateNames[${index}].Value" class="form-control" />
+                    <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
+                </div>
+            `;
+            $('#san-container').append(rowHtml);
+            reindexSanRows();
+        }
+
+        function reindexSanRows() {
+            $('.san-row').each(function(index) {
+                $(this).find('select').attr('name', 'AlternateNames[' + index + '].Type');
+                $(this).find('input').attr('name', 'AlternateNames[' + index + '].Value');
+            });
+        }
+    </script>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

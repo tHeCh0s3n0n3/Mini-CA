@@ -1,0 +1,58 @@
+@model Backend.Models.CSRGeneratedSuccessViewModel
+
+@{
+    ViewData["Title"] = "CSR and Key Generated";
+}
+
+<h1>CSR & Private Key Generated</h1>
+
+<div class="alert alert-warning mt-4">
+    <i class="bi bi-exclamation-triangle-fill"></i> <strong>CRITICAL:</strong> The private key is NOT stored on the server for security reasons. Download it now and save it in a secure location. You will NOT be able to recover it once you leave this page.
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Details</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Common Name</dt>
+                    <dd class="col-sm-9">@Model.CSR.CommonName</dd>
+
+                    <dt class="col-sm-3">Organization</dt>
+                    <dd class="col-sm-9">@Model.CSR.Organization</dd>
+
+                    <dt class="col-sm-3">Filename</dt>
+                    <dd class="col-sm-9">@Model.CSR.FileName</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-primary btn-lg" onclick="downloadKey()">
+                <i class="bi bi-key"></i> Download Private Key (.key)
+            </button>
+            <a asp-action="Process" asp-route-id="@Model.CSR.Id" class="btn btn-success btn-lg ms-2">
+                <i class="bi bi-check-lg"></i> Proceed to Sign Certificate
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary btn-lg ms-2">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function downloadKey() {
+        const key = `@Html.Raw(Model.PrivateKeyPem.Replace("`", "\\`"))`;
+        const blob = new Blob([key], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `@(Model.CSR.CommonName).key`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+</script>

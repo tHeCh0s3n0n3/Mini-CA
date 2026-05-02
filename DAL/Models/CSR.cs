@@ -55,7 +55,6 @@ public class CSR
 
     public string AlternateNames { get; set; } = string.Empty;
 
-    [Required]
     [Display(Name = "City")]
     public string Locality { get; set; } = string.Empty;
 

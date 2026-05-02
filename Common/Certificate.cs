@@ -332,6 +332,75 @@ public static class Certificate
         return certGen.Generate(signatureFactory);
     }
 
+    public static (byte[] CsrPem, byte[] KeyPem) GenerateCSR(string commonName, string org, string ou, string country, string locality, string state, string email, List<(int TagNo, string Value)> sans, List<int> usages, List<KeyPurposeID> purposes)
+    {
+        // Generate RSA Key Pair
+        var kpGen = new Org.BouncyCastle.Crypto.Generators.RsaKeyPairGenerator();
+        kpGen.Init(new KeyGenerationParameters(new SecureRandom(), 2048));
+        var keyPair = kpGen.GenerateKeyPair();
+
+        // Build Subject DN
+        var nameValues = new Dictionary<DerObjectIdentifier, string>
+        {
+            { X509Name.CN, commonName },
+            { X509Name.O, org },
+            { X509Name.C, country },
+            { X509Name.E, email }
+        };
+        if (!string.IsNullOrWhiteSpace(ou)) nameValues.Add(X509Name.OU, ou);
+        if (!string.IsNullOrWhiteSpace(locality)) nameValues.Add(X509Name.L, locality);
+        if (!string.IsNullOrWhiteSpace(state)) nameValues.Add(X509Name.ST, state);
+
+        var subject = new X509Name(nameValues.Keys.Reverse().ToList(), nameValues.Values.Reverse().ToList());
+
+        // Build Extensions
+        var extensionsGenerator = new X509ExtensionsGenerator();
+        
+        if (usages.Any())
+        {
+            extensionsGenerator.AddExtension(X509Extensions.KeyUsage, true, new KeyUsage(usages.Aggregate(0, (ku, next) => ku |= next)));
+        }
+
+        if (purposes.Any())
+        {
+            extensionsGenerator.AddExtension(X509Extensions.ExtendedKeyUsage, false, new ExtendedKeyUsage(purposes.ToArray()));
+        }
+
+        if (sans.Any())
+        {
+            var gnList = sans.Select(s => new GeneralName(s.TagNo, s.Value)).ToArray();
+            extensionsGenerator.AddExtension(X509Extensions.SubjectAlternativeName, false, new GeneralNames(gnList));
+        }
+
+        var attribute = new AttributePkcs(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest, new DerSet(extensionsGenerator.Generate()));
+        
+        // Create CSR
+        var pkcs10 = new Pkcs10CertificationRequest(
+            "SHA256WITHRSA",
+            subject,
+            keyPair.Public,
+            new DerSet(attribute),
+            keyPair.Private);
+
+        // Export to PEM
+        StringBuilder csrSb = new();
+        csrSb.AppendLine("-----BEGIN CERTIFICATE REQUEST-----");
+        csrSb.AppendLine(Convert.ToBase64String(pkcs10.GetEncoded(), Base64FormattingOptions.InsertLineBreaks));
+        csrSb.AppendLine("-----END CERTIFICATE REQUEST-----");
+
+        StringBuilder keySb = new();
+        keySb.AppendLine("-----BEGIN RSA PRIVATE KEY-----");
+        
+        // Export PKCS#1 Private Key
+        var privateKeyInfo = Org.BouncyCastle.Pkcs.PrivateKeyInfoFactory.CreatePrivateKeyInfo(keyPair.Private);
+        var innerKey = privateKeyInfo.ParsePrivateKey();
+        keySb.AppendLine(Convert.ToBase64String(innerKey.GetDerEncoded(), Base64FormattingOptions.InsertLineBreaks));
+        keySb.AppendLine("-----END RSA PRIVATE KEY-----");
+
+        return (Encoding.UTF8.GetBytes(csrSb.ToString()), Encoding.UTF8.GetBytes(keySb.ToString()));
+    }
+
+
     public static string CertToFile(X509Certificate signedCert)
     {
         StringBuilder sb = new();
