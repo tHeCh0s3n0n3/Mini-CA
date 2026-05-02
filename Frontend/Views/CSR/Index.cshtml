@@ -123,28 +123,32 @@
             <div class="form-group mb-3">
                 <label for="osSelector" class="form-label font-weight-bold">Select your Platform:</label>
                 <select id="osSelector" class="form-select w-auto d-inline-block ml-2" onchange="showInstructions(this.value)">
-                    <option value="windows">Windows</option>
-                    <option value="linux">Linux</option>
-                    <option value="chrome">Chrome / Chromium</option>
+                    <option value="windows">Windows (System, Edge, Chrome)</option>
+                    <option value="linux">Linux (System-wide)</option>
+                    <option value="chrome">Chrome / Chromium (Linux NSS)</option>
                     <option value="android">Android</option>
                 </select>
             </div>
 
             <div id="instructions-windows" class="instruction-block">
-                <h6>Windows (PowerShell)</h6>
-                <p>Run the following command in an <strong>Administrator</strong> PowerShell window:</p>
+                <h6>Windows (System-wide, Chrome, Edge)</h6>
+                <p>On Windows, most browsers use the system certificate store. Run the following command in an <strong>Administrator</strong> PowerShell window:</p>
                 <pre class="bg-light p-3 border rounded"><code>Import-Certificate -FilePath "minica-root.crt" -CertStoreLocation Cert:\LocalMachine\Root</code></pre>
             </div>
 
             <div id="instructions-linux" class="instruction-block" style="display:none;">
                 <h6>Linux (Ubuntu/Debian)</h6>
+                <p>For system-wide trust (CURL, Python, etc.):</p>
                 <pre class="bg-light p-3 border rounded"><code>sudo cp minica-root.crt /usr/local/share/ca-certificates/
 sudo update-ca-certificates</code></pre>
             </div>
 
             <div id="instructions-chrome" class="instruction-block" style="display:none;">
-                <h6>Chrome / Chromium</h6>
-                <p>Chrome usually inherits the OS certificate store (Windows/macOS). On Linux, you may need to add it to the NSS database:</p>
+                <h6>Chrome / Chromium (Linux specific)</h6>
+                <div class="alert alert-info">
+                    <strong>Note:</strong> On Windows and macOS, Chrome automatically uses the system store. Please use the <strong>Windows</strong> instructions above instead.
+                </div>
+                <p>On Linux, Chrome uses its own NSS database. You may need to add the certificate manually:</p>
                 <pre class="bg-light p-3 border rounded"><code>certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "Mini CA" -i minica-root.crt</code></pre>
             </div>
 
