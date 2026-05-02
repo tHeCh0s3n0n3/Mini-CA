@@ -19,6 +19,9 @@ public class Startup
     {
         Configuration = configuration;
         Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose()
+            .WriteTo.Console()
+            .WriteTo.File("/app/logs/Log.txt", rollingInterval: RollingInterval.Day)
             .ReadFrom.Configuration(Configuration)
             .CreateLogger();
 
