@@ -62,9 +62,7 @@ The system supports several overrides via `appsettings.json` or environment vari
 - **Verify Tools First:** Before starting any task, explicitly verify that required tools (e.g., `dotnet`, `git`, `dotnet-ef`) are installed and accessible in the current environment. 
 
 ### Git & Commit Standards
-- **Build Before Commit:** A successful build (`dotnet build`) with **zero errors** and **zero nullable warnings** is a mandatory prerequisite for any git commit. 
-- **Atomic Commits:** Prefer small, focused commits that correspond to specific tasks in an implementation plan.
-- **Tagging Discipline:** Do NOT tag a new release for non-functional changes (e.g., documentation, comments, `docker-compose.yaml` tweaks) to avoid unnecessary CI/CD image builds.
+- **Build Before Commit:** A successful build (`dotnet build`) with **zero errors** and **zero warnings** (including nullable and obsolete warnings) is a mandatory prerequisite for any git commit. Warnings are treated as errors unless an explicit exception is granted by the user.
 
 ## Development Conventions
 

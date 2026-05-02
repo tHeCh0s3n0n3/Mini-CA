@@ -49,7 +49,7 @@ HXhkgfU6Z18B4oLG3RK7qryv2ZiRaSbCCyTMimxrSvy5HRYyWb03aaaBM7XQBT9C
                 if (ekuExt != null) {
                     var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
                     Console.WriteLine("EKUs in CSR:");
-                    foreach (KeyPurposeID p in eku.GetUsages()) {
+                    foreach (KeyPurposeID p in eku.GetAllUsages()) {
                         Console.WriteLine($"- {p}");
                     }
                 } else {
