@@ -26,9 +26,20 @@ public class Startup
             .CreateLogger();
 
         var masterKeyPath = Configuration["Acme:MasterKeyPath"];
-        if (!string.IsNullOrEmpty(masterKeyPath) && File.Exists(masterKeyPath))
+        if (!string.IsNullOrEmpty(masterKeyPath))
         {
-            Common.Encryption.Initialize(masterKeyPath);
+            if (File.Exists(masterKeyPath))
+            {
+                Common.Encryption.Initialize(masterKeyPath);
+            }
+            else
+            {
+                Log.Error("Master key file not found at {Path}. Encryption will not be available.", masterKeyPath);
+            }
+        }
+        else
+        {
+            Log.Warning("Acme:MasterKeyPath is not configured. Encryption will not be available.");
         }
     }
 

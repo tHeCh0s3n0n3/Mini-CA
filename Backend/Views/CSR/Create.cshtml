@@ -7,48 +7,49 @@
 <h1>Generate New CSR</h1>
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10 mx-auto">
         <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark text-white">
                     <h5 class="mb-0">Subject Information</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="CommonName" class="control-label"></label>
-                            <input asp-for="CommonName" class="form-control" placeholder="e.g. server.local" />
+                            <label asp-for="CommonName" class="form-label font-weight-bold"></label>
+                            <input asp-for="CommonName" class="form-control" placeholder="e.g. server.local" required />
                             <span asp-validation-for="CommonName" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="EMailAddress" class="control-label"></label>
-                            <input asp-for="EMailAddress" class="form-control" />
+                            <label asp-for="EMailAddress" class="form-label font-weight-bold"></label>
+                            <input asp-for="EMailAddress" class="form-control" required />
                             <span asp-validation-for="EMailAddress" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Organization" class="control-label"></label>
-                            <input asp-for="Organization" class="form-control" />
+                            <label asp-for="Organization" class="form-label font-weight-bold"></label>
+                            <input asp-for="Organization" class="form-control" required />
                             <span asp-validation-for="Organization" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="OrganizationUnitName" class="control-label"></label>
+                            <label asp-for="OrganizationUnitName" class="form-label font-weight-bold"></label>
                             <input asp-for="OrganizationUnitName" class="form-control" />
                             <span asp-validation-for="OrganizationUnitName" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label asp-for="CountryCode" class="control-label"></label>
+                            <label asp-for="CountryCode" class="form-label font-weight-bold"></label>
                             <input asp-for="CountryCode" class="form-control" />
                             <span asp-validation-for="CountryCode" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label asp-for="Locality" class="control-label"></label>
+                            <label asp-for="Locality" class="form-label font-weight-bold"></label>
                             <input asp-for="Locality" class="form-control" />
                             <span asp-validation-for="Locality" class="text-danger"></span>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label asp-for="State" class="control-label"></label>
+                            <label asp-for="State" class="form-label font-weight-bold"></label>
                             <input asp-for="State" class="form-control" />
                             <span asp-validation-for="State" class="text-danger"></span>
                         </div>
@@ -56,8 +57,8 @@
                 </div>
             </div>
 
-            <div class="card mb-4">
-                <div class="card-header">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark text-white">
                     <h5 class="mb-0">Alternate Names (SANs)</h5>
                 </div>
                 <div class="card-body">
@@ -82,52 +83,128 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Purposes</h5>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Requested Purposes</h5>
+                            <div class="form-check">
+                                <input asp-for="PurposeAll" class="form-check-input" onclick="toggleAll('purpose', this)" />
+                                <label asp-for="PurposeAll" class="form-check-label text-white"></label>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input asp-for="PurposeServerAuth" class="form-check-input" />
-                                <label asp-for="PurposeServerAuth" class="form-check-label"></label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input asp-for="PurposeClientAuth" class="form-check-input" />
-                                <label asp-for="PurposeClientAuth" class="form-check-label"></label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input asp-for="PurposeCodeSigning" class="form-check-input" />
-                                <label asp-for="PurposeCodeSigning" class="form-check-label"></label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input asp-for="PurposeEMailProtection" class="form-check-input" />
-                                <label asp-for="PurposeEMailProtection" class="form-check-label"></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeServerAuth" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeServerAuth" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeClientAuth" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeClientAuth" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeCodeSigning" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeCodeSigning" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeEMailProtection" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeEMailProtection" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeIPsecEndSystem" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeIPsecEndSystem" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeIPsecTunnel" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeIPsecTunnel" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeIPsecUser" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeIPsecUser" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeTimeStamping" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeTimeStamping" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeOCSPSigning" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeOCSPSigning" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeSmartCardLogon" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeSmartCardLogon" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="PurposeMACAddress" data-group="purpose" class="form-check-input" />
+                                        <label asp-for="PurposeMACAddress" class="form-check-label"></label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Key Usage</h5>
+                            <div class="form-check">
+                                <input asp-for="UsageAll" class="form-check-input" onclick="toggleAll('usage', this)" />
+                                <label asp-for="UsageAll" class="form-check-label text-white"></label>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <div class="form-check mb-2">
-                                <input asp-for="UsageDigitalSignature" class="form-check-input" />
-                                <label asp-for="UsageDigitalSignature" class="form-check-label"></label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input asp-for="UsageKeyEncipherment" class="form-check-input" />
-                                <label asp-for="UsageKeyEncipherment" class="form-check-label"></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageDigitalSignature" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageDigitalSignature" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageNonRepudiation" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageNonRepudiation" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageKeyEncipherment" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageKeyEncipherment" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageDataEncipherment" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageDataEncipherment" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageKeyAgreement" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageKeyAgreement" class="form-check-label"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageKeyCertSigning" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageKeyCertSigning" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageCRLSigning" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageCRLSigning" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageEncipherOnly" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageEncipherOnly" class="form-check-label"></label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input asp-for="UsageDecipherOnly" data-group="usage" class="form-check-input" />
+                                        <label asp-for="UsageDecipherOnly" class="form-check-label"></label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group mt-4">
-                <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
-                <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-gear-fill"></i> Generate CSR & Private Key</button>
+            <div class="form-group mt-4 text-center">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg"><i class="bi bi-arrow-left"></i> Back to List</a>
+                <button type="submit" class="btn btn-primary btn-lg ms-2"><i class="bi bi-gear-fill"></i> Generate CSR & Private Key</button>
             </div>
         </form>
     </div>
@@ -135,6 +212,10 @@
 
 @section HeadScripts {
     <script>
+        function toggleAll(group, master) {
+            $(`input[data-group='${group}']`).prop('checked', master.checked);
+        }
+
         function removeSanRow(btn) {
             $(btn).closest('.san-row').remove();
             reindexSanRows();
