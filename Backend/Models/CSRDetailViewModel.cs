@@ -23,6 +23,12 @@ public class CSRDetailViewModel
     [Display(Name = "Alternate Names")]
     public List<string> AlternateNames { get; private set; } = [];
 
+    [Display(Name = "Key Usages")]
+    public List<string> KeyUsages { get; private set; } = [];
+
+    [Display(Name = "Certificate Purposes")]
+    public List<string> Purposes { get; private set; } = [];
+
     [Display(Name = "City")]
     public string? Locality { get; private set; }
 
@@ -87,6 +93,17 @@ public class CSRDetailViewModel
             Certificate = signedCSR.Certificate;
             NotBefore = signedCSR.NotBefore;
             NotAfter = signedCSR.NotAfter;
+
+            // If signed, parse the actual certificate to show the final attributes
+            try
+            {
+                var cert = Common.Certificate.ImportCACert(signedCSR.Certificate);
+                CommonName = cert.SubjectDN.GetValueList(Org.BouncyCastle.Asn1.X509.X509Name.CN).Cast<object>().FirstOrDefault()?.ToString() ?? CommonName;
+                AlternateNames = Common.Certificate.GetCertificateSANs(cert).ToList();
+                KeyUsages = Common.Certificate.GetCertificateKeyUsages(cert).ToList();
+                Purposes = Common.Certificate.GetCertificatePurposes(cert).ToList();
+            }
+            catch { /* Best effort fallback to CSR data */ }
         }
     }
 }

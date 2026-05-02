@@ -340,6 +340,71 @@ public static class Certificate
         return msg.GetEncoded();
     }
 
+    public static IEnumerable<string> GetCertificateSANs(X509Certificate cert)
+    {
+        List<string> retval = [];
+        var extensionValue = cert.GetExtensionValue(X509Extensions.SubjectAlternativeName);
+        if (extensionValue != null)
+        {
+            var gns = GeneralNames.GetInstance(Asn1Object.FromByteArray(extensionValue.GetOctets()));
+            foreach (var gn in gns.GetNames())
+            {
+                string? name = gn.Name?.ToString();
+                if (name != null)
+                {
+                    retval.Add(name);
+                }
+            }
+        }
+        return retval;
+    }
+
+    public static IEnumerable<string> GetCertificateKeyUsages(X509Certificate cert)
+    {
+        List<string> retval = [];
+        var ku = cert.GetKeyUsage();
+        if (ku != null)
+        {
+            // ku is bool[]: [digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment, keyAgreement, keyCertSign, crlSign, encipherOnly, decipherOnly]
+            if (ku.Length > 0 && ku[0]) retval.Add("Digital Signature");
+            if (ku.Length > 1 && ku[1]) retval.Add("Non-Repudiation");
+            if (ku.Length > 2 && ku[2]) retval.Add("Key Encipherment");
+            if (ku.Length > 3 && ku[3]) retval.Add("Data Encipherment");
+            if (ku.Length > 4 && ku[4]) retval.Add("Key Agreement");
+            if (ku.Length > 5 && ku[5]) retval.Add("Key Certificate Signing");
+            if (ku.Length > 6 && ku[6]) retval.Add("CRL Signing");
+            if (ku.Length > 7 && ku[7]) retval.Add("Encipher Only");
+            if (ku.Length > 8 && ku[8]) retval.Add("Decipher Only");
+        }
+        return retval;
+    }
+
+    public static IEnumerable<string> GetCertificatePurposes(X509Certificate cert)
+    {
+        List<string> retval = [];
+        var eku = cert.GetExtendedKeyUsage();
+        if (eku != null)
+        {
+            foreach (DerObjectIdentifier oid in eku)
+            {
+                if (oid.Equals(KeyPurposeID.AnyExtendedKeyUsage)) retval.Add("All Purposes");
+                else if (oid.Equals(KeyPurposeID.IdKPServerAuth)) retval.Add("Server Authentication");
+                else if (oid.Equals(KeyPurposeID.IdKPClientAuth)) retval.Add("Client Authentication");
+                else if (oid.Equals(KeyPurposeID.IdKPCodeSigning)) retval.Add("Code Signing");
+                else if (oid.Equals(KeyPurposeID.IdKPEmailProtection)) retval.Add("E-Mail Protection");
+                else if (oid.Equals(KeyPurposeID.IdKPIpsecEndSystem)) retval.Add("IPsec End System");
+                else if (oid.Equals(KeyPurposeID.IdKPIpsecTunnel)) retval.Add("IPsec Tunnel");
+                else if (oid.Equals(KeyPurposeID.IdKPIpsecUser)) retval.Add("IPsec User");
+                else if (oid.Equals(KeyPurposeID.IdKPTimeStamping)) retval.Add("Time Stamping");
+                else if (oid.Equals(KeyPurposeID.IdKPOcspSigning)) retval.Add("OCSP Signing");
+                else if (oid.Equals(KeyPurposeID.IdKPSmartCardLogon)) retval.Add("Smart Card Log-on");
+                else if (oid.Equals(KeyPurposeID.IdKPMacAddress)) retval.Add("MAC Address");
+                else retval.Add(oid.Id);
+            }
+        }
+        return retval;
+    }
+
     /// <summary>
     /// 
     /// </summary>

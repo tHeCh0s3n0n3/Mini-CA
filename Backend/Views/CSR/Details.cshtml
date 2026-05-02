@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>CSR</h4>
+    <h4>@(Model?.IsSigned == true ? "Signed Certificate Details" : "CSR Details")</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -40,12 +40,30 @@
             @Html.LabelFor(c => c.AlternateNames)
         </dt>
         <dd class="col-sm-10">
-            <ul>
+            <ul class="list-unstyled mb-0">
             @foreach (string item in Model.AlternateNames)
             {
-                <li>@item</li>
+                <li><span class="badge bg-light text-dark border">@item</span></li>
             }
             </ul>
+        </dd>
+}
+@if(Model is not null && Model.KeyUsages.Any())
+{
+        <dt class="col-sm-2">
+            @Html.LabelFor(c => c.KeyUsages)
+        </dt>
+        <dd class="col-sm-10">
+            @string.Join(", ", Model.KeyUsages)
+        </dd>
+}
+@if(Model is not null && Model.Purposes.Any())
+{
+        <dt class="col-sm-2">
+            @Html.LabelFor(c => c.Purposes)
+        </dt>
+        <dd class="col-sm-10">
+            @string.Join(", ", Model.Purposes)
         </dd>
 }
         <dt class = "col-sm-2">
@@ -87,7 +105,7 @@
     </dl>
     @if (Model is not null && Model.IsSigned.Equals(true))
     {
-        <h4>Certificate</h4>
+        <h4>Issuance Information</h4>
         <hr />
         <dl class="row">
             <dt class = "col-sm-2">
@@ -109,12 +127,15 @@
                 @Html.DisplayFor(model => model.NotAfter)
             </dd>
             <dt class = "col-sm-2">
+                <span class="badge @(Model.IsValid ? "bg-success" : "bg-danger")">@(Model.IsValid ? "Valid" : "Expired/Invalid")</span>
+            </dt>
+            <dd class = "col-sm-10">
                 <a asp-action="DownloadCertificate"
                  asp-route-id="@Model.Id"
-                        class="btn btn-success">
-                    <i class="bi bi-download"></i> Download
+                        class="btn btn-success btn-sm">
+                    <i class="bi bi-download"></i> Download Certificate
                 </a>
-            </dt>
+            </dd>
         </dl>
     }
 </div>
