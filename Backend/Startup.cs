@@ -35,16 +35,34 @@ public class Startup
             .ReadFrom.Configuration(Configuration)
             .CreateLogger();
 
-        var masterKeyPath = Configuration["Acme:MasterKeyPath"];
+        // Robust Master Key Discovery
+        string? masterKeyPath = Configuration["Acme:MasterKeyPath"];
+        
         if (string.IsNullOrEmpty(masterKeyPath))
         {
-            Log.Error("Acme:MasterKeyPath is not configured.");
-            throw new Exception("Acme:MasterKeyPath is not configured. Please check appsettings.json.");
+            Log.Information("Acme:MasterKeyPath not found in configuration. Trying default paths...");
+            
+            string[] searchPaths = ["/app/secrets/master.key", "/app/secrets/mster.key"];
+            foreach (var path in searchPaths)
+            {
+                if (File.Exists(path))
+                {
+                    masterKeyPath = path;
+                    Log.Information("Discovered master key at {Path}", path);
+                    break;
+                }
+            }
+        }
+
+        if (string.IsNullOrEmpty(masterKeyPath))
+        {
+            Log.Error("Master key could not be located via configuration or default paths.");
+            throw new Exception("Acme:MasterKeyPath is not configured and no file was found at standard locations. Please check your volume mappings.");
         }
 
         if (!File.Exists(masterKeyPath))
         {
-            Log.Error("Master key file not found at {Path}", masterKeyPath);
+            Log.Error("Master key file path was configured but file does not exist at {Path}", masterKeyPath);
             throw new FileNotFoundException($"Master key file not found at {masterKeyPath}. Ensure the volume is correctly mapped.");
         }
 
