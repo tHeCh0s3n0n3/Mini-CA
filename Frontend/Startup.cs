@@ -19,6 +19,7 @@ public class Startup
     {
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
+            .WriteTo.Console()
             .WriteTo.File("/app/logs/Log.txt")
             .CreateLogger();
         Configuration = configuration;
