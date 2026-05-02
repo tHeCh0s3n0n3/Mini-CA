@@ -75,13 +75,32 @@ The system supports several overrides via `appsettings.json` or environment vari
 - **Asynchronous Patterns:** Use `async/await` for all I/O and database operations.
 - **Time Handling:** ALWAYS use `DateTime.UtcNow` for timestamps and validity checks to ensure consistency across audit logs and certificate lifecycle.
 - **Logging:** Structured logging via **Serilog**.
+    - **Integration:** Serilog MUST be integrated with the generic host via `.UseSerilog()`.
+    - **Configuration:** Sinks (Console, File) are defined in code for reliability; log level overrides are managed via the `Serilog` section in `appsettings.json`.
+    - **Output Template:** Log messages must include `{SourceContext}` to identify the emitting component.
+- **RFC 5280 Compliance:** All generated certificates MUST strictly follow RFC 5280.
+    - **AuthorityKeyIdentifier:** MUST be non-critical.
+    - **BasicConstraints:** MUST be non-critical for end-entities (cA=False) and critical for CAs (cA=True).
+    - **Empty Extensions:** Extensions with no values (e.g., empty SANs or Key Usages) MUST be omitted to avoid syntax violations.
+
+### UI & UX Standards
+- **Unified Dashboards:** Both Frontend and Backend dashboards must share the same aesthetic:
+    - **Subject Column:** Group Common Name (bold) and SANs (small muted text) in a single column.
+    - **Date Format:** Use `ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")`.
+    - **Action Flow:** Inner page actions must have "Back/Cancel" on the left and the primary "Action" on the right.
+- **SAN Builder:** Manual signing and generation tools must provide a dynamic SAN editor supporting DNS, IP, Email, and URI types.
+    - **IP Handling:** IP SANs must be converted from raw hex back to human-readable strings for display.
+- **Automated Generation:** The system supports generating RSA key pairs and CSRs in one step.
+    - **Key Storage:** Generated private keys MUST be encrypted at rest (AES-256) using the master key.
+    - **Download:** A "KEY" button must be provided to allow users/admins to retrieve their credentials.
 
 ### Security Practices
-- **Secret Protection:** EAB HMAC keys are encrypted at rest using AES-256. The master key must be stored in a local file (referenced in `appsettings.json`) and never committed.
+- **Secret Protection:** EAB HMAC keys and generated private keys are encrypted at rest using AES-256. The master key must be stored in a local file (referenced in `appsettings.json` or found at `/app/secrets/master.key`) and never committed.
 - **CA Protection:** The Root CA private key and its password (if protected) are read from local files, separate from the codebase. The password file is optional; if missing, the key is assumed to be non-protected.
 - **Authorization:** Backend access is strictly enforced via the `AdminAuthorizationFilterAttribute`, which checks for the `admin` group claim from Authentik.
 - **Data Protection:** ASP.NET Core Data Protection keys MUST be persisted to a volume (e.g., `/app/asp-keys`) in Docker environments to prevent Antiforgery (CSRF) token invalidation after container restarts. Each service (Frontend/Backend) must have an isolated key ring.
+- **Fail-Fast Startup:** Application initialization MUST fail-fast and throw explicit exceptions if critical security assets (database, master key, root CA) are missing or misconfigured.
 
 ### Testing
 - **DevTestApp:** A console project used for rapid prototyping and unit-level verification of cryptographic or logic changes.
-- **Audit Logs:** All certificate issuance events (Manual and ACME) must be logged to the `AuditLogs` table.
+- **Audit Logs:** All certificate issuance events (Manual and ACME) must be logged to the `AuditLogs` table. Audit log details must use a human-friendly UTC format (`yyyy-MM-dd HH:mm:ss Z`).

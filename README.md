@@ -3,11 +3,13 @@
 **Mini CA** is a custom internal Public Key Infrastructure (PKI) and Certificate Authority (CA) system. It is designed to secure internal infrastructure via HTTPS by providing a self-service user portal for manual CSR signing and an automated ACME server for infrastructure components.
 
 ## 🚀 Key Features
-*   **User Dashboard:** Upload CSRs, track signing status, and download certificates in PEM, DER, and P7B formats.
-*   **Admin Portal:** Manage manual CSR signing, ACME External Account Binding (EAB) credentials, and view immutable audit logs.
-*   **Hardened ACME:** RFC 8555 compliant server with mandatory EAB and identifier whitelisting (Regex-based).
+*   **User Dashboard:** Generate new CSRs & Private Keys or upload existing ones, track status, and download certificates in PEM, DER, and P7B formats.
+*   **Admin Portal:** Manage manual CSR signing with an intelligent SAN builder, manage ACME EAB credentials, and view immutable audit logs.
+*   **Encrypted Storage:** Generated private keys are encrypted at rest (AES-256) and available for retrieval by the owner/admin.
+*   **RFC 5280 Compliant:** All issued certificates strictly adhere to X.509 standards and extension criticality rules.
+*   **Unified UI:** Consistent aesthetic and action flow across both user and administrative portals.
 *   **Authentik OIDC:** Secure authentication and group-based authorization via Authentik.
-*   **Docker Ready:** Easily deployable using Docker Compose.
+*   **Docker Ready:** Easily deployable using Docker Compose with built-in healthchecks and persistent key rings.
 
 ---
 

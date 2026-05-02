@@ -46,25 +46,28 @@ A new administrative interface will be added to the Backend to manage pre-provis
         *   **UI:** Display HMAC once; provide a "Download as JSON/Text" button for secure storage.
     *   **Revoke:** Delete an EAB record.
 
-### 3.4 ACME Operational Constraints
-*   **Rate Limiting:** Configurable via `appsettings.json` (e.g., `Acme:MaxOrdersPerMinute`).
-*   **Directory URL:** Prominently displayed in both Backend and Frontend for easy client configuration.
+### 3.4 Manual Signing Enhancements (Admin Portal)
+The manual CSR signing process includes an intelligent **SAN Builder**:
+*   **Automated Detection:** Detects misclassified IP addresses in the CSR and provides a warning.
+*   **Dynamic Overrides:** Allows admins to add, remove, or modify SAN types (DNS, IP, Email, URI) before signing.
+*   **Persistence:** All modifications are baked into the final RFC 5280 compliant certificate.
 
-## 4. Frontend User Dashboard
-The current single-page upload form will be expanded into a multi-purpose dashboard.
+## 4. Dashboard & Self-Service
+The Frontend and Backend have been unified into a cohesive certificate management suite.
 
-### 4.1 Data Model Changes
-*   **CSR Entity:** Add `UserId` string property to store the OIDC `sub` or `email` claim.
-*   **AcmeEab Entity:** New entity to store pre-provisioned ACME credentials.
-*   **AcmeAccount Entity:** New entity to track ACME accounts registered via EAB.
-*   **AuditLog Entity (New):** Records all issuance events (Manual & ACME) for traceability. Includes Timestamp, Actor (Admin or ACME Account), Action, and Subject.
+### 4.1 Automated Generation (Frontend & Backend)
+Users and admins can generate certificate identities in a single step:
+*   **Key Generation:** Generates a 2048-bit RSA key pair on the server.
+*   **CSR Generation:** Automatically creates a PKCS#10 CSR with requested SANs, purposes, and usages.
+*   **Key Storage:** The private key is encrypted at rest (AES-256) and stored in the database.
+*   **Retrieval:** Users can download their private key (`.key`) at any time from the dashboard.
 
-### 4.2 Dashboard Table
-Columns (in order):
-1.  **Request Timestamp**: `yyyy-MM-dd HH:mm:ss` (Local timezone).
-2.  **Subject**: `CN` and `SANs` (One per line).
-3.  **Status**: `Pending`, `Signed`, `Expiring Soon` (⚠️ icon), or `Expired` (❌ icon, row greyed out).
-4.  **Download Actions**: Multi-format buttons (PEM, DER, P7B).
+### 4.2 Unified Dashboard Table
+Both portals share the same high-contrast aesthetic:
+1.  **Request Timestamp**: `yyyy-MM-dd HH:mm:ss` (UTC converted to Local).
+2.  **Subject**: `CN` and `SANs` (One per line, human-readable).
+3.  **Status**: `Pending`, `Signed`, `Expiring Soon` (⚠️ icon), or `Expired` (❌ icon).
+4.  **Download Actions**: Key download (🔑) and multi-format certificate buttons (PEM, DER, P7B).
 
 ### 4.3 Root CA Trust Instructions
 A dedicated section providing:
