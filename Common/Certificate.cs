@@ -288,22 +288,37 @@ public static class Certificate
         certGen.SetPublicKey(csr.GetPublicKey());
 
         // Add CA-mandated extensions
-        certGen.AddExtension(X509Extensions.BasicConstraints
-                             , true
-                             , new BasicConstraints(false));
+        bool isCA = keyUsages != null && keyUsages.Contains(KeyUsage.KeyCertSign);
+
+        if (isCA)
+        {
+            // If it's a CA, BasicConstraints MUST be present and MUST be critical
+            certGen.AddExtension(X509Extensions.BasicConstraints, true, new BasicConstraints(true));
+        }
+        else
+        {
+            // For end-entities, it's safer/compliant to make it non-critical with cA=False.
+            certGen.AddExtension(X509Extensions.BasicConstraints, false, new BasicConstraints(false));
+        }
         
-        certGen.AddExtension(X509Extensions.KeyUsage
-                             , true
-                             , new KeyUsage(keyUsages.Aggregate(0, (ku, next) => ku |= next)));
+        if (keyUsages != null && keyUsages.Any())
+        {
+            certGen.AddExtension(X509Extensions.KeyUsage
+                                 , true
+                                 , new KeyUsage(keyUsages.Aggregate(0, (ku, next) => ku |= next)));
+        }
         
-        certGen.AddExtension(X509Extensions.ExtendedKeyUsage
-                             , true
-                             , new ExtendedKeyUsage(keyPurposes.ToArray()));
+        if (keyPurposes != null && keyPurposes.Any())
+        {
+            certGen.AddExtension(X509Extensions.ExtendedKeyUsage
+                                 , false
+                                 , new ExtendedKeyUsage(keyPurposes.ToArray()));
+        }
         
         SubjectPublicKeyInfo spkif
             = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(caCert.GetPublicKey());
         certGen.AddExtension(X509Extensions.AuthorityKeyIdentifier
-                             , true
+                             , false
                              , new AuthorityKeyIdentifier(spkif));
 
         // Add Subject Key Identifier
