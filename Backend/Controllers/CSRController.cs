@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Text;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1;
+using Serilog;
+using System.Collections;
 
 namespace Backend.Controllers;
 
@@ -115,6 +120,90 @@ public class CSRController : Controller
         }
         return View(csr);
     }
+
+    public IActionResult Upload()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Upload(UploadFileModel model)
+    {
+        Log.Information("Started upload function in Backend. File present: {FilePresent}", model?.FormFile != null);
+
+        try
+        {
+            if (model?.FormFile == null || !ModelState.IsValid)
+            {
+                if (model?.FormFile == null) Log.Warning("Upload failed: FormFile is null.");
+                return View();
+            }
+
+            CSR parsedCSR = new();
+            parsedCSR.UserId = User.Identity?.Name;
+
+            if (model.FormFile.Length > 0)
+            {
+                parsedCSR.FileName = model.FormFile.FileName;
+                parsedCSR.IsSigned = false;
+                parsedCSR.SubmittedOn = DateTime.UtcNow;
+
+                using Stream s = model.FormFile.OpenReadStream();
+                using (MemoryStream ms = new())
+                {
+                    await s.CopyToAsync(ms);
+                    parsedCSR.FileContents = ms.ToArray();
+                }
+
+                Log.Information("Processing file in Backend: {FileName}, Size: {Size}", parsedCSR.FileName, parsedCSR.FileContents.Length);
+
+                Pkcs10CertificationRequest csr;
+
+                try
+                {
+                    csr = Common.Certificate.ImportCSR(parsedCSR.FileContents);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Failed to parse CSR: {ex.Message}");
+                    return View();
+                }
+
+                CertificationRequestInfo csrInfo = csr.GetCertificationRequestInfo();
+
+                foreach (KeyValuePair<DerObjectIdentifier, string> item in CSR.ObjectIdentifiers)
+                {
+                    IList valueResult = csrInfo.Subject.GetValueList(item.Key);
+                    if (valueResult.Count == 1)
+                    {
+                        if (valueResult[0] is null)
+                        {
+                            continue;
+                        }
+                        parsedCSR.SetProperty(item.Value, $"{valueResult[0]}");
+                    }
+                }
+
+                List<string> alternateNames = Common.Certificate
+                                                    .GetSANs(csr)
+                                                    .ToList();
+                parsedCSR.AlternateNamesList = alternateNames;
+            }
+            
+            _db.Add<CSR>(parsedCSR);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Error uploading CSR in Backend");
+            ModelState.AddModelError("", $"An unexpected error occurred: {ex.Message}");
+            return View();
+        }
+    }
+
 
     // GET: CSR/Process/5
     public async Task<IActionResult> Process(Guid? id)

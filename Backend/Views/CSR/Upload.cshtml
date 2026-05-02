@@ -1,0 +1,28 @@
+@model Backend.Models.UploadFileModel
+
+@{
+    ViewData["Title"] = "Upload CSR";
+}
+
+<h1>Upload CSR</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Upload" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="FormFile" class="control-label"></label>
+                <input asp-for="FormFile" class="form-control" type="file" accept=".csr,.pem" />
+                <span asp-validation-for="FormFile" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4">
+                <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+                <button type="submit" class="btn btn-primary ms-2"><i class="bi bi-upload"></i> Upload & Import</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
