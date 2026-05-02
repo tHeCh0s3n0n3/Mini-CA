@@ -8,6 +8,7 @@ public class UserDashboardViewModel
 {
     public List<CSRItemViewModel> CSRs { get; set; } = new();
     public UploadFileModel UploadModel { get; set; } = new();
+    public CreateCSRViewModel GenerateModel { get; set; } = new();
 }
 
 public class CSRItemViewModel

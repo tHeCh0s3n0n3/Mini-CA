@@ -25,6 +25,11 @@
                     </div>
                 </div>
             </form>
+            <hr />
+            <div class="text-center">
+                <p class="text-muted mb-2">Alternatively, you can generate a new key and request in one step:</p>
+                <a asp-action="Generate" class="btn btn-primary"><i class="bi bi-gear-fill"></i> Generate CSR & Private Key</a>
+            </div>
         </div>
     </div>
 
@@ -81,18 +86,18 @@
                                 }
                             </td>
                             <td>
-                                @if (item.SignedCSR != null)
-                                {
-                                    <div class="btn-group">
+                                <div class="btn-group">
+                                    @if (!string.IsNullOrEmpty(item.CSR.EncryptedPrivateKey))
+                                    {
+                                        <a asp-action="DownloadKey" asp-route-id="@item.CSR.Id" class="btn btn-sm btn-outline-warning">KEY</a>
+                                    }
+                                    @if (item.SignedCSR != null)
+                                    {
                                         <a asp-action="DownloadPem" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">PEM</a>
                                         <a asp-action="DownloadDer" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">DER</a>
                                         <a asp-action="DownloadP7b" asp-route-id="@item.SignedCSR.Id" class="btn btn-sm btn-outline-primary">P7B</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    @:
-                                }
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }

@@ -127,6 +127,9 @@ public class CSRController : Controller
                 model.RequestedKeyUsages, 
                 model.RequestedKeyPurposes);
 
+            string keyString = Encoding.UTF8.GetString(keyPem);
+            string encryptedKey = Common.Encryption.Encrypt(keyString);
+
             CSR csr = new()
             {
                 CommonName = model.CommonName,
@@ -141,7 +144,8 @@ public class CSRController : Controller
                 FileName = $"{model.CommonName}.csr",
                 SubmittedOn = DateTime.UtcNow,
                 IsSigned = false,
-                UserId = User.Identity?.Name
+                UserId = User.Identity?.Name,
+                EncryptedPrivateKey = encryptedKey
             };
 
             _db.CSRs.Add(csr);
@@ -332,6 +336,19 @@ public class CSRController : Controller
         }
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> DownloadKey(Guid id)
+    {
+        var csr = await _db.CSRs.FindAsync(new CSRId(id));
+        
+        if (csr == null || string.IsNullOrEmpty(csr.EncryptedPrivateKey)) 
+            return NotFound("Private key not found.");
+
+        string decryptedKey = Common.Encryption.Decrypt(csr.EncryptedPrivateKey);
+        var keyBytes = Encoding.UTF8.GetBytes(decryptedKey);
+
+        return File(keyBytes, "application/octet-stream", $"{csr.CommonName}.key");
     }
 
     [HttpGet]

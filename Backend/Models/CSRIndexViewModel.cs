@@ -30,6 +30,8 @@ public class CSRIndexViewModel
 
     public SignedCSRId? SignedCSRId { get; set; }
 
+    public string? EncryptedPrivateKey { get; set; }
+
     public CSRIndexViewModel(CSR csr, SignedCSR? signedCSR)
     {
         Id = csr.Id;
@@ -39,6 +41,7 @@ public class CSRIndexViewModel
         IsSigned = csr.IsSigned;
         SubmittedOn = csr.SubmittedOn;
         FileSize = csr.FileContents.LongLength.GetReadableBytes();
+        EncryptedPrivateKey = csr.EncryptedPrivateKey;
         SignedCSRId = (IsSigned
                        && signedCSR is not null
                        ?    signedCSR.Id

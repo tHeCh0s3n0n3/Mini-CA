@@ -83,6 +83,8 @@ public class CSR
 
     public DateTime SubmittedOn { get; set; }
 
+    public string? EncryptedPrivateKey { get; set; }
+
     public static readonly Dictionary<DerObjectIdentifier, string> ObjectIdentifiers = new()
     {
         { X509Name.C, "CountryCode" }

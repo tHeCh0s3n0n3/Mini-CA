@@ -1,9 +1,23 @@
-using Common;
-using DAL.Models;
+#nullable enable
 using Org.BouncyCastle.Asn1.X509;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
-namespace Backend.Models;
+namespace DAL.Models;
+
+public class UploadFileModel
+{
+    [Required]
+    [Display(Name = "CSR File")]
+    public IFormFile? FormFile { get; set; }
+}
+
+public class SanItem
+{
+    public int Type { get; set; }
+    public string Value { get; set; } = string.Empty;
+}
 
 public class CreateCSRViewModel
 {

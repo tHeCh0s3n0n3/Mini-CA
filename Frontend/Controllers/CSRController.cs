@@ -45,6 +45,73 @@ public class CSRController : Controller
         return View(model);
     }
 
+    public IActionResult Generate()
+    {
+        return View(new CreateCSRViewModel());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Generate(CreateCSRViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var sans = model.AlternateNames?.Select(s => (s.Type, s.Value)).ToList() ?? [];
+            var (csrPem, keyPem) = Common.Certificate.GenerateCSR(
+                model.CommonName, 
+                model.Organization, 
+                model.OrganizationUnitName ?? "", 
+                model.CountryCode, 
+                model.Locality ?? "", 
+                model.State ?? "", 
+                model.EMailAddress, 
+                sans, 
+                model.RequestedKeyUsages, 
+                model.RequestedKeyPurposes);
+
+            string keyString = Encoding.UTF8.GetString(keyPem);
+            string encryptedKey = Common.Encryption.Encrypt(keyString);
+
+            CSR csr = new()
+            {
+                CommonName = model.CommonName,
+                Organization = model.Organization,
+                OrganizationUnitName = model.OrganizationUnitName ?? "",
+                CountryCode = model.CountryCode,
+                Locality = model.Locality ?? "",
+                State = model.State ?? "",
+                EMailAddress = model.EMailAddress,
+                AlternateNamesList = model.AlternateNames?.Select(s => s.Value).ToList() ?? [],
+                FileContents = csrPem,
+                FileName = $"{model.CommonName}.csr",
+                SubmittedOn = DateTime.UtcNow,
+                IsSigned = false,
+                UserId = User.Identity?.Name,
+                EncryptedPrivateKey = encryptedKey
+            };
+
+            _db.CSRs.Add(csr);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+        return View(model);
+    }
+
+    public async Task<IActionResult> DownloadKey(Guid id)
+    {
+        var userId = User.Identity?.Name;
+        var csr = await _db.CSRs.FirstOrDefaultAsync(c => c.Id == new CSRId(id) && c.UserId == userId);
+        
+        if (csr == null || string.IsNullOrEmpty(csr.EncryptedPrivateKey)) 
+            return NotFound("Private key not found or access denied.");
+
+        string decryptedKey = Common.Encryption.Decrypt(csr.EncryptedPrivateKey);
+        var keyBytes = Encoding.UTF8.GetBytes(decryptedKey);
+
+        return File(keyBytes, "application/octet-stream", $"{csr.CommonName}.key");
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Upload([FromForm(Name = "UploadModel")] UploadFileModel model)

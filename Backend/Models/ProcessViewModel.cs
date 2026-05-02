@@ -7,12 +7,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models;
 
-public class SanItem
-{
-    public int Type { get; set; }
-    public string Value { get; set; } = string.Empty;
-}
-
 public class ProcessViewModel
 {
     public CSRId OriginalRequestId { get; set; }

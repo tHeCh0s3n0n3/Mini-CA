@@ -22,6 +22,12 @@ public class Startup
             .WriteTo.File("/app/logs/Log.txt")
             .CreateLogger();
         Configuration = configuration;
+
+        var masterKeyPath = Configuration["Acme:MasterKeyPath"];
+        if (!string.IsNullOrEmpty(masterKeyPath) && File.Exists(masterKeyPath))
+        {
+            Common.Encryption.Initialize(masterKeyPath);
+        }
     }
 
     public IConfiguration Configuration { get; }

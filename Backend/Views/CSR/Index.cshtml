@@ -52,23 +52,31 @@
                         @Html.DisplayFor(modelItem => item.SubmittedOn)
                     </td>
                     <td>
-                        @if (item.IsSigned && item.SignedCSRId is not null)
-                        {
-                            <a asp-action="DownloadCertificate"
-                             asp-route-id="@item.SignedCSRId"
-                                    class="btn btn-success"
-                                    title="Download Certificate">
-                                <i class="bi bi-download"></i>
-                            </a>
-                        }
-                        else
-                        {
-                            <a asp-action="Process"
-                             asp-route-id="@item.Id"
-                                    class="btn btn-secondary" title="Process">
-                                <i class="bi bi-check-lg"></i>
-                            </a>
-                        }                        
+                        <div class="btn-group me-2">
+                            @if (!string.IsNullOrEmpty(item.EncryptedPrivateKey))
+                            {
+                                <a asp-action="DownloadKey" asp-route-id="@item.Id" class="btn btn-outline-warning" title="Download Private Key">
+                                    <i class="bi bi-key"></i>
+                                </a>
+                            }
+                            @if (item.IsSigned && item.SignedCSRId is not null)
+                            {
+                                <a asp-action="DownloadCertificate"
+                                 asp-route-id="@item.SignedCSRId"
+                                        class="btn btn-success"
+                                        title="Download Certificate">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="Process"
+                                 asp-route-id="@item.Id"
+                                        class="btn btn-secondary" title="Process">
+                                    <i class="bi bi-check-lg"></i>
+                                </a>
+                            }
+                        </div>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Details"><i class="bi bi-info-circle"></i></a>
                         <form asp-action="Delete" method="POST" asp-route-id="@item.Id" 
                                onclick="return confirm('Are you sure you want to delete this?')"
