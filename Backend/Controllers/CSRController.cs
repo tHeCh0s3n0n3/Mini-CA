@@ -259,6 +259,14 @@ public class CSRController : Controller
             // Sign the cert
             //Console.WriteLine("Signing the CSR...");
             var sans = processViewModel.AlternateNames?.Select(s => (s.Type, s.Value)).ToList();
+            Log.Information("Signing CSR with {Count} SAN overrides", sans?.Count ?? 0);
+            if (sans != null)
+            {
+                foreach (var s in sans)
+                {
+                    Log.Information("SAN Override: Type {Type}, Value {Value}", s.Type, s.Value);
+                }
+            }
             Org.BouncyCastle.X509.X509Certificate signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposeIDs, sans);
             string newCertFileContents = Common.Certificate.CertToFile(signedCert);
 

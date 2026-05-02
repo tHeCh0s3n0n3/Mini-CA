@@ -1,63 +1,15 @@
-using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.Pkcs;
-using System.Text;
+using System;
 
 try {
-    string csrPem = @"-----BEGIN CERTIFICATE REQUEST-----
-MIIDADCCAegCAQAwezELMAkGA1UEBhMCQUUxDjAMBgNVBAcMBUR1YmFpMSQwIgYD
-VQQKDBtXZWJtaW4gV2Vic2VydmVyIG9uIE1lbnBoaXMxEzARBgNVBAMMCjEwLjEw
-LjAuMTAxITAfBgkqhkiG9w0BCQEWEmRldkB0YXJla2ZhZGVsLmNvbTCCASIwDQYJ
-KoZIhvcNAQEBBQADggEPADCCAQoCggEBALg6EC3b4yHnqvsjWdCsRDSSxbbh39y6
-A4C0avKE6jS1B8uj+e5SFxydjOIeMFTyKX/nq92xb2I/oAUWr5cVwt7Co18D88H9
-07zLn/YqhhEbTihoBjcMPu8nLywp1gRA2vM8RGHbYL6Nl74atoc2rKzHBa+hTeOu
-KxRy6LBZnZeY3dPLCYfjZeFKU66cW3w+Tk/lMjXsrWEK6z/RSljOzddoZp+hdebq
-VaalO8hB39G5xwS+tQqH/9fliiIH0CZXtnhTZxxVGDU3Xk0SkkqifH9geHYkqD0z
-eRszvWZBIhLSqxfxEdAI6RBR2KG19QPyAByWabten8BNqXsARFY0yksCAwEAAaBA
-MD4GCSqGSIb3DQEJDjExMC8wFQYDVR0RBA4wDIIKMTAuMTAuMC4xMDAJBgNVHRME
-AjAAMAsGA1UdDwQEAwIF4DANBgkqhkiG9w0BAQsFAAOCAQEAKjPRaQvzyxooOr/o
-Peq/ZS9MMtiupseoy7hoWwh+1UH1+cdoUnGz5kwXKhz3TNOfSS5ytTYp33QuwM5Z
-8rhz/5cW2wBXVYQYHAfyNieJeqqHSNb7LHBDiHLZzgNWbqE7T0SctkEZn1cR0M3m
-vQvRNJ1vnq4G3MRZ8sHc3F4E9ouWux+iLDEOjrZ2rZpvaq5rKaQgTuO13sSjXDk/
-rkfp+XzRJcEuy00prwVeCAKW+WBl3/KbQ1LgRbNWyRsyO8EBUJMsfr/toFIkefxS
-HXhkgfU6Z18B4oLG3RK7qryv2ZiRaSbCCyTMimxrSvy5HRYyWb03aaaBM7XQBT9C
-/sqn5Q==
------END CERTIFICATE REQUEST-----";
-    byte[] csrBytes = Encoding.UTF8.GetBytes(csrPem);
-    Pkcs10CertificationRequest csr = Common.Certificate.ImportCSR(csrBytes);
+    var gn = new GeneralName(GeneralName.IPAddress, "10.10.0.10");
+    Console.WriteLine($"Tag: {gn.TagNo}, Encoded: {BitConverter.ToString(gn.GetEncoded())}");
     
-    Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
-    if (attributes != null)
-    {
-        for (int i = 0; i != attributes.Count; i++)
-        {
-            AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
-            if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
-            {
-                X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
-                
-                var kuExt = extensions.GetExtension(X509Extensions.KeyUsage);
-                if (kuExt != null) {
-                    var ku = KeyUsage.GetInstance(kuExt.GetParsedValue());
-                    Console.WriteLine($"Key Usage in CSR: {ku.GetBytes()[0]:X}");
-                } else {
-                    Console.WriteLine("No Key Usage in CSR.");
-                }
+    // Attempt with octets
+    byte[] ip = new byte[] { 10, 10, 0, 10 };
+    var gnOctets = new GeneralName(GeneralName.IPAddress, new Org.BouncyCastle.Asn1.DerOctetString(ip));
+    Console.WriteLine($"Tag: {gnOctets.TagNo}, Encoded: {BitConverter.ToString(gnOctets.GetEncoded())}");
 
-                var ekuExt = extensions.GetExtension(X509Extensions.ExtendedKeyUsage);
-                if (ekuExt != null) {
-                    var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
-                    Console.WriteLine("EKUs in CSR:");
-                    foreach (KeyPurposeID p in eku.GetAllUsages()) {
-                        Console.WriteLine($"- {p}");
-                    }
-                } else {
-                    Console.WriteLine("No EKU (Purposes) in CSR.");
-                }
-            }
-        }
-    }
 } catch (Exception ex) {
-    Console.WriteLine("Error: " + ex.ToString());
+    Console.WriteLine("Error: " + ex.Message);
 }

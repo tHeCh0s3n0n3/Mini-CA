@@ -9,98 +9,6 @@
 <div>
     <h4>CSR</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CountryCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CountryCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Organization)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Organization)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.OrganizationUnitName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.OrganizationUnitName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CommonName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CommonName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.LabelFor(c => c.AlternateNames)
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model?.HasSanMismatchWarning ?? false)
-            {
-                <div class="alert alert-warning py-2 mb-2">
-                    <i class="bi bi-exclamation-triangle"></i> Warning: A Subject Alternative Name mismatch was detected (e.g., an IP address classified as a DNS name). Please verify and correct the types below.
-                </div>
-            }
-            <div id="san-container">
-                @if (Model?.AlternateNames != null)
-                {
-                    for (int i = 0; i < Model.AlternateNames.Count; i++)
-                    {
-                        <div class="input-group mb-2 san-row">
-                            <select name="AlternateNames[@i].Type" class="form-select" style="max-width: 150px;">
-                                <option value="2" selected="@(Model.AlternateNames[i].Type == 2)">DNS Name</option>
-                                <option value="7" selected="@(Model.AlternateNames[i].Type == 7)">IP Address</option>
-                                <option value="1" selected="@(Model.AlternateNames[i].Type == 1)">Email</option>
-                                <option value="6" selected="@(Model.AlternateNames[i].Type == 6)">URI</option>
-                            </select>
-                            <input name="AlternateNames[@i].Value" value="@Model.AlternateNames[i].Value" class="form-control" />
-                            <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
-                        </div>
-                    }
-                }
-            </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSanRow()"><i class="bi bi-plus"></i> Add Alternate Name</button>
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Locality)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Locality)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.State)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.State)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EMailAddress)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EMailAddress)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FileName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FileName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FileSize)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FileSize)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SubmittedOn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SubmittedOn)
-        </dd>
-    </dl>
     <form asp-action="Process" method="post" asp-antiforgery="true">
         <!-- Hidden Fields -->
         @if (Model is not null)
@@ -115,6 +23,98 @@
             <input type="hidden" asp-for="FileName" value="@Model.FileName" />
             <input type="hidden" asp-for="SubmittedOn" value="@Model.SubmittedOn" />
         }
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.CountryCode)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.CountryCode)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Organization)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Organization)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.OrganizationUnitName)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.OrganizationUnitName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CommonName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CommonName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.LabelFor(c => c.AlternateNames)
+            </dt>
+            <dd class="col-sm-10">
+                @if (Model?.HasSanMismatchWarning ?? false)
+                {
+                    <div class="alert alert-warning py-2 mb-2">
+                        <i class="bi bi-exclamation-triangle"></i> Warning: A Subject Alternative Name mismatch was detected (e.g., an IP address classified as a DNS name). Please verify and correct the types below.
+                    </div>
+                }
+                <div id="san-container">
+                    @if (Model?.AlternateNames != null)
+                    {
+                        for (int i = 0; i < Model.AlternateNames.Count; i++)
+                        {
+                            <div class="input-group mb-2 san-row">
+                                <select name="AlternateNames[@i].Type" class="form-select" style="max-width: 150px;">
+                                    <option value="2" selected="@(Model.AlternateNames[i].Type == 2)">DNS Name</option>
+                                    <option value="7" selected="@(Model.AlternateNames[i].Type == 7)">IP Address</option>
+                                    <option value="1" selected="@(Model.AlternateNames[i].Type == 1)">Email</option>
+                                    <option value="6" selected="@(Model.AlternateNames[i].Type == 6)">URI</option>
+                                </select>
+                                <input name="AlternateNames[@i].Value" value="@Model.AlternateNames[i].Value" class="form-control" />
+                                <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
+                            </div>
+                        }
+                    }
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSanRow()"><i class="bi bi-plus"></i> Add Alternate Name</button>
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Locality)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Locality)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.State)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.State)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EMailAddress)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EMailAddress)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FileName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FileName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FileSize)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FileSize)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SubmittedOn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SubmittedOn)
+            </dd>
+        </dl>
 
         <div class="form-group row">
             <label asp-for="ExpieryDate" class="col-form-label col-sm-2"></label>
