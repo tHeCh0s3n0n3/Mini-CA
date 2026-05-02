@@ -7,6 +7,6 @@ namespace Backend.Models
     {
         [Required]
         [Display(Name = "CSR File")]
-        public IFormFile FormFile { get; set; }
+        public IFormFile? FormFile { get; set; }
     }
 }
