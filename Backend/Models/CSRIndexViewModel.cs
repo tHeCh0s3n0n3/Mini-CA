@@ -15,6 +15,8 @@ public class CSRIndexViewModel
     [Display(Name = "Common Name")]
     public string CommonName { get; set; }
 
+    public List<string> AlternateNames { get; set; } = [];
+
     [Required]
     [Display(Name = "Filename")]
     public string FileName { get; set; }
@@ -37,6 +39,7 @@ public class CSRIndexViewModel
         Id = csr.Id;
         CountryCode = csr.CountryCode;
         CommonName = csr.CommonName;
+        AlternateNames = csr.AlternateNamesList;
         FileName = csr.FileName;
         IsSigned = csr.IsSigned;
         SubmittedOn = csr.SubmittedOn;

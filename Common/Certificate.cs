@@ -424,6 +424,23 @@ public static class Certificate
         return msg.GetEncoded();
     }
 
+    private static string? GetSanValue(GeneralName gn)
+    {
+        if (gn.TagNo == GeneralName.IPAddress)
+        {
+            var octets = Org.BouncyCastle.Asn1.Asn1OctetString.GetInstance(gn.Name).GetOctets();
+            try
+            {
+                return new System.Net.IPAddress(octets).ToString();
+            }
+            catch
+            {
+                return gn.Name.ToString();
+            }
+        }
+        return gn.Name.ToString();
+    }
+
     public static IEnumerable<string> GetCertificateSANs(X509Certificate cert)
     {
         List<string> retval = [];
@@ -433,7 +450,7 @@ public static class Certificate
             var gns = GeneralNames.GetInstance(Asn1Object.FromByteArray(extensionValue.GetOctets()));
             foreach (var gn in gns.GetNames())
             {
-                string? name = gn.Name?.ToString();
+                string? name = GetSanValue(gn);
                 if (name != null)
                 {
                     retval.Add(name);
@@ -515,7 +532,7 @@ public static class Certificate
                             GeneralNames gns = GeneralNames.GetInstance(ext.GetParsedValue());
                             foreach (GeneralName gn in gns.GetNames())
                             {
-                                string? name = gn.Name?.ToString();
+                                string? name = GetSanValue(gn);
                                 if (name != null)
                                 {
                                     retval.Add((gn.TagNo, name));
@@ -556,7 +573,7 @@ public static class Certificate
                             GeneralNames gns = GeneralNames.GetInstance(ext.GetParsedValue());
                             foreach (GeneralName gn in gns.GetNames())
                             {
-                                string? name = gn.Name?.ToString();
+                                string? name = GetSanValue(gn);
                                 if (name != null)
                                 {
                                     retval.Add(name);

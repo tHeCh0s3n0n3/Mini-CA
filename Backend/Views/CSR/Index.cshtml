@@ -40,7 +40,11 @@
                         @Html.DisplayFor(modelItem => item.CountryCode)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CommonName)
+                        <strong>@Html.DisplayFor(modelItem => item.CommonName)</strong><br />
+                        @foreach (var san in item.AlternateNames)
+                        {
+                            <small class="text-muted d-block">@san</small>
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.FileName)
@@ -49,7 +53,7 @@
                         @Html.DisplayFor(modelItem => item.FileSize)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SubmittedOn)
+                        @item.SubmittedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
                     </td>
                     <td>
                         <div class="btn-group me-2">
