@@ -19,10 +19,12 @@ public class Startup
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
+        const string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}";
+
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Verbose()
-            .WriteTo.Console()
-            .WriteTo.File("/app/logs/Log.txt", rollingInterval: RollingInterval.Day)
+            .WriteTo.Console(outputTemplate: outputTemplate)
+            .WriteTo.File("/app/logs/Log.txt", rollingInterval: RollingInterval.Day, outputTemplate: outputTemplate)
             .ReadFrom.Configuration(Configuration)
             .CreateLogger();
 
