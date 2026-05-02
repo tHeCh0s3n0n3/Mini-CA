@@ -63,6 +63,9 @@ The system supports several overrides via `appsettings.json` or environment vari
 
 ### Git & Commit Standards
 - **Build Before Commit:** A successful build (`dotnet build`) with **zero errors** and **zero warnings** (including nullable and obsolete warnings) is a mandatory prerequisite for any git commit. Warnings are treated as errors unless an explicit exception is granted by the user.
+- **Tagging Discipline:** Do NOT tag a new release for non-functional changes (e.g., documentation, comments, `docker-compose.yaml` tweaks) to avoid unnecessary CI/CD image builds.
+- **Safe Release Workflow:** Build and verification MUST be performed separately from tagging. A tag should only be created AFTER a successful build with zero errors and zero warnings. Force-pushing of tags is strictly forbidden; if a tag is pushed with an error, the next version iteration must be used instead.
+- **Atomic Commits:** Prefer small, focused commits that correspond to specific tasks in an implementation plan.
 
 ## Development Conventions
 

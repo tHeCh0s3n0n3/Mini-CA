@@ -33,7 +33,7 @@ public class Startup
         {
             Log.Information("Acme:MasterKeyPath not found in configuration. Trying default paths...");
             
-            string[] searchPaths = ["/app/secrets/master.key", "/app/secrets/mster.key"];
+            string[] searchPaths = ["/app/secrets/master.key"];
             foreach (var path in searchPaths)
             {
                 if (File.Exists(path))
