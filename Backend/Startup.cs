@@ -36,21 +36,19 @@ public class Startup
             .CreateLogger();
 
         var masterKeyPath = Configuration["Acme:MasterKeyPath"];
-        if (!string.IsNullOrEmpty(masterKeyPath))
+        if (string.IsNullOrEmpty(masterKeyPath))
         {
-            if (File.Exists(masterKeyPath))
-            {
-                Encryption.Initialize(masterKeyPath);
-            }
-            else
-            {
-                Log.Error("Master key file not found at {Path}. Encryption will not be available.", masterKeyPath);
-            }
+            Log.Error("Acme:MasterKeyPath is not configured.");
+            throw new Exception("Acme:MasterKeyPath is not configured. Please check appsettings.json.");
         }
-        else
+
+        if (!File.Exists(masterKeyPath))
         {
-            Log.Warning("Acme:MasterKeyPath is not configured. Encryption will not be available.");
+            Log.Error("Master key file not found at {Path}", masterKeyPath);
+            throw new FileNotFoundException($"Master key file not found at {masterKeyPath}. Ensure the volume is correctly mapped.");
         }
+
+        Encryption.Initialize(masterKeyPath);
     }
 
     public void ConfigureServices(IServiceCollection services)

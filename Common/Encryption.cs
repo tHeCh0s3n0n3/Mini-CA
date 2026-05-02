@@ -16,18 +16,38 @@ public static class Encryption
             throw new ArgumentException($"'{nameof(masterKeyPath)}' cannot be null or empty.", nameof(masterKeyPath));
         }
 
-        string keyBase64 = File.ReadAllText(masterKeyPath, Encoding.UTF8).Trim();
-        _masterKey = Convert.FromBase64String(keyBase64);
+        Console.WriteLine($"[Encryption] Initializing with master key from: {masterKeyPath}");
 
-        if (_masterKey.Length != 32)
+        if (!File.Exists(masterKeyPath))
         {
-            throw new ArgumentException("Master key must be 32 bytes for AES-256.", nameof(masterKeyPath));
+            Console.WriteLine($"[Encryption] ERROR: Master key file not found at {masterKeyPath}");
+            return;
+        }
+
+        try
+        {
+            string keyBase64 = File.ReadAllText(masterKeyPath, Encoding.UTF8).Trim();
+            _masterKey = Convert.FromBase64String(keyBase64);
+
+            if (_masterKey.Length != 32)
+            {
+                Console.WriteLine($"[Encryption] ERROR: Master key must be 32 bytes (AES-256). Found {_masterKey.Length} bytes.");
+                _masterKey = null;
+                return;
+            }
+
+            Console.WriteLine("[Encryption] Successfully initialized master key.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Encryption] ERROR: Failed to load master key: {ex.Message}");
+            _masterKey = null;
         }
     }
 
     public static string Encrypt(string plainText)
     {
-        if (_masterKey == null) throw new InvalidOperationException("Encryption not initialized with master key.");
+        if (_masterKey == null) throw new InvalidOperationException("Encryption not initialized with master key. Please ensure Acme:MasterKeyPath is correct and the file exists.");
 
         using Aes aes = Aes.Create();
         aes.Key = _masterKey;
