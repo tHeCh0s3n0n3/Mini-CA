@@ -169,7 +169,8 @@ public class CSRController : Controller
 
             // Sign the cert
             //Console.WriteLine("Signing the CSR...");
-            Org.BouncyCastle.X509.X509Certificate signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposeIDs);
+            var sans = processViewModel.AlternateNames?.Select(s => (s.Type, s.Value)).ToList();
+            Org.BouncyCastle.X509.X509Certificate signedCert = Common.Certificate.SignCSR(csr, caCert, caKey, 1, keyUsages, keyPurposeIDs, sans);
             string newCertFileContents = Common.Certificate.CertToFile(signedCert);
 
             // Save signed cert

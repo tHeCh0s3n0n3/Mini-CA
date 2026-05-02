@@ -34,20 +34,36 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CommonName)
         </dd>
-@if(Model is not null && Model.AlternateNames.Any())
-{
         <dt class="col-sm-2">
             @Html.LabelFor(c => c.AlternateNames)
         </dt>
         <dd class="col-sm-10">
-            <ul>
-            @foreach (string item in Model.AlternateNames)
+            @if (Model?.HasSanMismatchWarning ?? false)
             {
-                <li>@item</li>
+                <div class="alert alert-warning py-2 mb-2">
+                    <i class="bi bi-exclamation-triangle"></i> Warning: A Subject Alternative Name mismatch was detected (e.g., an IP address classified as a DNS name). Please verify and correct the types below.
+                </div>
             }
-            </ul>
+            <div id="san-container">
+                @if (Model?.AlternateNames != null)
+                {
+                    for (int i = 0; i < Model.AlternateNames.Count; i++)
+                    {
+                        <div class="input-group mb-2 san-row">
+                            <select name="AlternateNames[@i].Type" class="form-select" style="max-width: 150px;">
+                                <option value="2" selected="@(Model.AlternateNames[i].Type == 2)">DNS Name</option>
+                                <option value="7" selected="@(Model.AlternateNames[i].Type == 7)">IP Address</option>
+                                <option value="1" selected="@(Model.AlternateNames[i].Type == 1)">Email</option>
+                                <option value="6" selected="@(Model.AlternateNames[i].Type == 6)">URI</option>
+                            </select>
+                            <input name="AlternateNames[@i].Value" value="@Model.AlternateNames[i].Value" class="form-control" />
+                            <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
+                        </div>
+                    }
+                }
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="addSanRow()"><i class="bi bi-plus"></i> Add Alternate Name</button>
         </dd>
-}
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Locality)
         </dt>
@@ -93,7 +109,6 @@
             <input type="hidden" asp-for="CountryCode" value="@Model.CountryCode" />
             <input type="hidden" asp-for="Organization" value="@Model.Organization" />
             <input type="hidden" asp-for="CommonName" value="@Model.CommonName" />
-            <input type="hidden" asp-for="AlternateNames" value="@Model.AlternateNames" />
             <input type="hidden" asp-for="Locality" value="@Model.Locality" />
             <input type="hidden" asp-for="State" value="@Model.State" />
             <input type="hidden" asp-for="EMailAddress" value="@Model.EMailAddress" />
@@ -252,19 +267,49 @@
 @section HeadScripts {
     <script>
         function AllPurposesSelected(ele) {
-            var inputs = $('input[data-type="' + ele.dataset.type + '"]').not(ele);
-            
-            if (ele.checked) {                
+            var inputs = $("input[data-type='purpose']").not(ele);
+
+            if (ele.checked) {
                 inputs.each(function(idx, item) {
-                    item.checked = !ele.checked;
-                    item.disabled = ele.checked;
+                    item.checked = ele.checked;
+                    //item.disabled = ele.checked;
                 });
             }
             else {
                 inputs.each(function(idx, item) {
-                    item.disabled = ele.checked;
+                    //item.disabled = ele.checked;
                 });
             }
+        }
+
+        function removeSanRow(btn) {
+            $(btn).closest('.san-row').remove();
+            reindexSanRows();
+        }
+
+        function addSanRow() {
+            var index = $('.san-row').length;
+            var rowHtml = `
+                <div class="input-group mb-2 san-row">
+                    <select name="AlternateNames[${index}].Type" class="form-select" style="max-width: 150px;">
+                        <option value="2">DNS Name</option>
+                        <option value="7">IP Address</option>
+                        <option value="1">Email</option>
+                        <option value="6">URI</option>
+                    </select>
+                    <input name="AlternateNames[${index}].Value" class="form-control" />
+                    <button type="button" class="btn btn-outline-danger" onclick="removeSanRow(this)"><i class="bi bi-trash"></i></button>
+                </div>
+            `;
+            $('#san-container').append(rowHtml);
+            reindexSanRows();
+        }
+
+        function reindexSanRows() {
+            $('.san-row').each(function(index) {
+                $(this).find('select').attr('name', 'AlternateNames[' + index + '].Type');
+                $(this).find('input').attr('name', 'AlternateNames[' + index + '].Value');
+            });
         }
     </script>
 }

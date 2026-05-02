@@ -6,6 +6,13 @@ using Org.BouncyCastle.Asn1;
 using System.ComponentModel.DataAnnotations;
 
 namespace Backend.Models;
+
+public class SanItem
+{
+    public int Type { get; set; }
+    public string Value { get; set; } = string.Empty;
+}
+
 public class ProcessViewModel
 {
     public CSRId OriginalRequestId { get; set; }
@@ -24,7 +31,9 @@ public class ProcessViewModel
     public string? CommonName { get; set; }
 
     [Display(Name = "Alternate Names")]
-    public List<string> AlternateNames { get; set; } = [];
+    public List<SanItem> AlternateNames { get; set; } = [];
+
+    public bool HasSanMismatchWarning { get; set; }
 
     [Display(Name = "City")]
     public string? Locality { get; set; }
@@ -133,7 +142,6 @@ public class ProcessViewModel
         Organization = csr.Organization;
         OrganizationUnitName = csr.OrganizationUnitName;
         CommonName = csr.CommonName;
-        AlternateNames = csr.AlternateNamesList;
         Locality = csr.Locality;
         State = csr.State;
         EMailAddress = csr.EMailAddress;
@@ -141,6 +149,23 @@ public class ProcessViewModel
         IsSigned = csr.IsSigned;
         SubmittedOn = csr.SubmittedOn;
         FileSize = csr.FileContents.LongLength.GetReadableBytes();
+
+        AlternateNames = new List<SanItem>();
+        try
+        {
+            var pkcs10 = Common.Certificate.ImportCSR(csr.FileContents);
+            var typedSans = Common.Certificate.GetTypedSANs(pkcs10);
+            foreach (var san in typedSans)
+            {
+                bool isIp = System.Net.IPAddress.TryParse(san.Name, out _);
+                if (san.TagNo == GeneralName.DnsName && isIp)
+                {
+                    HasSanMismatchWarning = true;
+                }
+                AlternateNames.Add(new SanItem { Type = san.TagNo, Value = san.Name });
+            }
+        }
+        catch { }
 
         ParseRequestedExtensions(csr);
         ApplySmartDefaults();

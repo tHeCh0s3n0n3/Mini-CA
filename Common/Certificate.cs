@@ -200,7 +200,8 @@ public static class Certificate
                                           , AsymmetricCipherKeyPair caKey
                                           , int validityYears
                                           , IEnumerable<int> keyUsages
-                                          , IEnumerable<KeyPurposeID> keyPurposes)
+                                          , IEnumerable<KeyPurposeID> keyPurposes
+                                          , IEnumerable<(int TagNo, string Name)>? sanList = null)
     {
         ArgumentNullException.ThrowIfNull(csr);
         ArgumentNullException.ThrowIfNull(caCert);
@@ -246,12 +247,24 @@ public static class Certificate
             X509Extensions.SubjectKeyIdentifier
         };
 
+        if (sanList != null && sanList.Any())
+        {
+            overridenExtensions.Add(X509Extensions.SubjectAlternativeName);
+        }
+
         foreach (var kvp in requestedExtensions)
         {
             if (!overridenExtensions.Contains(kvp.Key))
             {
                 certGen.AddExtension(kvp.Key, kvp.Value.IsCritical, kvp.Value.GetParsedValue());
             }
+        }
+
+        if (sanList != null && sanList.Any())
+        {
+            var gnList = sanList.Select(s => new GeneralName(s.TagNo, s.Name)).ToArray();
+            var gns = new GeneralNames(gnList);
+            certGen.AddExtension(X509Extensions.SubjectAlternativeName, false, gns);
         }
 
         // Serial Number
@@ -325,6 +338,47 @@ public static class Certificate
         
         var msg = gen.Generate(new Org.BouncyCastle.Cms.CmsProcessableByteArray(Array.Empty<byte>()), false);
         return msg.GetEncoded();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="csr"></param>
+    /// <returns></returns>
+    public static IEnumerable<(int TagNo, string Name)> GetTypedSANs(Pkcs10CertificationRequest csr)
+    {
+        List<(int TagNo, string Name)> retval = [];
+
+        Asn1Set attributes = csr.GetCertificationRequestInfo().Attributes;
+        if (attributes is not null)
+        {
+            for (int i = 0; i != attributes.Count; i++)
+            {
+                AttributePkcs attr = AttributePkcs.GetInstance(attributes[i]);
+                if (attr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                {
+                    X509Extensions extensions = X509Extensions.GetInstance(attr.AttrValues[0]);
+                    foreach (DerObjectIdentifier oid in extensions.ExtensionOids)
+                    {
+                        if (oid.Equals(X509Extensions.SubjectAlternativeName))
+                        {
+                            X509Extension ext = extensions.GetExtension(oid);
+                            GeneralNames gns = GeneralNames.GetInstance(ext.GetParsedValue());
+                            foreach (GeneralName gn in gns.GetNames())
+                            {
+                                string? name = gn.Name?.ToString();
+                                if (name != null)
+                                {
+                                    retval.Add((gn.TagNo, name));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return retval;
     }
 
     /// <summary>
