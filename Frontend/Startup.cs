@@ -17,12 +17,10 @@ public class Startup
 {
     public Startup(IConfiguration configuration)
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Verbose()
-            .WriteTo.Console()
-            .WriteTo.File("/app/logs/Log.txt")
-            .CreateLogger();
         Configuration = configuration;
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(Configuration)
+            .CreateLogger();
 
         var masterKeyPath = Configuration["Acme:MasterKeyPath"];
         if (!string.IsNullOrEmpty(masterKeyPath) && File.Exists(masterKeyPath))
