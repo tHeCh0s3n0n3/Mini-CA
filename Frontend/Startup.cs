@@ -1,3 +1,4 @@
+#nullable enable
 using DAL;
 using DAL.Identity;
 using DAL.Models;
