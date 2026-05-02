@@ -134,9 +134,12 @@ public class CSRController : Controller
         if (signed == null) return NotFound();
 
         var csr = await _db.CSRs.FindAsync(signed.OriginalRequestId);
-        var fileName = $"{csr?.CommonName ?? "cert"}.crt";
+        var fileName = $"{csr?.CommonName ?? "cert"}_Exp_{signed.NotAfter:yyyy-MM-dd}.crt";
 
-        return File(signed.Certificate, "application/x-x509-ca-cert", fileName);
+        return File(signed.Certificate, "application/x-x509-ca-cert", fileName
+                    , new DateTimeOffset(signed.SignedOn)
+                    , new Microsoft.Net.Http.Headers.EntityTagHeaderValue(
+                        new Microsoft.Extensions.Primitives.StringSegment($"\"{signed.Id:N}\""), true));
     }
 
     public async Task<IActionResult> DownloadDer(Guid id)
@@ -152,9 +155,12 @@ public class CSRController : Controller
         var derBytes = Convert.FromBase64String(base64);
 
         var csr = await _db.CSRs.FindAsync(signed.OriginalRequestId);
-        var fileName = $"{csr?.CommonName ?? "cert"}.cer";
+        var fileName = $"{csr?.CommonName ?? "cert"}_Exp_{signed.NotAfter:yyyy-MM-dd}.cer";
 
-        return File(derBytes, "application/octet-stream", fileName);
+        return File(derBytes, "application/octet-stream", fileName
+                    , new DateTimeOffset(signed.SignedOn)
+                    , new Microsoft.Net.Http.Headers.EntityTagHeaderValue(
+                        new Microsoft.Extensions.Primitives.StringSegment($"\"{signed.Id:N}\""), true));
     }
 
     public async Task<IActionResult> DownloadP7b(Guid id)
@@ -170,9 +176,12 @@ public class CSRController : Controller
         var p7bBytes = Common.Certificate.CertToP7B(bcCert, caCert);
 
         var csr = await _db.CSRs.FindAsync(signed.OriginalRequestId);
-        var fileName = $"{csr?.CommonName ?? "cert"}.p7b";
+        var fileName = $"{csr?.CommonName ?? "cert"}_Exp_{signed.NotAfter:yyyy-MM-dd}.p7b";
 
-        return File(p7bBytes, "application/x-pkcs7-certificates", fileName);
+        return File(p7bBytes, "application/x-pkcs7-certificates", fileName
+                    , new DateTimeOffset(signed.SignedOn)
+                    , new Microsoft.Net.Http.Headers.EntityTagHeaderValue(
+                        new Microsoft.Extensions.Primitives.StringSegment($"\"{signed.Id:N}\""), true));
     }
 
     public IActionResult DownloadRoot()
