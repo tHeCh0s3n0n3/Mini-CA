@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System;
 using System.Text;
 using Org.BouncyCastle.OpenSsl;
@@ -586,6 +586,37 @@ public static class Certificate
         }
         
         return retval;
+    }
+
+    public static int AutoDetectSanType(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return 2; // DNS Name (default)
+        }
+
+        value = value.Trim();
+
+        // 1. IP Address
+        if (System.Net.IPAddress.TryParse(value, out _))
+        {
+            return 7; // IP Address
+        }
+
+        // 2. Email Address
+        if (value.Contains('@') && !value.Contains('/') && !value.Contains(':'))
+        {
+            return 1; // Email
+        }
+
+        // 3. URI
+        if (Uri.TryCreate(value, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == "ldap" || uri.Scheme == "ldaps"))
+        {
+            return 6; // URI
+        }
+
+        // 4. Default to DNS Name
+        return 2; // DNS Name
     }
 
     private class CAKeyPasswordFinder(string path) : IPasswordFinder

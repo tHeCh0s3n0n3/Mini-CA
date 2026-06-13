@@ -1,4 +1,4 @@
-﻿using Backend.Filters;
+using Backend.Filters;
 using Backend.Models;
 using DAL;
 using DAL.Models;
@@ -114,6 +114,17 @@ public class CSRController : Controller
     {
         if (ModelState.IsValid)
         {
+            if (!string.IsNullOrWhiteSpace(model.CommonName))
+            {
+                bool cnExists = model.AlternateNames?.Any(s => string.Equals(s.Value?.Trim(), model.CommonName.Trim(), StringComparison.OrdinalIgnoreCase)) ?? false;
+                if (!cnExists)
+                {
+                    int detectedType = Common.Certificate.AutoDetectSanType(model.CommonName);
+                    model.AlternateNames ??= [];
+                    model.AlternateNames.Add(new SanItem { Type = detectedType, Value = model.CommonName.Trim() });
+                }
+            }
+
             var sans = model.AlternateNames?.Select(s => (s.Type, s.Value)).ToList() ?? [];
             var (csrPem, keyPem) = Common.Certificate.GenerateCSR(
                 model.CommonName, 
