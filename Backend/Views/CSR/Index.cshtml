@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Backend.Models.CSRIndexViewModel>
+@model IEnumerable<Backend.Models.CSRIndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -82,6 +82,7 @@
                             }
                         </div>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary" title="Details"><i class="bi bi-info-circle"></i></a>
+                        <a asp-action="Create" asp-route-copyId="@item.Id" class="btn btn-outline-info" title="Copy / Renew CSR"><i class="bi bi-copy"></i></a>
                         <form asp-action="Delete" method="POST" asp-route-id="@item.Id" 
                                onclick="return confirm('Are you sure you want to delete this?')"
                               style="display:inline">

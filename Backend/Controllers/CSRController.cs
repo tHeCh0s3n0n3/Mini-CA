@@ -10,6 +10,7 @@ using System.Text;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
 using Serilog;
 using System.Collections;
 
@@ -102,8 +103,116 @@ public class CSRController : Controller
     }
 
     // GET: CSR/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create(Guid? copyId)
     {
+        if (copyId.HasValue)
+        {
+            var csr = await _db.CSRs.FindAsync(new CSRId(copyId.Value));
+            if (csr != null)
+            {
+                var viewModel = new CreateCSRViewModel
+                {
+                    CommonName = csr.CommonName,
+                    Organization = csr.Organization,
+                    OrganizationUnitName = csr.OrganizationUnitName,
+                    CountryCode = csr.CountryCode,
+                    Locality = csr.Locality,
+                    State = csr.State,
+                    EMailAddress = csr.EMailAddress
+                };
+
+                // Populate alternate names (SANs) from the existing CSR record
+                try
+                {
+                    var pkcs10 = Common.Certificate.ImportCSR(csr.FileContents);
+                    var typedSans = Common.Certificate.GetTypedSANs(pkcs10);
+                    viewModel.AlternateNames = typedSans.Select(san => new SanItem 
+                    { 
+                        Type = san.TagNo, 
+                        Value = san.Name 
+                    }).ToList();
+                }
+                catch
+                {
+                    // Fallback to AlternateNamesList if parsing fails
+                    viewModel.AlternateNames = csr.AlternateNamesList.Select(val => new SanItem
+                    {
+                        Type = Common.Certificate.AutoDetectSanType(val),
+                        Value = val
+                    }).ToList();
+                }
+
+                // Populate key usages/purposes from the existing CSR extensions if possible
+                try
+                {
+                    var pkcs10 = Common.Certificate.ImportCSR(csr.FileContents);
+                    var attr = pkcs10.GetCertificationRequestInfo().Attributes;
+                    if (attr != null)
+                    {
+                        for (int i = 0; i != attr.Count; i++)
+                        {
+                            var pkcsAttr = AttributePkcs.GetInstance(attr[i]);
+                            if (pkcsAttr.AttrType.Equals(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                            {
+                                var extensions = X509Extensions.GetInstance(pkcsAttr.AttrValues[0]);
+
+                                // Key Usage
+                                var kuExt = extensions.GetExtension(X509Extensions.KeyUsage);
+                                if (kuExt != null)
+                                {
+                                    var ku = KeyUsage.GetInstance(kuExt.GetParsedValue());
+                                    int bits = ku.PadBits == 0 ? ku.GetBytes()[0] : ku.GetBytes()[0] & (0xff << ku.PadBits);
+
+                                    viewModel.UsageDigitalSignature = (bits & KeyUsage.DigitalSignature) != 0;
+                                    viewModel.UsageNonRepudiation = (bits & KeyUsage.NonRepudiation) != 0;
+                                    viewModel.UsageKeyEncipherment = (bits & KeyUsage.KeyEncipherment) != 0;
+                                    viewModel.UsageDataEncipherment = (bits & KeyUsage.DataEncipherment) != 0;
+                                    viewModel.UsageKeyAgreement = (bits & KeyUsage.KeyAgreement) != 0;
+                                    viewModel.UsageKeyCertSigning = (bits & KeyUsage.KeyCertSign) != 0;
+                                    viewModel.UsageCRLSigning = (bits & KeyUsage.CrlSign) != 0;
+                                    viewModel.UsageEncipherOnly = (bits & KeyUsage.EncipherOnly) != 0;
+                                    viewModel.UsageDecipherOnly = (bits & KeyUsage.DecipherOnly) != 0;
+                                }
+
+                                // EKU
+                                var ekuExt = extensions.GetExtension(X509Extensions.ExtendedKeyUsage);
+                                if (ekuExt != null)
+                                {
+                                    var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
+                                    
+                                    // Reset defaults first
+                                    viewModel.PurposeServerAuth = false;
+                                    viewModel.UsageDigitalSignature = false;
+                                    viewModel.UsageKeyEncipherment = false;
+
+                                    foreach (var purpose in eku.GetAllUsages())
+                                    {
+                                        if (purpose.Equals(KeyPurposeID.AnyExtendedKeyUsage)) viewModel.PurposeAll = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPServerAuth)) viewModel.PurposeServerAuth = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPClientAuth)) viewModel.PurposeClientAuth = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPCodeSigning)) viewModel.PurposeCodeSigning = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPEmailProtection)) viewModel.PurposeEMailProtection = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPIpsecEndSystem)) viewModel.PurposeIPsecEndSystem = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPIpsecTunnel)) viewModel.PurposeIPsecTunnel = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPIpsecUser)) viewModel.PurposeIPsecUser = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPTimeStamping)) viewModel.PurposeTimeStamping = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPOcspSigning)) viewModel.PurposeOCSPSigning = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPSmartCardLogon)) viewModel.PurposeSmartCardLogon = true;
+                                        if (purpose.Equals(KeyPurposeID.IdKPMacAddress)) viewModel.PurposeMACAddress = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // Fallback to default usages/purposes
+                }
+
+                return View(viewModel);
+            }
+        }
         return View(new CreateCSRViewModel());
     }
 
