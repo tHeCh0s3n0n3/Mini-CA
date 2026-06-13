@@ -159,6 +159,11 @@ public class CSRController : Controller
                                 {
                                     var extensions = X509Extensions.GetInstance(pkcsAttr.AttrValues[0]);
 
+                                    // Reset defaults first so we only check what is actually requested in the CSR
+                                    vm.UsageDigitalSignature = false;
+                                    vm.UsageKeyEncipherment = false;
+                                    vm.PurposeServerAuth = false;
+
                                     // Key Usage
                                     var kuExt = extensions.GetExtension(X509Extensions.KeyUsage);
                                     if (kuExt != null)
@@ -182,11 +187,6 @@ public class CSRController : Controller
                                     if (ekuExt != null)
                                     {
                                         var eku = ExtendedKeyUsage.GetInstance(ekuExt.GetParsedValue());
-                                        
-                                        // Reset defaults first
-                                        vm.PurposeServerAuth = false;
-                                        vm.UsageDigitalSignature = false;
-                                        vm.UsageKeyEncipherment = false;
 
                                         foreach (var purpose in eku.GetAllUsages())
                                         {
@@ -221,6 +221,11 @@ public class CSRController : Controller
                     try
                     {
                         var cert = Common.Certificate.ImportCACert(signedCSR.Certificate);
+
+                        // Reset defaults first so we only populate what is actually in the certificate
+                        viewModel.UsageDigitalSignature = false;
+                        viewModel.UsageKeyEncipherment = false;
+                        viewModel.PurposeServerAuth = false;
 
                         // Populate alternate names (SANs) from the certificate
                         var alternateNames = new List<SanItem>();
