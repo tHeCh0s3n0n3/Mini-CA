@@ -1,0 +1,92 @@
+@model IEnumerable<DAL.Models.IntermediateCA>
+
+@{
+    ViewData["Title"] = "Intermediate CAs";
+}
+
+<h1>Intermediate CAs</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Create New CA CSR</a>
+    <a asp-action="Upload" class="btn btn-outline-primary ms-2"><i class="bi bi-upload"></i> Upload CA CSR</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Common Name / Subject</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Expiry Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model is not null) {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.CountryCode
+                    </td>
+                    <td>
+                        <strong>@item.CommonName</strong><br />
+                        <span class="text-muted small">O: @item.Organization @(!string.IsNullOrEmpty(item.OrganizationUnitName) ? $"/ OU: {item.OrganizationUnitName}" : "")</span>
+                    </td>
+                    <td>
+                        @if (item.IsSigned)
+                        {
+                            <span class="badge bg-success">Signed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                    </td>
+                    <td>
+                        @item.SubmittedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                    </td>
+                    <td>
+                        @if (item.IsSigned && item.NotAfter.HasValue)
+                        {
+                            @item.NotAfter.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")
+                        }
+                        else
+                        {
+                            <span class="text-muted">--</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group me-2">
+                            @if (!string.IsNullOrEmpty(item.EncryptedPrivateKey))
+                            {
+                                <a asp-action="DownloadKey" asp-route-id="@item.Id" class="btn btn-outline-warning" title="Download Private Key">
+                                    <i class="bi bi-key"></i> Download Key
+                                </a>
+                            }
+                            @if (item.IsSigned && item.Certificate is not null)
+                            {
+                                <a asp-action="DownloadCertificate" asp-route-id="@item.Id" class="btn btn-success" title="Download Certificate">
+                                    <i class="bi bi-download"></i> Download Cert
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-action="Sign" asp-route-id="@item.Id" class="btn btn-secondary" title="Sign Intermediate CA">
+                                    <i class="bi bi-check-lg"></i> Sign
+                                </a>
+                            }
+                        </div>
+                        <form asp-action="Delete" method="POST" asp-route-id="@item.Id" 
+                               onclick="return confirm('Are you sure you want to delete this Intermediate CA request/certificate? This action is irreversible.')"
+                               style="display:inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

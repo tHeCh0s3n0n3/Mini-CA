@@ -1,0 +1,70 @@
+@model DAL.Models.CreateCSRViewModel
+
+@{
+    ViewData["Title"] = "Generate New Intermediate CA CSR";
+}
+
+<h1>Generate New Intermediate CA CSR</h1>
+
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Subject Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="CommonName" class="form-label font-weight-bold"></label>
+                            <input asp-for="CommonName" class="form-control" placeholder="e.g. Mini CA Intermediate CA" required />
+                            <span asp-validation-for="CommonName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="EMailAddress" class="form-label font-weight-bold"></label>
+                            <input asp-for="EMailAddress" class="form-control" required />
+                            <span asp-validation-for="EMailAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Organization" class="form-label font-weight-bold"></label>
+                            <input asp-for="Organization" class="form-control" required />
+                            <span asp-validation-for="Organization" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OrganizationUnitName" class="form-label font-weight-bold"></label>
+                            <input asp-for="OrganizationUnitName" class="form-control" />
+                            <span asp-validation-for="OrganizationUnitName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="CountryCode" class="form-label font-weight-bold"></label>
+                            <input asp-for="CountryCode" class="form-control" />
+                            <span asp-validation-for="CountryCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Locality" class="form-label font-weight-bold"></label>
+                            <input asp-for="Locality" class="form-control" />
+                            <span asp-validation-for="Locality" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="State" class="form-label font-weight-bold"></label>
+                            <input asp-for="State" class="form-control" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-4 text-center">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg"><i class="bi bi-arrow-left"></i> Back to List</a>
+                <button type="submit" class="btn btn-primary btn-lg ms-2"><i class="bi bi-gear-fill"></i> Generate CA CSR & Key</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

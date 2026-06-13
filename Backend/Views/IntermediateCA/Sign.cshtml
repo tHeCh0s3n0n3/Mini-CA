@@ -1,0 +1,80 @@
+@model Backend.Models.SignIntermediateCAViewModel
+
+@{
+    ViewData["Title"] = "Sign Intermediate CA Request";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Intermediate CA CSR Info</h4>
+    <hr />
+    <form asp-action="Sign" method="post" asp-antiforgery="true">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+            <div class="col-md-8">
+                <dl class="row">
+                    <dt class="col-sm-3">Common Name</dt>
+                    <dd class="col-sm-9"><strong>@Model.CommonName</strong></dd>
+
+                    <dt class="col-sm-3">Organization</dt>
+                    <dd class="col-sm-9">@Model.Organization</dd>
+
+                    <dt class="col-sm-3">Department (OU)</dt>
+                    <dd class="col-sm-9">@Model.OrganizationUnitName</dd>
+
+                    <dt class="col-sm-3">Country Code</dt>
+                    <dd class="col-sm-9">@Model.CountryCode</dd>
+
+                    <dt class="col-sm-3">City / Locality</dt>
+                    <dd class="col-sm-9">@Model.Locality</dd>
+
+                    <dt class="col-sm-3">State / Province</dt>
+                    <dd class="col-sm-9">@Model.State</dd>
+
+                    <dt class="col-sm-3">E-Mail Address</dt>
+                    <dd class="col-sm-9">@Model.EMailAddress</dd>
+                </dl>
+
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger"><i class="bi bi-shield-lock-fill"></i> CA Extensions Policy Enforced</h5>
+                        <p class="card-text mb-1">
+                            This certificate will be signed as a <strong>CA (Certificate Authority)</strong>. The following extensions are automatically hardcoded and enforced for safety:
+                        </p>
+                        <ul>
+                            <li><strong>Basic Constraints</strong>: <code>Critical = true, IsCA = true</code></li>
+                            <li><strong>Key Usages</strong>: <code>Critical = true, Usages = KeyCertSign, CrlSign</code></li>
+                            <li><strong>Extended Key Usages (EKU)</strong>: None (Standard Intermediate CA)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3 row">
+                    <label asp-for="ExpieryDate" class="col-sm-3 col-form-label font-weight-bold"></label>
+                    <div class="col-sm-5">
+                        <input asp-for="ExpieryDate" type="date" class="form-control" 
+                               value="@Model.ExpieryDate.ToString("yyyy-MM-dd")"
+                               max="@Model.MaxExpiryDate.ToString("yyyy-MM-dd")" required />
+                        <span asp-validation-for="ExpieryDate" class="text-danger"></span>
+                        <small class="form-text text-muted">
+                            Must be on or before the Root CA's expiry date: <strong>@Model.MaxExpiryDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</strong>.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to List</a>
+                    <button type="submit" class="btn btn-danger ms-2"><i class="bi bi-check-lg"></i> Sign Intermediate CA</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -23,6 +23,7 @@ public class DB : DbContext
     public DbSet<AcmeEab> AcmeEabs { get; set; }
     public DbSet<AcmeAccount> AcmeAccounts { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
+    public DbSet<IntermediateCA> IntermediateCAs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,6 +102,32 @@ public class DB : DbContext
             entity.Property(e => e.Action).IsRequired();
             entity.Property(e => e.Subject).IsRequired();
             entity.Property(e => e.Timestamp).ValueGeneratedOnAdd().IsRequired();
+        });
+
+        modelBuilder.Entity<IntermediateCA>(entity =>
+        {
+            entity.ToTable("IntermediateCAs");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).IsRequired();
+            entity.Property(e => e.CountryCode)
+                  .HasMaxLength(2)
+                  .IsFixedLength()
+                  .IsRequired();
+            entity.Property(e => e.Organization).IsRequired();
+            entity.Property(e => e.OrganizationUnitName);
+            entity.Property(e => e.CommonName).IsRequired();
+            entity.Property(e => e.Locality);
+            entity.Property(e => e.State);
+            entity.Property(e => e.EMailAddress).IsRequired();
+            entity.Property(e => e.CsrFileContents).IsRequired();
+            entity.Property(e => e.FileName).IsRequired();
+            entity.Property(e => e.Certificate);
+            entity.Property(e => e.EncryptedPrivateKey);
+            entity.Property(e => e.IsSigned).IsRequired();
+            entity.Property(e => e.SubmittedOn).ValueGeneratedOnAdd().IsRequired();
+            entity.Property(e => e.SignedOn);
+            entity.Property(e => e.NotBefore);
+            entity.Property(e => e.NotAfter);
         });
     }
 }
