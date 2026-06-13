@@ -39,7 +39,9 @@ public class CSRController : Controller
     // GET: CSR
     public async Task<IActionResult> Index()
     {
-        List<CSR> csrs = await _db.CSRs.ToListAsync();
+        List<CSR> csrs = await _db.CSRs
+                            .OrderByDescending(c => c.SubmittedOn)
+                            .ToListAsync();
         List<CSRIndexViewModel> model = [];
         foreach(CSR csr in csrs)
         {
